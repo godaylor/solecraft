@@ -1,0 +1,16 @@
+.root {
+  max-width: 38rem;
+  padding: var(--space-6);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-medium);
+}
+
+.root h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 2rem);
+}
+
+.root p {
+  color: var(--text-secondary);
+}

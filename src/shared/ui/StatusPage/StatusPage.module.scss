@@ -1,0 +1,42 @@
+.status {
+  display: grid;
+  width: min(100%, var(--layout-max));
+  min-height: 58vh;
+  padding: clamp(var(--space-7), 10vw, var(--space-9))
+    clamp(var(--space-4), 4vw, var(--space-7));
+  align-content: center;
+  justify-items: start;
+}
+
+.status h1 {
+  max-width: 15ch;
+  margin-block-end: var(--space-4);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+.status > p:not(.code) {
+  max-width: 38rem;
+  margin-block-end: var(--space-5);
+  color: var(--text-secondary);
+}
+
+.code {
+  margin-block-end: var(--space-3);
+  color: var(--action-primary);
+  font-family: var(--font-data);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.loading {
+  width: min(100%, var(--layout-max));
+  min-height: 45vh;
+  padding: var(--space-7) clamp(var(--space-4), 4vw, var(--space-7));
+  margin-inline: auto;
+  font-family: var(--font-data);
+}

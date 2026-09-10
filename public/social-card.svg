@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Solecraft — fit-first city sneakers">
+  <rect width="1200" height="630" fill="#F3F6FA"/>
+  <path d="M80 120h1040M80 315h1040M80 510h1040" stroke="#C9D0DB" stroke-width="2"/>
+  <path d="M110 120h650" stroke="#315CF5" stroke-width="12"/>
+  <circle cx="760" cy="120" r="18" fill="#FF7A45" stroke="#171C26" stroke-width="4"/>
+  <text x="92" y="275" fill="#171C26" font-family="Arial, sans-serif" font-size="124" font-weight="800" letter-spacing="3">Solecraft</text>
+  <text x="96" y="385" fill="#171C26" font-family="Arial, sans-serif" font-size="36" font-weight="600">FIT-FIRST CITY SNEAKERS</text>
+  <text x="96" y="470" fill="#566171" font-family="monospace" font-size="28">WIDTH / CUSHIONING / SUPPORT</text>
+  <rect x="875" y="205" width="230" height="230" rx="42" fill="#BDE7D6" stroke="#171C26" stroke-width="4"/>
+  <path d="M920 360c45-85 92-85 140 0" fill="none" stroke="#315CF5" stroke-width="14" stroke-linecap="round"/>
+  <path d="M916 385h150" stroke="#171C26" stroke-width="8" stroke-linecap="round"/>
+</svg>

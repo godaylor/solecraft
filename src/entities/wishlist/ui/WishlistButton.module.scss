@@ -1,0 +1,14 @@
+.button {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  font-size: 1.35rem;
+}
+.button[aria-pressed='true'] {
+  color: white;
+  background: var(--action-primary);
+}

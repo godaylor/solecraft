@@ -1,0 +1,106 @@
+.dialog {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+}
+
+.dialog::backdrop {
+  background: color-mix(in srgb, var(--color-asphalt) 58%, transparent);
+}
+
+.panel {
+  display: flex;
+  width: min(100%, 28rem);
+  min-height: 100dvh;
+  margin-inline-start: auto;
+  padding: max(var(--space-5), env(safe-area-inset-top)) var(--space-5)
+    max(var(--space-6), env(safe-area-inset-bottom));
+  flex-direction: column;
+  background: var(--surface-page);
+  border-inline-start: 1px solid var(--border-default);
+  animation: slide-in var(--motion-medium) ease-out both;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block-end: var(--space-6);
+  border-block-end: 1px solid var(--border-default);
+}
+
+.heading h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 6vw, 2rem);
+  line-height: 1.1;
+}
+
+.kicker {
+  margin-block-end: var(--space-2);
+  color: var(--text-secondary);
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.closeIcon {
+  font-family: var(--font-body);
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.list {
+  margin: 0;
+  padding: var(--space-5) 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--text-primary);
+  border-block-end: 1px solid var(--border-default);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.active {
+  color: var(--action-primary);
+}
+
+.note {
+  max-width: 24rem;
+  margin-block: auto 0;
+  padding-block-start: var(--space-7);
+  color: var(--text-secondary);
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@media (forced-colors: active) {
+  .dialog::backdrop {
+    background: Canvas;
+  }
+
+  .panel {
+    border-color: CanvasText;
+  }
+}

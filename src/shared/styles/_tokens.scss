@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light;
+
+  --color-cold-paper: #f3f6fa;
+  --color-asphalt: #171c26;
+  --color-transit-blue: #315cf5;
+  --color-transit-blue-strong: #2447ca;
+  --color-sole-orange: #ff7a45;
+  --color-gauge-mint: #bde7d6;
+  --color-line-grey: #c9d0db;
+  --color-white: #ffffff;
+  --color-muted-ink: #566171;
+  --color-danger: #b42318;
+
+  --surface-page: var(--color-cold-paper);
+  --surface-raised: var(--color-white);
+  --surface-inverse: var(--color-asphalt);
+  --surface-data: var(--color-gauge-mint);
+  --text-primary: var(--color-asphalt);
+  --text-secondary: var(--color-muted-ink);
+  --text-inverse: var(--color-white);
+  --border-default: var(--color-line-grey);
+  --action-primary: var(--color-transit-blue);
+  --action-primary-hover: var(--color-transit-blue-strong);
+  --focus-ring: var(--color-transit-blue);
+  --accent-emotional: var(--color-sole-orange);
+
+  --font-display: 'Unbounded Variable', 'Arial Black', sans-serif;
+  --font-body: 'Manrope Variable', Arial, sans-serif;
+  --font-data: 'IBM Plex Mono', Consolas, monospace;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --radius-small: 0.5rem;
+  --radius-medium: 1rem;
+  --radius-large: 1.5rem;
+  --shadow-card: 0 1.25rem 3rem rgb(23 28 38 / 8%);
+  --layout-max: 90rem;
+  --motion-fast: 160ms;
+  --motion-medium: 260ms;
+}
+
+@media (forced-colors: active) {
+  :root {
+    --surface-page: Canvas;
+    --surface-raised: Canvas;
+    --surface-inverse: Canvas;
+    --surface-data: Canvas;
+    --text-primary: CanvasText;
+    --text-secondary: CanvasText;
+    --text-inverse: CanvasText;
+    --border-default: CanvasText;
+    --action-primary: LinkText;
+    --action-primary-hover: LinkText;
+    --focus-ring: Highlight;
+    --accent-emotional: Highlight;
+  }
+}

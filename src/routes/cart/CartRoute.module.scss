@@ -1,0 +1,72 @@
+.page {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+.heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.heading p {
+  margin: 0;
+  font: 0.75rem var(--font-data);
+  text-transform: uppercase;
+}
+.heading h1 {
+  margin: 0.3rem 0 0;
+  font: clamp(2.5rem, 6vw, 5rem)/0.95 var(--font-display);
+}
+.heading a {
+  min-height: 44px;
+  color: var(--action-primary);
+}
+.undo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--surface-data);
+}
+.undo button,
+.clear > button {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  text-decoration: underline;
+}
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr minmax(18rem, 25rem);
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+.clear {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.summary {
+  padding: 1.25rem;
+  color: var(--text-inverse);
+  background: var(--surface-inverse);
+}
+.summary p {
+  display: flex;
+  justify-content: space-between;
+}
+.summary small {
+  display: block;
+  color: var(--color-line-grey);
+}
+@media (max-width: 42rem) {
+  .heading,
+  .bottom {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+}

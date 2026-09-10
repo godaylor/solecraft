@@ -1,0 +1,306 @@
+.discovery {
+  margin-block: var(--space-7) var(--space-5);
+}
+
+.toolbar {
+  display: grid;
+  gap: var(--space-4);
+  align-items: end;
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--border-default);
+}
+
+.search,
+.sort,
+.selectGroup label {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.searchControl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+}
+
+.search input,
+.sort select,
+.selectGroup select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding-inline: var(--space-3);
+  color: var(--text-primary);
+  background: var(--surface-page);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-small);
+  font: inherit;
+}
+
+.sort select,
+.selectGroup select {
+  min-width: 0;
+}
+
+.mobileFilterButton,
+.clearAll,
+.clearRail,
+.cancelButton {
+  min-height: 2.75rem;
+  padding-inline: var(--space-4);
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.activeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  padding-block-start: var(--space-4);
+}
+
+.activeFilters > span,
+.railHeading p,
+.sheetHeading p {
+  margin: 0;
+  color: var(--action-primary);
+  font-family: var(--font-data);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.activeFilters ul {
+  display: flex;
+  flex: 1 1 24rem;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activeFilters li button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-3);
+  color: var(--text-primary);
+  background: var(--surface-data);
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.clearAll {
+  border-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.rail {
+  display: none;
+}
+
+.railHeading,
+.sheetHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block-end: var(--space-4);
+  border-block-end: 1px solid var(--border-default);
+}
+
+.railHeading h2,
+.sheetHeading h2 {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.railHeading > span {
+  display: inline-flex;
+  min-width: 2rem;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  background: var(--surface-inverse);
+  border-radius: 999px;
+  font-family: var(--font-data);
+}
+
+.filterFields {
+  display: grid;
+}
+
+.fieldset {
+  padding: var(--space-4) 0;
+  margin: 0;
+  border: 0;
+  border-block-end: 1px solid var(--border-default);
+}
+
+.fieldset legend,
+.selectGroup label > span {
+  padding: 0;
+  color: var(--text-primary);
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.choiceList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--space-3);
+  padding-block-start: var(--space-2);
+}
+
+.choiceList label,
+.stockChoice {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.choiceList input,
+.stockChoice input {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0;
+  accent-color: var(--action-primary);
+}
+
+.selectGroup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-block-end: 1px solid var(--border-default);
+}
+
+.stockChoice {
+  padding-block: var(--space-4);
+  border-block-end: 1px solid var(--border-default);
+}
+
+.clearRail {
+  width: 100%;
+  margin-block-start: var(--space-4);
+}
+
+.sheet {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+}
+
+.sheet::backdrop {
+  background: color-mix(in srgb, var(--color-asphalt) 58%, transparent);
+}
+
+.sheetPanel {
+  display: flex;
+  width: min(100%, 34rem);
+  min-height: 100dvh;
+  margin-inline-start: auto;
+  padding: max(var(--space-5), env(safe-area-inset-top)) var(--space-5)
+    max(var(--space-5), env(safe-area-inset-bottom));
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--surface-page);
+  border-inline-start: 1px solid var(--border-default);
+}
+
+.sheetHeading {
+  position: sticky;
+  z-index: 1;
+  top: calc(-1 * max(var(--space-5), env(safe-area-inset-top)));
+  padding-block: max(var(--space-5), env(safe-area-inset-top)) var(--space-4);
+  background: var(--surface-page);
+}
+
+.sheetHeading [aria-hidden='true'] {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.sheetActions {
+  display: grid;
+  gap: var(--space-2);
+  margin-block-start: auto;
+  padding-block-start: var(--space-5);
+}
+
+.cancelButton {
+  border-color: transparent;
+}
+
+@media (min-width: 38rem) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.35fr) auto;
+  }
+}
+
+@media (min-width: 75rem) {
+  .mobileFilterButton {
+    display: none;
+  }
+
+  .rail {
+    position: sticky;
+    top: var(--space-5);
+    display: block;
+    align-self: start;
+    max-height: calc(100vh - var(--space-7));
+    padding-inline-end: var(--space-5);
+    overflow-y: auto;
+    border-inline-end: 1px solid var(--border-default);
+  }
+
+  .choiceList {
+    grid-template-columns: 1fr;
+  }
+
+  .selectGroup {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheetPanel {
+    scroll-behavior: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .activeFilters li button,
+  .railHeading > span {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+  }
+
+  .sheet::backdrop {
+    background: Canvas;
+  }
+}

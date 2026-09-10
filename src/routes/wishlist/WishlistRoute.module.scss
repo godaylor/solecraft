@@ -1,0 +1,38 @@
+.page {
+  width: min(100%, var(--layout-max));
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+.page header p {
+  margin: 0;
+  font: 0.75rem var(--font-data);
+  text-transform: uppercase;
+}
+.page h1 {
+  margin: 0.3rem 0 2rem;
+  font: clamp(2.5rem, 6vw, 5rem)/0.95 var(--font-display);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 1rem;
+}
+.empty {
+  padding: 3rem;
+  border: 1px dashed var(--border-default);
+  text-align: center;
+}
+.error {
+  display: grid;
+  max-width: 42rem;
+  gap: 1rem;
+}
+.error button {
+  justify-self: start;
+}
+.empty a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--action-primary);
+}

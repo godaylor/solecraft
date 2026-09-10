@@ -1,0 +1,15 @@
+.root {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  color: var(--color-danger);
+  background: var(--surface-raised);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-small);
+}
+
+@media (forced-colors: active) {
+  .root {
+    color: CanvasText;
+  }
+}

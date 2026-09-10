@@ -1,0 +1,90 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.row {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-data);
+  font-size: 0.7rem;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.label strong {
+  font-weight: 400;
+  text-align: end;
+}
+
+.track {
+  position: relative;
+  height: 0.5rem;
+  background:
+    linear-gradient(var(--border-default), var(--border-default)) center / 100% 1px
+      no-repeat,
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(25% - 1px),
+      var(--border-default) calc(25% - 1px),
+      var(--border-default) 25%
+    );
+}
+
+.marker {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--track-position);
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--action-primary);
+  border: 0.125rem solid var(--surface-raised);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--text-primary);
+  transform: translate(-50%, -50%);
+}
+
+.unknown {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--border-default) 0,
+    var(--border-default) 0.25rem,
+    transparent 0.25rem,
+    transparent 0.5rem
+  );
+  opacity: 0.7;
+}
+
+.compact {
+  gap: var(--space-2);
+}
+
+.compact .label {
+  font-size: 0.62rem;
+}
+
+.compact .track {
+  height: 0.375rem;
+}
+
+@media (forced-colors: active) {
+  .track,
+  .unknown {
+    background: Canvas;
+    border-block-end: 1px solid CanvasText;
+  }
+
+  .marker {
+    background: Highlight;
+    border-color: Canvas;
+    box-shadow: 0 0 0 1px CanvasText;
+  }
+}

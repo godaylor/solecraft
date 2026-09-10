@@ -1,0 +1,61 @@
+.page,
+.state,
+.account {
+  width: min(100% - 2rem, 62rem);
+  margin: 2rem auto;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid var(--text-primary);
+  background: var(--surface-raised);
+}
+.page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+.page h1,
+.state h1,
+.account h1 {
+  margin: 0.4rem 0 1rem;
+  font: clamp(2.2rem, 5vw, 4rem)/0.95 var(--font-display);
+}
+.page > div > p:first-child,
+.account > p:first-child {
+  font: 0.72rem var(--font-data);
+  text-transform: uppercase;
+}
+.page form {
+  display: grid;
+  align-content: center;
+  gap: 0.75rem;
+}
+.page input {
+  min-height: 48px;
+  padding: 0.7rem;
+  border: 1px solid var(--text-primary);
+  font: inherit;
+}
+.state a,
+.account a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--action-primary);
+}
+.account nav {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.loading {
+  padding: 4rem;
+  text-align: center;
+}
+@media (max-width: 42rem) {
+  .page {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .account nav {
+    display: grid;
+  }
+}

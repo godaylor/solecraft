@@ -1,0 +1,20 @@
+.link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-primary);
+  font-weight: 720;
+  text-decoration-color: var(--action-primary);
+  text-decoration-thickness: 0.125rem;
+  text-underline-offset: 0.3rem;
+}
+
+.link span:last-child {
+  color: var(--action-primary);
+  transition: transform var(--motion-fast) ease;
+}
+
+.link:hover span:last-child {
+  transform: translate(0.125rem, -0.125rem);
+}

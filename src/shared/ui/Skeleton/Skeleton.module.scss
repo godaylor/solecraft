@@ -1,0 +1,49 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-medium);
+}
+
+.media,
+.line {
+  background: linear-gradient(
+    90deg,
+    var(--color-line-grey),
+    var(--surface-raised),
+    var(--color-line-grey)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+.media {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-small);
+}
+
+.line {
+  width: 76%;
+  height: 0.75rem;
+  border-radius: 999px;
+}
+
+.line:last-child {
+  width: 48%;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+@media (forced-colors: active) {
+  .media,
+  .line {
+    background: Canvas;
+    border: 1px solid CanvasText;
+  }
+}
