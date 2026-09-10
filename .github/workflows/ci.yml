@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+env:
+  VITE_APP_ENV: test
+  VITE_SUPABASE_URL: http://127.0.0.1:32621
+  VITE_SUPABASE_PUBLISHABLE_KEY: local-test-anon
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run test:run
+      - run: npm run test:deploy
+      - run: npm run build
+      - run: npm run bundle:check
+      - run: npm audit
+
+  browser-and-performance:
+    if: github.event_name != 'schedule'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SKIP_VISUAL_REGRESSION: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run db:start
+      - run: npm run db:reset
+      - name: Use the isolated stack public key
+        run: |
+          PUBLIC_KEY=$(node_modules/.bin/supabase status -o json | jq -r '.ANON_KEY')
+          test -n "$PUBLIC_KEY" && test "$PUBLIC_KEY" != null
+          echo "VITE_SUPABASE_PUBLISHABLE_KEY=$PUBLIC_KEY" >> "$GITHUB_ENV"
+      - run: npm run db:test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e:smoke
+      - run: npm run lighthouse:ci
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m10-browser-performance
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  scheduled-three-browser:
+    if: github.event_name == 'schedule'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SKIP_VISUAL_REGRESSION: '1'
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run db:start
+      - run: npm run db:reset
+      - name: Use the isolated stack public key
+        run: |
+          PUBLIC_KEY=$(node_modules/.bin/supabase status -o json | jq -r '.ANON_KEY')
+          test -n "$PUBLIC_KEY" && test "$PUBLIC_KEY" != null
+          echo "VITE_SUPABASE_PUBLISHABLE_KEY=$PUBLIC_KEY" >> "$GITHUB_ENV"
+      - run: npm run db:test
+      - run: npm run build
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run e2e -- --project=${{ matrix.browser }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scheduled-${{ matrix.browser }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

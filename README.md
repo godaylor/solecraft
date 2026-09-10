@@ -1,70 +1,176 @@
-# Getting Started with Create React App
+# Solecraft
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![CI](https://github.com/godaylor/solecraft/actions/workflows/ci.yml/badge.svg)](https://github.com/godaylor/solecraft/actions/workflows/ci.yml)
 
-## Available Scripts
+Канонический репозиторий: [github.com/godaylor/solecraft](https://github.com/godaylor/solecraft).
 
-In the project directory, you can run:
+Solecraft — portfolio-grade fit-first магазин городских кроссовок. Каталог помогает
+сравнивать ширину, амортизацию и поддержку, а commerce flow сохраняет точную
+variant/size/SKU identity от PDP до immutable order snapshot.
 
-### `npm start`
+Сейчас M0–M9 завершены; оставшиеся manual AT проверки M9 покрыты явно принятым
+временным waiver только для progression. Текущие результаты локальной части M10 и
+открытые gates зафиксированы в `docs/RELEASE_PREPARATION.md`. Public release остаётся
+заблокирован до закрытия этих ограничений, revalidation waiver и проверки deploy.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Что реализовано
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- URL-driven каталог с поиском, фильтрами, сортировкой и пагинацией;
+- PDP с canonical colorway URL, gallery, size guide и точным inventory item/SKU;
+- persistent guest cart/wishlist и детерминированный merge после magic-link входа;
+- owner-only Supabase data с RLS allow/deny и безопасной очисткой private cache;
+- guest/auth checkout с server-authoritative totals, stock, idempotency и atomic order;
+- scoped guest receipt capability и authenticated order history/detail;
+- loading/empty/error/retry states, keyboard flows, axe и responsive browser coverage.
+- русский интерфейс по умолчанию и сохраняемый RU/EN режим для UI, описаний,
+  категорий и metadata; названия обувных брендов и моделей остаются исходными.
 
-### `npm test`
+## Локальный запуск
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Требуются Node `22.19.0`, npm `10.9.x`, Docker и доступные порты из
+`supabase/config.toml` (`32620–32629`). Существующий изолированный compatibility
+stack не должен управлять контейнерами других проектов.
 
-### `npm run build`
+```bash
+npm ci
+npm run db:start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Скопируйте `.env.example` в ignored `.env.local` и заполните:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```dotenv
+VITE_APP_ENV=local
+VITE_SUPABASE_URL=http://127.0.0.1:32621
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+На существующем стеке не запускайте `db:reset`: это удаляет данные. Для чистого
+изолированного тестового стека seed/reset допустим отдельно. Возьмите публичный
+локальный ключ из `npm run db:status`; не используйте service-role/secret key.
 
-### `npm run eject`
+Пустой ключ нужно заменить реальным публичным ключом этого локального стека.
+Исторический `local-test-anon` используется лишь отдельными тестовыми fixtures и
+не подходит для полного Auth/commerce flow. Remote environment требует реальный
+Supabase publishable key.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run dev
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Production build и локальный preview:
+Dev: `http://127.0.0.1:32600`. Preview/Playwright: `http://127.0.0.1:32601`.
+Порты фиксированы, автоматический переход на другой порт отключён.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+npm run preview -- --host 127.0.0.1 --port 32601
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Демо-сценарий
 
-## Learn More
+1. Откройте каталог, примените URL-фильтры и перейдите на PDP.
+2. Выберите colorway и доступный EU-размер, добавьте точный SKU в корзину.
+3. Для гостевого checkout пройдите contact → delivery → demo-payment → review.
+4. Выберите «Успешная демо-оплата». Реальные card credentials приложение не собирает.
+5. Для owner history войдите по magic link. Локальная ссылка доступна в Mailpit на
+   `http://127.0.0.1:32624`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Общего demo account/password нет: Auth passwordless, а пользовательские данные
+изолированы RLS. Сценарии «отклонение» и «таймаут» существуют только для проверки
+recovery и не обращаются к платёжному провайдеру.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Архитектура и владение состоянием
 
-### Code Splitting
+| Состояние                                                    | Владелец                       |
+| ------------------------------------------------------------ | ------------------------------ |
+| Поиск, фильтры, sort, page, PDP colorway                     | React Router URL               |
+| Каталог, inventory, profile, owner cart/wishlist, orders     | TanStack Query                 |
+| Guest cart (inventory ID + quantity) и wishlist (product ID) | Versioned Zustand persistence  |
+| Session/user                                                 | Supabase Auth provider         |
+| Язык RU/EN                                                   | Locale provider + localStorage |
+| Краткоживущий UI                                             | Local React state              |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Компоненты используют domain repositories, а не вызывают Supabase напрямую. Supabase
+runtime загружается после первого UI paint и остаётся единым singleton для Auth и всех
+repositories. Checkout повторно проверяет цену/остаток на сервере; money хранится в
+minor units. Guest receipt token хранится только в `sessionStorage`, на сервере — hash.
+Versioned storage keys Solecraft принимают данные из прежних cart, wishlist, checkout,
+auth-return, receipt и locale keys по copy-first миграции без потери нового состояния.
 
-### Analyzing the Bundle Size
+Подробности: [архитектура](docs/ARCHITECTURE.md),
+[product requirements](docs/TRANSFORMATION_SPEC.md) и [план/evidence](PLAN.md).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Проверки
 
-### Making a Progressive Web App
+```bash
+npm run lint
+npm run format:check
+npm run typecheck
+npm run test:run
+npm run db:test
+npm run build
+npm run bundle:check
+npm run lighthouse:ci
+npm run e2e:smoke
+npm audit
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Deployed smoke запускается только против явно переданного live URL:
 
-### Advanced Configuration
+```powershell
+$env:PLAYWRIGHT_BASE_URL = 'https://example.invalid'
+npm run e2e:deployed
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+CI выполняет quality/security, local Supabase/browser/Lighthouse gates и отдельный
+scheduled Chromium/Firefox/WebKit suite. Workflow не содержит production credentials.
 
-### Deployment
+## Измеренный результат M10
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- initial JavaScript: `114.21 KiB gzip` при budget `200 KiB`;
+- initial CSS: `6.34 KiB gzip` при budget `40 KiB`;
+- controlled mobile Lighthouse (median из 3): Performance `99`, Accessibility `100`;
+- LCP `1.654 s`, CLS `0.012`; field instrumentation собирает CLS/INP/LCP без PII и
+  без внешней отправки по умолчанию.
 
-### `npm run build` fails to minify
+Отчёт и методика: [M10 release evidence](docs/M10_RELEASE_EVIDENCE.md).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Portfolio evidence
+
+- [mobile home visual baseline](e2e/resilience-a11y.m9.spec.ts-snapshots/m9-home-mobile-chromium-win32.png);
+- [desktop catalog visual baseline](e2e/resilience-a11y.m9.spec.ts-snapshots/m9-catalog-desktop-chromium-win32.png);
+- [M9 resilience/accessibility evidence](docs/M9_ACCESSIBILITY_EVIDENCE.md);
+- URL state и error/recovery evidence перечислены в [PLAN.md](PLAN.md);
+- social preview: [SVG source](public/social-card.svg) и [PNG](public/social-card.png).
+
+## Ограничения перед public release
+
+Подготовка от 2026-09-08: [результат и проверки](docs/RELEASE_PREPARATION.md),
+[Vercel и cloud Supabase](docs/DEPLOYMENT.md). `vercel.json` вызывает
+`npm run build:vercel`: Build Output API v3, SPA fallback, cache/security headers
+и CSP с точным origin из реальной переменной окружения. Сборка для Vercel
+отклоняет localhost, отсутствующие настройки и privileged keys.
+
+- waiver M9 истекает перед public release: NVDA + native Firefox и Android
+  TalkBack + Chrome journeys должны быть реально выполнены и сохранены;
+- live host/provider, production Supabase project и redirect allowlist не выбраны;
+  поэтому deployed deep-link/cache/security-header smoke ещё не выполнялся;
+- права на legacy sneaker cutouts не заявлены: перед публичным merchandising deploy
+  их нужно заменить или формально разрешить;
+- headless Playwright WebKit не включает системный Full Keyboard Access для ссылок;
+  этот один Tab-to-link test явно skipped, а Firefox/Chromium keyboard и WebKit
+  navigation/dialog/axe gates проходят.
+
+## Данные и attribution
+
+Schema/migrations/pgTAP предназначены для isolated local/test stack. Не запускайте
+remote `db push`/`db reset` без отдельного разрешения и review. Shared legacy MockAPI
+cart не используется. Источник и ограничения media описаны в
+[content/media-sources.md](content/media-sources.md).
+
+## Лицензии
+
+Код и оригинальные материалы Solecraft распространяются на условиях
+[LICENSE](LICENSE). Уведомления для сторонних runtime-зависимостей и встроенных
+шрифтов находятся в [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); копии font
+copyright notices и SIL OFL также публикуются вместе с сайтом в `public/licenses/`.
