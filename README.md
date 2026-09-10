@@ -133,7 +133,9 @@ $env:PLAYWRIGHT_BASE_URL = 'https://solecraft-two.vercel.app'
 npm run e2e:deployed
 ```
 
-Результат: 2/2 Chromium tests PASS. Текущий [GitHub Actions run](https://github.com/godaylor/solecraft/actions/runs/34426350108) также зелёный.
+Результат первого production artifact: 2/2 Chromium tests PASS. Для текущего alias
+обычный браузер после Vercel Security Checkpoint показывает главную и каталог;
+headless повтор может получить временный 403 anti-bot ответ. Текущий [GitHub Actions run](https://github.com/godaylor/solecraft/actions/runs/34472198302) зелёный.
 
 ## Измеренный результат M10
 

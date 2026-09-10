@@ -13,7 +13,10 @@ Frontend публикуется статически, но приложение 
 - Supabase project ref: `nwekblxelexknvvrfwig`, URL
   `https://nwekblxelexknvvrfwig.supabase.co`.
 - Все 6 локальных migrations применены, затем применён `supabase/seed.sql`.
-- `npm run e2e:deployed` против production URL: 2/2 PASS.
+- `npm run e2e:deployed` против первого production deployment: 2/2 PASS. Текущий
+  alias после GitHub auto-deploy подтверждён в обычном браузере (главная и каталог
+  загружаются); headless повтор из этой среды может получить Vercel Security
+  Checkpoint (403) до выполнения browser challenge.
 
 Vercel хранит только `VITE_APP_ENV`, `VITE_SUPABASE_URL` и
 `VITE_SUPABASE_PUBLISHABLE_KEY` для production. Service-role/secret keys, DB password
@@ -128,8 +131,11 @@ $env:PLAYWRIGHT_BASE_URL = 'https://solecraft-two.vercel.app'
 npm run e2e:deployed
 ```
 
-Фактический production smoke 2026-09-10: direct routes, SPA fallback, asset 404,
-HTML cache policy и hashed-asset cache policy прошли (`2 passed`).
+Фактический production smoke 2026-09-10 на первом production artifact: direct routes,
+SPA fallback, asset 404, HTML cache policy и hashed-asset cache policy прошли
+(`2 passed`). Для повторения с текущего IP сначала откройте alias в обычном браузере,
+если Vercel покажет Security Checkpoint; это anti-bot interstitial, а не ответ
+приложения.
 
 Проверяются direct routes, SPA 404/auth callback, social PNG, HTML cache policy и
 immutable hashed asset. Затем Lighthouse запускается против того же URL через

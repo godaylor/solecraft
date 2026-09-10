@@ -49,7 +49,7 @@ Auth/SMTP и media-rights проверки не подменяются hosted sm
 | Lighthouse mobile, 3 runs | PASS: все Performance 99, Accessibility 100, Best Practices 100, SEO 100; выбранный median run LCP 1.804 s, CLS 0.0133 |
 | Manual NVDA + native Firefox | NOT RUN — не заменяется headless automation |
 | Manual Android TalkBack + Chrome | NOT RUN — не заменяется viewport emulation |
-| Hosted CI / real Vercel smoke | PASS: [GitHub Actions](https://github.com/godaylor/solecraft/actions/runs/34426350108) success; `npm run e2e:deployed` 2/2 PASS на production alias |
+| Hosted CI / real Vercel smoke | PASS на первом production artifact: [GitHub Actions](https://github.com/godaylor/solecraft/actions/runs/34472198302) success, `npm run e2e:deployed` 2/2 PASS; текущий headless повтор получил Vercel Security Checkpoint (403), обычный browser smoke прошёл |
 
 ### Обнаруженные ограничения повторных тестов
 
