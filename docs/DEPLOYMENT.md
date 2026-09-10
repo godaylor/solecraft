@@ -1,9 +1,23 @@
 # Deployment contract
 
-Это M10 runbook для Vercel + облачного Supabase, актуализированный 2026-09-08.
-Он не является разрешением на commit, push, production deploy или remote migration.
+Это M10 runbook для Vercel + облачного Supabase, актуализированный 2026-09-10.
+Production deployment и additive migrations выполнены по явному запросу владельца.
 Frontend публикуется статически, но приложение НЕ автономный static-only магазин:
 каталог, Auth, owner commerce, атомарный checkout и история требуют Supabase.
+
+## Текущее развертывание
+
+- GitHub: [godaylor/solecraft](https://github.com/godaylor/solecraft), ветка `master`.
+- Vercel production: [solecraft-two.vercel.app](https://solecraft-two.vercel.app).
+- Vercel deployment details: [ENL19q6gBZiHdaopuyYLJ2kiRKkq](https://vercel.com/maxeem/solecraft/ENL19q6gBZiHdaopuyYLJ2kiRKkq).
+- Supabase project ref: `nwekblxelexknvvrfwig`, URL
+  `https://nwekblxelexknvvrfwig.supabase.co`.
+- Все 6 локальных migrations применены, затем применён `supabase/seed.sql`.
+- `npm run e2e:deployed` против production URL: 2/2 PASS.
+
+Vercel хранит только `VITE_APP_ENV`, `VITE_SUPABASE_URL` и
+`VITE_SUPABASE_PUBLISHABLE_KEY` для production. Service-role/secret keys, DB password
+и CLI credentials не входят в repository, frontend bundle или этот документ.
 
 ## Что подготовлено локально
 
@@ -21,18 +35,15 @@ Frontend публикуется статически, но приложение 
 
 ## Первый запуск через GitHub и Vercel
 
-1. Сначала закрыть hard prerequisites ниже и просмотреть весь текущий diff: worktree
-   содержит незакоммиченную модернизацию, а не только последний release patch.
-   После отдельного разрешения сделать commit/push в выбранный GitHub repository.
-   Не добавлять `.env.local`, `.codex-temp`, dumps, Docker snapshots и test artifacts.
-2. Выбрать отдельные Preview/test и Production Supabase projects. Получить реальные
-   Project URL и **publishable** key. Не переносить локальные auth users, корзины,
-   заказы или другие пользовательские данные в облако.
-3. После отдельного разрешения подключить CLI к точному project ref, проверить
-   migration history и dry-run. Применить существующие `supabase/migrations` только
-   к выбранному проекту. Catalog seed допустим лишь для явно подтверждённого пустого
-   demo project; `db reset` в облаке запрещён. Повторить RLS/checkout tests в отдельном
-   test project, не на Production.
+1. Просмотреть текущий diff и историю перед новым release commit. Commit/push для
+   канонического GitHub repository уже выполнены; `.env.local`, `.codex-temp`, dumps,
+   Docker snapshots и test artifacts не добавлялись.
+2. Для production выбран Supabase project `nwekblxelexknvvrfwig`. Локальные auth users,
+   корзины и заказы в облако не переносились.
+3. CLI link, migration history, dry-run, additive migrations и catalog seed уже
+   выполнены для этого пустого demo project. `db reset` в облаке запрещён. Для
+   следующего этапа нужен отдельный Preview/test project, чтобы не смешивать его с
+   production demo data.
 4. В Vercel импортировать разрешённый GitHub repository. Root Directory — корень
    repository (`.`), не имя локальной Windows-папки. Framework — Other; Build Command
    `npm run build:vercel`; Install Command `npm ci`; Node.js 22.x (локально проверен
@@ -49,20 +60,15 @@ Frontend публикуется статически, но приложение 
 
 | Настройка | Где получить / задать |
 | --- | --- |
-| Выбранный GitHub repository и право push | GitHub владельца |
-| Vercel account/team, project и настоящий app domain | Vercel dashboard |
-| Preview и Production Supabase project refs / URLs | Supabase dashboard |
-| Публичный `sb_publishable_…` key каждого проекта | Project API settings; не secret key |
-| Auth Site URL и redirect `/auth/callback` | Auth URL Configuration, после выбора app domain |
+| Отдельный Preview/test Supabase project и его publishable key | Supabase dashboard |
+| Auth Site URL и redirect `/auth/callback` для live origin | Auth URL Configuration |
 | SMTP sender/provider и его credentials | Supabase Auth SMTP; не Vite/Vercel frontend env |
-| Разрешение на remote migrations и catalog seed | Отдельное подтверждение владельца |
+| Manual NVDA/TalkBack evidence и права на legacy media | Release owner / content review |
 
-CLI cloud discovery 2026-09-08 заблокирован `LegacyPlatformAuthRequiredError`:
-авторизация Supabase CLI отсутствует. Ни один cloud URL/key/project не выдуман и
-облачное подключение не объявляется выполненным. Default SMTP ограничивает доставку;
-для входа внешних посетителей нужен настроенный SMTP и проверка реального письма.
-CLI access token/DB password, если понадобятся для migrations, хранятся вне frontend
-environment и не выводятся в отчёт.
+Supabase CLI был авторизован через одноразовый device-login. Default SMTP ограничивает
+доставку; для входа внешних посетителей нужен настроенный SMTP и проверка реального
+письма. CLI access token/DB password хранятся вне frontend environment и не выводятся
+в отчёт.
 
 ## Hard prerequisites
 
@@ -70,10 +76,11 @@ environment и не выводятся в отчёт.
 
 1. Реальная revalidation manual AT waiver: NVDA + native Firefox и Android TalkBack +
    Chrome, с сохранённым versioned evidence.
-2. Vercel account/project, настоящий production domain и отдельный production
-   Supabase project с корректными Auth/SMTP settings.
+2. Отдельный Preview/test Supabase project и корректные Auth/SMTP settings для live
+   origin. Production project и Vercel alias уже доступны.
 3. Подтверждённые права на sneaker media либо их замена.
-4. Отдельное разрешение на применение additive migrations к production Supabase.
+4. Для будущих schema changes — отдельный review и разрешение; текущие additive
+   migrations и catalog seed уже применены.
 
 ## Build environment
 
@@ -117,9 +124,12 @@ entry CSS ради cold-load LCP. После выбора provider его мож
 После deploy и до переключения public traffic:
 
 ```powershell
-$env:PLAYWRIGHT_BASE_URL = 'https://<preview-or-production-origin>'
+$env:PLAYWRIGHT_BASE_URL = 'https://solecraft-two.vercel.app'
 npm run e2e:deployed
 ```
+
+Фактический production smoke 2026-09-10: direct routes, SPA fallback, asset 404,
+HTML cache policy и hashed-asset cache policy прошли (`2 passed`).
 
 Проверяются direct routes, SPA 404/auth callback, social PNG, HTML cache policy и
 immutable hashed asset. Затем Lighthouse запускается против того же URL через

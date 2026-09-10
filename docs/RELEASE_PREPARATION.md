@@ -1,8 +1,8 @@
-# Solecraft — подготовка публикации, 2026-09-08
+# Solecraft — подготовка публикации, 2026-09-10
 
-**Статус: доступная локальная подготовка выполнена; PUBLIC RELEASE BLOCKED.**
-M10 не закрыт. Commit, push, PR, deploy, remote migrations и cloud data writes не
-выполнялись. Этот отчёт актуальнее исторических evidence от 2026-09-03.
+**Статус: production deploy выполнен; PUBLIC RELEASE GATE остаётся открытым.**
+M10 cloud/hosted часть выполнена по явному запросу владельца. Manual accessibility,
+Auth/SMTP и media-rights проверки не подменяются hosted smoke.
 
 ## Результат и границы
 
@@ -20,8 +20,11 @@ M10 не закрыт. Commit, push, PR, deploy, remote migrations и cloud data
   Auth, owner cart/wishlist, server-authoritative checkout и order history. Он не был
   заменён статической заглушкой ради deploy.
 - Подготовлены Vercel Build Output API v3, exact-origin CSP, asset/SPA routing,
-  cache/security headers и fail-closed cloud settings validation. Облачное подключение
-  не выполнено: реального проекта/ключей и CLI authorization нет.
+  cache/security headers и fail-closed cloud settings validation. Production Vercel
+  alias — [solecraft-two.vercel.app](https://solecraft-two.vercel.app), Supabase project
+  ref — `nwekblxelexknvvrfwig`.
+- Все 6 additive migrations применены к новому Supabase project, затем применён
+  `supabase/seed.sql`; локальные пользователи/заказы не переносились.
 - Лицензии шрифтов и source attribution не удалялись. Права на legacy sneaker media
   не выданы за подтверждённые; см. `content/media-sources.md`.
 
@@ -46,7 +49,7 @@ M10 не закрыт. Commit, push, PR, deploy, remote migrations и cloud data
 | Lighthouse mobile, 3 runs | PASS: все Performance 99, Accessibility 100, Best Practices 100, SEO 100; выбранный median run LCP 1.804 s, CLS 0.0133 |
 | Manual NVDA + native Firefox | NOT RUN — не заменяется headless automation |
 | Manual Android TalkBack + Chrome | NOT RUN — не заменяется viewport emulation |
-| Hosted CI / real Vercel smoke | NOT RUN — нет commit/push/deploy и выбранного cloud configuration |
+| Hosted CI / real Vercel smoke | PASS: [GitHub Actions](https://github.com/godaylor/solecraft/actions/runs/34426350108) success; `npm run e2e:deployed` 2/2 PASS на production alias |
 
 ### Обнаруженные ограничения повторных тестов
 
@@ -121,13 +124,10 @@ pg_dump внутри этого же volume:
 
 ## Git и изменённые области
 
-Ветка `master`; HEAD и read-only `git ls-remote origin master` совпали:
-`8083f8c71a0d8ded01da80c993d58c9f87802504`.
-Origin остался `https://github.com/godaylor/react-sneakers.git` — remote name не обязан
-совпадать с local folder. Принадлежность и право push не предполагались.
-Worktree содержит большую существовавшую незакоммиченную модернизацию. Она сохранена;
-`git diff --stat` не включает новые untracked source/docs, поэтому не описывает весь
-release. До commit нужен просмотр также untracked files. `git diff --check` прошёл.
+Ветка `master`; HEAD и `origin/master` совпадают на `f566eac` после push в
+канонический [github.com/godaylor/solecraft](https://github.com/godaylor/solecraft).
+Два исходных коммита сохранены неизменными; cloud/deploy evidence добавляется
+отдельным release commit. Worktree не содержит секретных env-файлов в Git.
 
 В этой подготовке затронуты:
 
@@ -143,21 +143,19 @@ release. До commit нужен просмотр также untracked files. `gi
 - только форматирование: дополнительные ранее неотформатированные TSX/model/test
   файлы из точного списка `prettier --list-different`.
 
-## Что нужно для публикации
+## Что нужно для полного public release
 
 Подробный порядок и места настроек: [DEPLOYMENT.md](DEPLOYMENT.md).
 
-1. Выбрать/авторизовать GitHub repository, Vercel account/project/domain и отдельные
-   Preview/test + Production Supabase projects. Нужны настоящие Project URL,
-   publishable keys, Auth Site URL/callback allowlist и SMTP для посетителей.
-2. Отдельно разрешить remote migrations/catalog seed, commit/push и Preview deploy.
-   Локальные пользователи/заказы/корзины не переносятся в облако автоматически.
+1. Создать отдельный Preview/test Supabase project и настроить точные Auth Site URL /
+   callback allowlist для [production alias](https://solecraft-two.vercel.app), а также
+   SMTP для реальных magic links.
+2. Локальные пользователи/заказы/корзины не переносятся в облако автоматически;
+   production demo seed уже применён только к пустому project ref `nwekblxelexknvvrfwig`.
 3. Подтвердить права или заменить legacy sneaker images; затем повторить visual QA.
 4. Выполнить manual NVDA/Firefox и TalkBack/Chrome, clean hosted CI (включая Linux
-   visual baselines), чистый cross-engine rerun и real deployed smoke.
+   visual baselines) и чистый cross-engine rerun. Production deployed smoke уже PASS.
 
-Codex может после предоставления доступа/разрешения применить точные настройки,
-проверить migration dry-run, подготовить commit/push, Preview и hosted smoke.
-Владелец должен лично пройти login/2FA/authorization, выбрать account/project/domain,
-подтвердить доступы, media rights и выполнить/подтвердить ручные AT checks.
-Ни один из этих внешних шагов не отмечен выполненным.
+Владелец должен лично подтвердить media rights и выполнить manual NVDA/Firefox и
+TalkBack/Chrome AT checks. Production deploy, migrations, seed, GitHub push и hosted
+smoke уже зафиксированы; оставшиеся gates перечислены выше.

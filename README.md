@@ -3,15 +3,16 @@
 [![CI](https://github.com/godaylor/solecraft/actions/workflows/ci.yml/badge.svg)](https://github.com/godaylor/solecraft/actions/workflows/ci.yml)
 
 Канонический репозиторий: [github.com/godaylor/solecraft](https://github.com/godaylor/solecraft).
+Production demo: [solecraft-two.vercel.app](https://solecraft-two.vercel.app).
+Cloud backend: Supabase project ref `nwekblxelexknvvrfwig`.
 
 Solecraft — portfolio-grade fit-first магазин городских кроссовок. Каталог помогает
 сравнивать ширину, амортизацию и поддержку, а commerce flow сохраняет точную
 variant/size/SKU identity от PDP до immutable order snapshot.
 
-Сейчас M0–M9 завершены; оставшиеся manual AT проверки M9 покрыты явно принятым
-временным waiver только для progression. Текущие результаты локальной части M10 и
-открытые gates зафиксированы в `docs/RELEASE_PREPARATION.md`. Public release остаётся
-заблокирован до закрытия этих ограничений, revalidation waiver и проверки deploy.
+Сейчас M0–M9 завершены, production deploy M10 доступен. Официальный public-release
+gate остаётся открытым для manual AT, Auth/SMTP настройки и подтверждения media rights;
+это не скрывает уже выполненную cloud и hosted проверку.
 
 ## Что реализовано
 
@@ -125,6 +126,15 @@ npm run e2e:deployed
 CI выполняет quality/security, local Supabase/browser/Lighthouse gates и отдельный
 scheduled Chromium/Firefox/WebKit suite. Workflow не содержит production credentials.
 
+Production deployed smoke (2026-09-10):
+
+```powershell
+$env:PLAYWRIGHT_BASE_URL = 'https://solecraft-two.vercel.app'
+npm run e2e:deployed
+```
+
+Результат: 2/2 Chromium tests PASS. Текущий [GitHub Actions run](https://github.com/godaylor/solecraft/actions/runs/34426350108) также зелёный.
+
 ## Измеренный результат M10
 
 - initial JavaScript: `114.21 KiB gzip` при budget `200 KiB`;
@@ -153,8 +163,8 @@ scheduled Chromium/Firefox/WebKit suite. Workflow не содержит producti
 
 - waiver M9 истекает перед public release: NVDA + native Firefox и Android
   TalkBack + Chrome journeys должны быть реально выполнены и сохранены;
-- live host/provider, production Supabase project и redirect allowlist не выбраны;
-  поэтому deployed deep-link/cache/security-header smoke ещё не выполнялся;
+- live host и production Supabase project выбраны, production smoke выполнен; ещё
+  нужно добавить exact Auth Site URL/redirect allowlist и настроить SMTP для live magic links;
 - права на legacy sneaker cutouts не заявлены: перед публичным merchandising deploy
   их нужно заменить или формально разрешить;
 - headless Playwright WebKit не включает системный Full Keyboard Access для ссылок;
@@ -164,8 +174,9 @@ scheduled Chromium/Firefox/WebKit suite. Workflow не содержит producti
 ## Данные и attribution
 
 Schema/migrations/pgTAP предназначены для isolated local/test stack. Не запускайте
-remote `db push`/`db reset` без отдельного разрешения и review. Shared legacy MockAPI
-cart не используется. Источник и ограничения media описаны в
+remote `db push`/`db reset` повторно без review: migrations и catalog seed уже применены
+к Supabase project `nwekblxelexknvvrfwig` по явному запросу владельца. Shared legacy
+MockAPI cart не используется. Источник и ограничения media описаны в
 [content/media-sources.md](content/media-sources.md).
 
 ## Лицензии
