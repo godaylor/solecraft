@@ -134,9 +134,10 @@ $env:PLAYWRIGHT_BASE_URL = 'https://solecraft-two.vercel.app'
 npm run e2e:deployed
 ```
 
-Результат первого production artifact: 2/2 Chromium tests PASS. Для текущего alias
-обычный браузер после Vercel Security Checkpoint показывает главную и каталог;
-headless повтор может получить временный 403 anti-bot ответ. Текущий [GitHub Actions run](https://github.com/godaylor/solecraft/actions/runs/34472198302) зелёный.
+Новый generated-media artifact опубликован 2026-09-11. Обычный browser smoke подтвердил
+главную → canonical PDP и новую product media; automated metadata/cache test PASS.
+Route-matrix headless повтор остановлен Vercel Security Checkpoint после нескольких
+успешных routes. Текущий [GitHub Actions run](https://github.com/godaylor/solecraft/actions/runs/34546490040) зелёный.
 
 ## Измеренный результат M10
 

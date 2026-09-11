@@ -65,8 +65,8 @@ transactionally; guest receipt token хранится только в sessionSto
 
 Production уже обслуживает SPA routes, catalog/PDP, guest wishlist/cart, demo checkout,
 guest receipt и owner order surfaces поверх cloud Supabase. Deployed smoke и hosted CI
-были зелёными для предыдущего artifact. Новый product-media artifact локально прошёл
-unit/build, canonical home → PDP regression, browser smoke, resilience и visual review;
-ему ещё нужны deploy/deployed smoke. Public release gate остаётся открыт до настройки
-production custom SMTP и фактической manual NVDA/Firefox + TalkBack/Chrome
-проверки.
+зелёные. Generated-media artifact опубликован 2026-09-11: live home → canonical PDP,
+новая media, route rendering и cache/metadata проверены; GitHub Actions run
+`34546490040` успешен. Public release gate остаётся открыт до настройки production
+custom SMTP, фактической manual NVDA/Firefox + TalkBack/Chrome проверки и повторного
+Lighthouse без Windows profile-lock.

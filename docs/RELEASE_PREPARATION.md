@@ -58,6 +58,10 @@ CSS 6.48 KiB), npm audit 0; installed Chrome smoke 15/15 и resilience/a11y 13/1
 применимых PASS. Три новых screenshots просмотрены и сохранены в `docs/screenshots/`.
 Повтор Lighthouse заблокирован системным `EBUSY` временного Chrome-профиля до создания
 отчёта; historical 99/100/LCP/CLS числа выше не переобозначаются как новый замер.
+Commit `cc2d02e` опубликован, GitHub Actions run `34546490040` PASS. Live browser
+подтвердил home → canonical Signal 01 PDP и новую media; automated metadata/cache PASS.
+Полная headless route-matrix повторно получила Vercel Security Checkpoint Code 21 и
+остаётся частично заблокированной хостингом.
 
 ### Обнаруженные ограничения повторных тестов
 

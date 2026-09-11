@@ -17,6 +17,11 @@
 - Текущий Lighthouse rerun дважды заблокирован Windows lock временного Chrome-профиля
   (`EBUSY Account Web Data`) до появления отчёта; процессы/порты других проектов не
   изменялись. Последнее валидное измерение ниже относится к предыдущему artifact.
+- Commit `cc2d02e` опубликован; [GitHub Actions run 34546490040](https://github.com/godaylor/solecraft/actions/runs/34546490040)
+  завершён успешно. На live alias вручную подтверждены canonical home → Signal 01 PDP,
+  новая generated media и доступные размеры. Automated metadata/cache test PASS;
+  повтор всей headless route-matrix получил Vercel Security Checkpoint Code 21 после
+  нескольких успешных routes, поэтому не объявлен полностью зелёным.
 
 > Historical evidence below is dated 2026-09-03. Current ports, rebrand, checks and
 > remaining release gates: [RELEASE_PREPARATION.md](RELEASE_PREPARATION.md), 2026-09-08.

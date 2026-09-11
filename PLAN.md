@@ -90,7 +90,8 @@ M10 local implementation завершена до внешней release-гран
   `/auth/callback` allowlist подтверждены в dashboard 2026-09-11. Custom SMTP для
   внешних magic links ещё не настроен.
 - Legacy sneaker cutouts заменены 2026-09-11 оригинальным fictional ImageGen catalog
-  set; updated hosted artifact и visual/performance revalidation ещё не выполнены.
+  set; commit `cc2d02e`, hosted CI и live visual/canonical-PDP smoke GREEN. Новый
+  Lighthouse rerun заблокирован Windows `EBUSY` временного Chrome-профиля.
 
 До закрытия этих пунктов M10 не помечается GREEN и Release exit gate не пересекается.
 
