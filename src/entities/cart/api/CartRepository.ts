@@ -18,7 +18,13 @@ export type CartInventoryRecord = {
   model: string
   title: string
   brandName: string
-  image?: { src: string; alt: string; width: number; height: number }
+  image?: {
+    src: string
+    srcSet?: string
+    alt: string
+    width: number
+    height: number
+  }
 }
 
 export interface CartRepository {

@@ -7,7 +7,7 @@ describe('fixture catalog adapter', () => {
     expect(fixtureProducts).toHaveLength(4)
     expect(fixtureProducts[0]).toMatchObject({
       id: 'para-city-01',
-      slug: 'sever-signal',
+      slug: 'sever-signal-01',
       price: { amountMinor: 1299000, currency: 'RUB' },
     })
   })

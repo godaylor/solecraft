@@ -40,6 +40,7 @@ export type Product = {
   }
   image: {
     src: string
+    srcSet?: string
     alt: string
     width: number
     height: number
@@ -68,6 +69,7 @@ export type ProductMedia = {
   id: string
   kind: 'catalog' | 'gallery'
   src: string
+  srcSet?: string
   alt: string
   width: number
   height: number

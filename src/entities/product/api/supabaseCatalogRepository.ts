@@ -16,6 +16,7 @@ import type {
   Product,
   Support,
 } from '../model/product'
+import { resolveProductImageAsset } from '../model/productMedia'
 
 type CatalogRow = Database['public']['Views']['catalog_products']['Row']
 
@@ -189,6 +190,12 @@ export function adaptCatalogRow(row: CatalogRow): Product {
       ? undefined
       : requireString(row.fit_reviewed_at, 'fit_reviewed_at')
 
+  const image = resolveProductImageAsset(
+    requireString(row.image_path, 'image_path'),
+    requireInteger(row.image_width, 'image_width'),
+    requireInteger(row.image_height, 'image_height'),
+  )
+
   return {
     id: requireString(row.id, 'id'),
     slug: requireString(row.slug, 'slug'),
@@ -227,10 +234,8 @@ export function adaptCatalogRow(row: CatalogRow): Product {
       },
     },
     image: {
-      src: requireString(row.image_path, 'image_path'),
+      ...image,
       alt: requireString(row.image_alt, 'image_alt'),
-      width: requireInteger(row.image_width, 'image_width'),
-      height: requireInteger(row.image_height, 'image_height'),
     },
     fit: {
       width: requireEnum(row.fit_width, fitWidths, 'fit_width'),

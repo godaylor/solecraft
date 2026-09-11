@@ -6,12 +6,12 @@
 > Inputs: [baseline](./docs/BASELINE_AUDIT.md), [product choice](./docs/PRODUCT_OPTIONS.md), [spec](./docs/TRANSFORMATION_SPEC.md), [architecture](./docs/ARCHITECTURE.md)
 
 ## Rebrand evidence — 2026-09-03
+
 Актуальное продолжение M10 от 2026-09-08: [RELEASE_PREPARATION.md](docs/RELEASE_PREPARATION.md).
 Корень уже переименован в `07-solecraft`; исторические порты и показатели ниже
 сохранены как evidence прошлых запусков. Текущие локальные порты — только 32600–32699.
 Доступная подготовка Vercel/cloud завершена локально; public release не объявляется
 выполненным без реальных облачных настроек, manual AT и media rights.
-
 
 Solecraft replaces the former user-facing product name without changing routes,
 Supabase contracts, catalog identity or existing guest/auth state. Russian remains the
@@ -86,12 +86,11 @@ M10 local implementation завершена до внешней release-гран
 
 - Manual NVDA + native Firefox и Android TalkBack + Chrome **NOT RUN**; M9 waiver
   истекает и требует revalidation перед public release.
-- Provider/domain/production Supabase project и разрешение на remote changes не заданы;
-  live URL direct reload/cache/security headers/auth redirect/deployed privacy smoke
-  **NOT RUN**.
-- Hosted clean-checkout CI run невозможен без commit/push, которые запрещены.
-- Legacy sneaker cutouts не имеют заявленных public merchandising rights и требуют
-  разрешения либо замены перед публичным deploy.
+- Production Vercel/Supabase и hosted CI существуют; exact production Auth Site URL и
+  `/auth/callback` allowlist подтверждены в dashboard 2026-09-11. Custom SMTP для
+  внешних magic links ещё не настроен.
+- Legacy sneaker cutouts заменены 2026-09-11 оригинальным fictional ImageGen catalog
+  set; updated hosted artifact и visual/performance revalidation ещё не выполнены.
 
 До закрытия этих пунктов M10 не помечается GREEN и Release exit gate не пересекается.
 

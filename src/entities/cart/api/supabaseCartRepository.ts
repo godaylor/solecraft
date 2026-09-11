@@ -1,6 +1,7 @@
 import type { Database } from '../../../shared/api/database.types'
 import type { PublicSupabaseClient } from '../../../shared/api/supabaseClient'
 import type { CartInventoryRecord, CartRepository } from './CartRepository'
+import { resolveProductImageAsset } from '../../product/model/productMedia'
 
 type CartRow = Database['public']['Views']['cart_inventory_items']['Row']
 
@@ -28,6 +29,9 @@ function mapCartRow(row: CartRow): CartInventoryRecord {
     row.image_alt !== null &&
     row.image_width !== null &&
     row.image_height !== null
+  const image = hasImage
+    ? resolveProductImageAsset(row.image_path!, row.image_width!, row.image_height!)
+    : undefined
   return {
     inventoryId: requiredString(row.inventory_id, 'inventory_id'),
     sku: requiredString(row.sku, 'sku'),
@@ -54,10 +58,8 @@ function mapCartRow(row: CartRow): CartInventoryRecord {
     ...(hasImage
       ? {
           image: {
-            src: row.image_path!,
+            ...image!,
             alt: row.image_alt!,
-            width: row.image_width!,
-            height: row.image_height!,
           },
         }
       : {}),

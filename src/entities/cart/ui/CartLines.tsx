@@ -66,6 +66,8 @@ export function CartLines({
           {record?.image && !failedImageIds.has(line.inventoryId) ? (
             <img
               src={record.image.src}
+              srcSet={record.image.srcSet}
+              sizes={compact ? '72px' : '112px'}
               alt=""
               width={record.image.width}
               height={record.image.height}

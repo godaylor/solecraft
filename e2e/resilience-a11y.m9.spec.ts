@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 const catalogRequestPattern = /\/rest\/v1\/catalog_products(?:\?|$)/
 const cartRequestPattern = /\/rest\/v1\/cart_inventory_items(?:\?|$)/
+const isChromiumEngine = () => ['chromium', 'chrome'].includes(test.info().project.name)
 
 function guardUnexpectedRuntime(page: Page) {
   const errors: string[] = []
@@ -144,7 +145,7 @@ test('slow catalog response keeps a stable loading state before recovery', async
   page,
 }) => {
   test.skip(
-    test.info().project.name !== 'chromium',
+    !isChromiumEngine(),
     'One deterministic throttled-response run is sufficient.',
   )
   await page.route(catalogRequestPattern, async (route) => {
@@ -162,7 +163,7 @@ test('500, network-unavailable response, and broken media recover without losing
 }) => {
   test.setTimeout(90_000)
   test.skip(
-    test.info().project.name !== 'chromium',
+    !isChromiumEngine(),
     'One deterministic resilience run is sufficient; engines use the critical flow.',
   )
   let failedCatalogRequests = 0
@@ -203,7 +204,7 @@ test('500, network-unavailable response, and broken media recover without losing
     page.getByRole('heading', { name: 'По этим условиям пар нет' }),
   ).toBeVisible()
 
-  await page.route('**/img/sneakers/*', (route) => route.abort('failed'))
+  await page.route('**/media/products/*', (route) => route.abort('failed'))
   await page.goto('/products/sever-signal-01')
   await expect(page.getByText('Изображение временно недоступно').first()).toBeVisible()
   await page
@@ -232,10 +233,7 @@ test('500, network-unavailable response, and broken media recover without losing
 test('checkout validation exposes summary links and inline field relationships', async ({
   page,
 }) => {
-  test.skip(
-    test.info().project.name !== 'chromium',
-    'Semantic assertion is engine-neutral.',
-  )
+  test.skip(!isChromiumEngine(), 'Semantic assertion is engine-neutral.')
   await page.goto('/products/sever-signal-01')
   await page
     .getByRole('group', { name: 'Размер EU' })
@@ -260,7 +258,7 @@ test('forced colors and reduced motion preserve discovery controls and meaning',
   page,
 }) => {
   test.skip(
-    test.info().project.name !== 'chromium',
+    !isChromiumEngine(),
     'Playwright forced-colors emulation is verified in Chromium.',
   )
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
@@ -302,10 +300,7 @@ for (const viewport of [
   test(`critical surfaces have no horizontal overflow at ${viewport.width}x${viewport.height}`, async ({
     page,
   }) => {
-    test.skip(
-      test.info().project.name !== 'chromium',
-      'Viewport matrix is engine-neutral.',
-    )
+    test.skip(!isChromiumEngine(), 'Viewport matrix is engine-neutral.')
     await page.setViewportSize(viewport)
     for (const path of ['/catalog', '/products/sever-signal-01', '/cart']) {
       await page.goto(path)
@@ -332,7 +327,7 @@ for (const viewport of [
 test('200% and 400% layout equivalents retain content and controls', async ({
   page,
 }) => {
-  test.skip(test.info().project.name !== 'chromium', 'Zoom reflow is engine-neutral.')
+  test.skip(!isChromiumEngine(), 'Zoom reflow is engine-neutral.')
   for (const viewport of [
     { width: 720, height: 450 },
     { width: 360, height: 225 },

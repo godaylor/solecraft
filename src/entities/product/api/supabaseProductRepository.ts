@@ -15,6 +15,7 @@ import type {
   Support,
 } from '../model/product'
 import { ProductRepositoryError, type ProductRepository } from './ProductRepository'
+import { resolveProductImageAsset } from '../model/productMedia'
 
 type ProductDetailsRow = Database['public']['Views']['product_details']['Row']
 
@@ -100,13 +101,16 @@ function mapMedia(value: unknown): ProductMedia[] {
     const item = object(entry, `variants.media[${index}]`)
     const kind = string(item.kind, 'media.kind')
     if (kind !== 'catalog' && kind !== 'gallery') malformed('media.kind')
+    const image = resolveProductImageAsset(
+      string(item.src, 'media.src'),
+      integer(item.width, 'media.width'),
+      integer(item.height, 'media.height'),
+    )
     return {
       id: string(item.id, 'media.id'),
       kind,
-      src: string(item.src, 'media.src'),
+      ...image,
       alt: string(item.alt, 'media.alt'),
-      width: integer(item.width, 'media.width'),
-      height: integer(item.height, 'media.height'),
       position: integer(item.position, 'media.position'),
     }
   })

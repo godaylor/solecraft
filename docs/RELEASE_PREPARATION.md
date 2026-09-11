@@ -2,7 +2,7 @@
 
 **Статус: production deploy выполнен; PUBLIC RELEASE GATE остаётся открытым.**
 M10 cloud/hosted часть выполнена по явному запросу владельца. Manual accessibility,
-Auth/SMTP и media-rights проверки не подменяются hosted smoke.
+Custom SMTP и manual accessibility проверки не подменяются hosted smoke.
 
 ## Результат и границы
 
@@ -25,31 +25,39 @@ Auth/SMTP и media-rights проверки не подменяются hosted sm
   ref — `nwekblxelexknvvrfwig`.
 - Все 6 additive migrations применены к новому Supabase project, затем применён
   `supabase/seed.sql`; локальные пользователи/заказы не переносились.
-- Лицензии шрифтов и source attribution не удалялись. Права на legacy sneaker media
-  не выданы за подтверждённые; см. `content/media-sources.md`.
+- Лицензии шрифтов и source attribution не удалялись. На 2026-09-11 legacy raster
+  media удалены из current public tree и заменены оригинальным fictional ImageGen set;
+  см. `content/media-sources.md`.
 
 ## Проверки
 
-| Проверка | Фактический результат |
-| --- | --- |
-| Node/build runtime | Node 22.19.0; официальный archive проверен по SHA256, используется только repo-local runtime |
-| Lint / format | PASS; точечный Prettier исправил только файлы, не проходившие проверку |
-| TypeScript + production build | PASS, Vite 8.2.2, 213 modules; финальный `dist` использует основной локальный backend 32621 |
-| Unit/integration | PASS: 29 files, 81 tests |
-| Deploy config unit tests | PASS: 2 tests, включая запрет localhost/privileged keys и порядок SPA/assets |
-| Hosted build без settings | Ожидаемый отказ до build: `Set VITE_APP_ENV to preview or production for a hosted build`; cloud artifact не объявляется готовым |
-| Dependency audit | `npm audit`: 0 vulnerabilities |
-| Initial gzip budget | JS 118.91 KiB / 200; CSS 6.48 KiB / 40 |
-| PostgreSQL/RLS/checkout pgTAP | PASS: 122 assertions в отдельной свежей test database; atomic 35, auth 24, catalog 34, guest cart 6, order history 15, product 8 |
-| Chromium, свежие fixtures | Полный запуск: 60 PASS, 2 explicit deployed-only SKIP, 1 visual mismatch (5 pixels). После обновления baseline отдельный visual test PASS без `--update-snapshots`. Единый полностью зелёный full run после этого обновления не выполнялся |
-| Firefox + WebKit, critical subset | Совместный запуск 23 PASS / 24 explicit SKIP / 1 WebKit network failure; повтор именно WebKit owner-history test PASS. Полный cross-engine release gate этим не закрыт |
-| RU/EN + responsive journey | Home → EN → catalog → PDP → available size → cart → reload проверен на 360×800, 768×1024, 1440×900 в Chromium/Firefox/WebKit; финальный dev RU/EN smoke на 32600 также PASS, HTTP 200 |
-| Keyboard / axe / recovery | Chromium critical flows, overlays/focus return, 500/retry, validation, double submit/idempotency, guest receipt и owner/other/anonymous denial прошли; проверенные axe сценарии без violations |
-| Visual review | Просмотрены мобильная EN-корзина, home mobile и catalog desktop screenshots; Windows Chromium baselines обновлены для Solecraft |
-| Lighthouse mobile, 3 runs | PASS: все Performance 99, Accessibility 100, Best Practices 100, SEO 100; выбранный median run LCP 1.804 s, CLS 0.0133 |
-| Manual NVDA + native Firefox | NOT RUN — не заменяется headless automation |
-| Manual Android TalkBack + Chrome | NOT RUN — не заменяется viewport emulation |
-| Hosted CI / real Vercel smoke | PASS на первом production artifact: [GitHub Actions](https://github.com/godaylor/solecraft/actions/runs/34472198302) success, `npm run e2e:deployed` 2/2 PASS; текущий headless повтор получил Vercel Security Checkpoint (403), обычный browser smoke прошёл |
+| Проверка                          | Фактический результат                                                                                                                                                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node/build runtime                | Node 22.19.0; официальный archive проверен по SHA256, используется только repo-local runtime                                                                                                                                                                  |
+| Lint / format                     | PASS; точечный Prettier исправил только файлы, не проходившие проверку                                                                                                                                                                                        |
+| TypeScript + production build     | PASS, Vite 8.2.2, 213 modules; финальный `dist` использует основной локальный backend 32621                                                                                                                                                                   |
+| Unit/integration                  | PASS: 29 files, 81 tests                                                                                                                                                                                                                                      |
+| Deploy config unit tests          | PASS: 2 tests, включая запрет localhost/privileged keys и порядок SPA/assets                                                                                                                                                                                  |
+| Hosted build без settings         | Ожидаемый отказ до build: `Set VITE_APP_ENV to preview or production for a hosted build`; cloud artifact не объявляется готовым                                                                                                                               |
+| Dependency audit                  | `npm audit`: 0 vulnerabilities                                                                                                                                                                                                                                |
+| Initial gzip budget               | JS 118.91 KiB / 200; CSS 6.48 KiB / 40                                                                                                                                                                                                                        |
+| PostgreSQL/RLS/checkout pgTAP     | PASS: 122 assertions в отдельной свежей test database; atomic 35, auth 24, catalog 34, guest cart 6, order history 15, product 8                                                                                                                              |
+| Chromium, свежие fixtures         | Полный запуск: 60 PASS, 2 explicit deployed-only SKIP, 1 visual mismatch (5 pixels). После обновления baseline отдельный visual test PASS без `--update-snapshots`. Единый полностью зелёный full run после этого обновления не выполнялся                    |
+| Firefox + WebKit, critical subset | Совместный запуск 23 PASS / 24 explicit SKIP / 1 WebKit network failure; повтор именно WebKit owner-history test PASS. Полный cross-engine release gate этим не закрыт                                                                                        |
+| RU/EN + responsive journey        | Home → EN → catalog → PDP → available size → cart → reload проверен на 360×800, 768×1024, 1440×900 в Chromium/Firefox/WebKit; финальный dev RU/EN smoke на 32600 также PASS, HTTP 200                                                                         |
+| Keyboard / axe / recovery         | Chromium critical flows, overlays/focus return, 500/retry, validation, double submit/idempotency, guest receipt и owner/other/anonymous denial прошли; проверенные axe сценарии без violations                                                                |
+| Visual review                     | Просмотрены мобильная EN-корзина, home mobile и catalog desktop screenshots; Windows Chromium baselines обновлены для Solecraft                                                                                                                               |
+| Lighthouse mobile, 3 runs         | PASS: все Performance 99, Accessibility 100, Best Practices 100, SEO 100; выбранный median run LCP 1.804 s, CLS 0.0133                                                                                                                                        |
+| Manual NVDA + native Firefox      | NOT RUN — не заменяется headless automation                                                                                                                                                                                                                   |
+| Manual Android TalkBack + Chrome  | NOT RUN — не заменяется viewport emulation                                                                                                                                                                                                                    |
+| Hosted CI / real Vercel smoke     | PASS на первом production artifact: [GitHub Actions](https://github.com/godaylor/solecraft/actions/runs/34472198302) success, `npm run e2e:deployed` 2/2 PASS; текущий headless повтор получил Vercel Security Checkpoint (403), обычный browser smoke прошёл |
+
+Дополнение 2026-09-11 для generated-media artifact: format/typecheck/lint PASS,
+30 test files / 84 tests PASS, production build и gzip budgets PASS (JS 119.15 KiB,
+CSS 6.48 KiB), npm audit 0; installed Chrome smoke 15/15 и resilience/a11y 13/13
+применимых PASS. Три новых screenshots просмотрены и сохранены в `docs/screenshots/`.
+Повтор Lighthouse заблокирован системным `EBUSY` временного Chrome-профиля до создания
+отчёта; historical 99/100/LCP/CLS числа выше не переобозначаются как новый замер.
 
 ### Обнаруженные ограничения повторных тестов
 
@@ -81,14 +89,14 @@ Raw local artifacts: ignored `test-results/m10/` (Lighthouse JSON/bundle report)
 Перед новым bind проверялась занятость. Автоматический fallback dev/preview порта
 отключён. Ни один чужой container/network/volume не остановлен или удалён.
 
-| Назначение | Host port / итоговое состояние |
-| --- | --- |
-| Dev сайт | 32600, запущен на 127.0.0.1 |
-| Preview / Playwright | 32601, после проверок остановлен |
-| Lighthouse debugging | 32602, временный, после проверки освобождён |
-| Основной Supabase API / PostgreSQL / Mailpit | 32621 / 32622 / 32624, running, bind 127.0.0.1 |
-| Остальные настроенные Supabase host ports | 32620 shadow, 32623 Studio, 32625 SMTP comment, 32626 POP3 comment, 32627 analytics, 32628 inspector, 32629 pooler; не все сервисы включены/запущены |
-| Отдельный test API / Mailpit | 32641 / 32644; четыре созданных test сервиса остановлены после проверок |
+| Назначение                                   | Host port / итоговое состояние                                                                                                                       |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dev сайт                                     | 32600, запущен на 127.0.0.1                                                                                                                          |
+| Preview / Playwright                         | 32601, после проверок остановлен                                                                                                                     |
+| Lighthouse debugging                         | 32602, временный, после проверки освобождён                                                                                                          |
+| Основной Supabase API / PostgreSQL / Mailpit | 32621 / 32622 / 32624, running, bind 127.0.0.1                                                                                                       |
+| Остальные настроенные Supabase host ports    | 32620 shadow, 32623 Studio, 32625 SMTP comment, 32626 POP3 comment, 32627 analytics, 32628 inspector, 32629 pooler; не все сервисы включены/запущены |
+| Отдельный test API / Mailpit                 | 32641 / 32644; четыре созданных test сервиса остановлены после проверок                                                                              |
 
 Внутренние container ports (5432, 8000, 9999 и т. п.) не являются host binds.
 Старые 4173/5173/55320–55329 при финальной проверке не слушались.
@@ -147,15 +155,15 @@ pg_dump внутри этого же volume:
 
 Подробный порядок и места настроек: [DEPLOYMENT.md](DEPLOYMENT.md).
 
-1. Создать отдельный Preview/test Supabase project и настроить точные Auth Site URL /
-   callback allowlist для [production alias](https://solecraft-two.vercel.app), а также
-   SMTP для реальных magic links.
+1. Создать отдельный Preview/test Supabase project и настроить SMTP для реальных magic
+   links. Production Auth Site URL `https://solecraft-two.vercel.app` и exact callback
+   allowlist подтверждены в Supabase dashboard 2026-09-11.
 2. Локальные пользователи/заказы/корзины не переносятся в облако автоматически;
    production demo seed уже применён только к пустому project ref `nwekblxelexknvvrfwig`.
-3. Подтвердить права или заменить legacy sneaker images; затем повторить visual QA.
+3. Выполнить visual QA нового generated product set после hosted deploy.
 4. Выполнить manual NVDA/Firefox и TalkBack/Chrome, clean hosted CI (включая Linux
    visual baselines) и чистый cross-engine rerun. Production deployed smoke уже PASS.
 
-Владелец должен лично подтвердить media rights и выполнить manual NVDA/Firefox и
-TalkBack/Chrome AT checks. Production deploy, migrations, seed, GitHub push и hosted
+Владелец должен лично выполнить manual NVDA/Firefox и TalkBack/Chrome AT checks.
+Production deploy, migrations, seed, GitHub push и hosted
 smoke уже зафиксированы; оставшиеся gates перечислены выше.

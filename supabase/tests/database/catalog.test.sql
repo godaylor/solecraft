@@ -293,7 +293,7 @@ select is(
   (
     select count(*)
     from public.catalog_products
-    where image_width <> 266 or image_height <> 224
+    where image_width <> 1200 or image_height <> 900
   ),
   0::bigint,
   'catalog media dimensions are explicit'

@@ -59,14 +59,14 @@ Vercel хранит только `VITE_APP_ENV`, `VITE_SUPABASE_URL` и
    magic link, guest/auth cart и demo checkout на Preview/test database. Выполнить
    ручные AT checks. Только после явного разрешения публиковать Production.
 
-### Настройки, которых сейчас нет
+### Настройки и release-owner gates
 
-| Настройка | Где получить / задать |
-| --- | --- |
-| Отдельный Preview/test Supabase project и его publishable key | Supabase dashboard |
-| Auth Site URL и redirect `/auth/callback` для live origin | Auth URL Configuration |
-| SMTP sender/provider и его credentials | Supabase Auth SMTP; не Vite/Vercel frontend env |
-| Manual NVDA/TalkBack evidence и права на legacy media | Release owner / content review |
+| Настройка                                                     | Где получить / задать                           |
+| ------------------------------------------------------------- | ----------------------------------------------- |
+| Отдельный Preview/test Supabase project и его publishable key | Supabase dashboard                              |
+| Auth Site URL и redirect `/auth/callback` для live origin     | CONFIGURED и визуально подтверждено 2026-09-11  |
+| SMTP sender/provider и его credentials                        | Supabase Auth SMTP; не Vite/Vercel frontend env |
+| Manual NVDA/TalkBack evidence                                 | Release owner / native AT devices               |
 
 Supabase CLI был авторизован через одноразовый device-login. Default SMTP ограничивает
 доставку; для входа внешних посетителей нужен настроенный SMTP и проверка реального
@@ -79,9 +79,9 @@ Supabase CLI был авторизован через одноразовый dev
 
 1. Реальная revalidation manual AT waiver: NVDA + native Firefox и Android TalkBack +
    Chrome, с сохранённым versioned evidence.
-2. Отдельный Preview/test Supabase project и корректные Auth/SMTP settings для live
-   origin. Production project и Vercel alias уже доступны.
-3. Подтверждённые права на sneaker media либо их замена.
+2. Отдельный Preview/test Supabase project и custom SMTP для live origin. Production
+   project, Vercel alias и exact production Auth URL/callback уже доступны.
+3. Visual QA текущего generated product set на deployed artifact.
 4. Для будущих schema changes — отдельный review и разрешение; текущие additive
    migrations и catalog seed уже применены.
 

@@ -1,5 +1,6 @@
 import type { CatalogRepository } from './CatalogRepository'
 import type { Cushioning, FitWidth, Product, Support } from '../model/product'
+import { resolveProductImageAsset } from '../model/productMedia'
 
 type ProductFixture = {
   id: string
@@ -23,7 +24,7 @@ type ProductFixture = {
 const productFixtures = [
   {
     id: 'para-city-01',
-    slug: 'sever-signal',
+    slug: 'sever-signal-01',
     brand: 'СЕВЕР',
     model: 'Signal 01',
     title: 'Городские кроссовки Signal 01',
@@ -62,7 +63,7 @@ const productFixtures = [
   },
   {
     id: 'para-city-04',
-    slug: 'krug-rain',
+    slug: 'krug-rain-2',
     brand: 'КРУГ',
     model: 'Rain 2',
     title: 'Кроссовки Rain 2 для мокрого города',
@@ -108,10 +109,8 @@ export function adaptProductFixture(fixture: ProductFixture): Product {
       color: { slug: 'default', name: 'Основной', code: '#171C26' },
     },
     image: {
-      src: `/img/sneakers/${fixture.imageNumber}.png`,
+      ...resolveProductImageAsset(`/img/sneakers/${fixture.imageNumber}.png`, 266, 224),
       alt: `${fixture.brand} ${fixture.model}, вид сбоку`,
-      width: 266,
-      height: 224,
     },
     fit: {
       ...fixture.fit,

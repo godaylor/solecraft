@@ -62,6 +62,24 @@ test('home and shell have no detectable axe violations', async ({ page }) => {
   expect(results.violations).toEqual([])
 })
 
+test('home recommendations use canonical product routes', async ({ page }) => {
+  await page.goto('/')
+
+  const recommendations = page.getByRole('link', { name: 'К подходящей паре' })
+  await expect(recommendations.nth(0)).toHaveAttribute(
+    'href',
+    '/products/sever-signal-01',
+  )
+  await expect(recommendations.nth(1)).toHaveAttribute('href', '/products/forma-metro')
+  await expect(recommendations.nth(2)).toHaveAttribute('href', '/products/krug-rain-2')
+  await expect(
+    page.getByRole('link', { name: /Signal 01 — открыть карточку товара/ }),
+  ).toHaveAttribute('href', '/products/sever-signal-01')
+
+  await recommendations.nth(2).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Rain 2' })).toBeVisible()
+})
+
 test('skip link and header navigation work with keyboard only', async ({
   page,
 }, testInfo) => {
@@ -144,7 +162,7 @@ test('reduced motion and forced colors preserve the home meaning', async ({ page
 })
 
 test('ProductCard keeps a named fallback when media fails', async ({ page }) => {
-  await page.route('**/img/sneakers/1.png', (route) => route.abort())
+  await page.route('**/media/products/solecraft-01*', (route) => route.abort())
   await page.goto('/catalog')
 
   await expect(page.getByText('Изображение временно недоступно').first()).toBeVisible()

@@ -54,6 +54,8 @@ function ProductGallery({ variant }: { variant: ProductVariant }) {
         ) : (
           <img
             src={active.src}
+            srcSet={active.srcSet}
+            sizes="(min-width: 900px) 58vw, 100vw"
             alt={active.alt}
             width={active.width}
             height={active.height}
@@ -87,6 +89,8 @@ function ProductGallery({ variant }: { variant: ProductVariant }) {
               ) : (
                 <img
                   src={media.src}
+                  srcSet={media.srcSet}
+                  sizes="96px"
                   alt=""
                   width={media.width}
                   height={media.height}

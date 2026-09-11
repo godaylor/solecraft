@@ -240,15 +240,15 @@ select
   )::uuid,
   variants.id,
   'catalog',
-  '/img/sneakers/' ||
-    (
+  '/media/products/solecraft-' ||
+    lpad((
       mod((products.merch_rank / 10)::integer - 1 + case when variants.is_default then 0 else 1 end, 10)
       + 1
-    )::text ||
-    '.png',
+    )::text, 2, '0') ||
+    '.webp',
   products.title || ', цвет «' || variants.color_name || '», вид сбоку',
-  266,
-  224,
+  1200,
+  900,
   0
 from public.product_variants as variants
 join public.products as products on products.id = variants.product_id

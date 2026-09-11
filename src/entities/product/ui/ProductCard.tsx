@@ -49,6 +49,8 @@ export function ProductCard({
         ) : (
           <img
             src={product.image.src}
+            srcSet={product.image.srcSet}
+            sizes="(min-width: 1200px) 280px, (min-width: 900px) 30vw, (min-width: 600px) 45vw, 92vw"
             alt={product.image.alt}
             width={product.image.width}
             height={product.image.height}

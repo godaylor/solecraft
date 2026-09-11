@@ -11,8 +11,8 @@ Solecraft — portfolio-grade fit-first магазин городских кро
 variant/size/SKU identity от PDP до immutable order snapshot.
 
 Сейчас M0–M9 завершены, production deploy M10 доступен. Официальный public-release
-gate остаётся открытым для manual AT, Auth/SMTP настройки и подтверждения media rights;
-это не скрывает уже выполненную cloud и hosted проверку.
+gate остаётся открытым для manual AT и custom SMTP. Неподтверждённые legacy
+media заменены собственным сгенерированным fictional catalog set.
 
 ## Что реализовано
 
@@ -25,6 +25,7 @@ gate остаётся открытым для manual AT, Auth/SMTP настро�
 - loading/empty/error/retry states, keyboard flows, axe и responsive browser coverage.
 - русский интерфейс по умолчанию и сохраняемый RU/EN режим для UI, описаний,
   категорий и metadata; названия обувных брендов и моделей остаются исходными.
+- десять оригинальных 1200×900 fictional product cutouts с responsive WebP `srcset`.
 
 ## Локальный запуск
 
@@ -139,9 +140,10 @@ headless повтор может получить временный 403 anti-bo
 
 ## Измеренный результат M10
 
-- initial JavaScript: `114.21 KiB gzip` при budget `200 KiB`;
-- initial CSS: `6.34 KiB gzip` при budget `40 KiB`;
-- controlled mobile Lighthouse (median из 3): Performance `99`, Accessibility `100`;
+- текущий media build: initial JavaScript `119.15 KiB gzip` при budget `200 KiB`;
+- текущий media build: initial CSS `6.48 KiB gzip` при budget `40 KiB`;
+- предыдущий deployed artifact, controlled mobile Lighthouse (median из 3):
+  Performance `99`, Accessibility `100`;
 - LCP `1.654 s`, CLS `0.012`; field instrumentation собирает CLS/INP/LCP без PII и
   без внешней отправки по умолчанию.
 
@@ -149,8 +151,9 @@ headless повтор может получить временный 403 anti-bo
 
 ## Portfolio evidence
 
-- [mobile home visual baseline](e2e/resilience-a11y.m9.spec.ts-snapshots/m9-home-mobile-chromium-win32.png);
-- [desktop catalog visual baseline](e2e/resilience-a11y.m9.spec.ts-snapshots/m9-catalog-desktop-chromium-win32.png);
+- [mobile home](docs/screenshots/solecraft-home-mobile.png);
+- [desktop catalog](docs/screenshots/solecraft-catalog-desktop.png);
+- [desktop product detail](docs/screenshots/solecraft-pdp-desktop.png);
 - [M9 resilience/accessibility evidence](docs/M9_ACCESSIBILITY_EVIDENCE.md);
 - URL state и error/recovery evidence перечислены в [PLAN.md](PLAN.md);
 - social preview: [SVG source](public/social-card.svg) и [PNG](public/social-card.png).
@@ -165,10 +168,11 @@ headless повтор может получить временный 403 anti-bo
 
 - waiver M9 истекает перед public release: NVDA + native Firefox и Android
   TalkBack + Chrome journeys должны быть реально выполнены и сохранены;
-- live host и production Supabase project выбраны, production smoke выполнен; ещё
-  нужно добавить exact Auth Site URL/redirect allowlist и настроить SMTP для live magic links;
-- права на legacy sneaker cutouts не заявлены: перед публичным merchandising deploy
-  их нужно заменить или формально разрешить;
+- live host и production Supabase project выбраны, production smoke выполнен; Auth
+  Site URL и exact `/auth/callback` allowlist подтверждены в dashboard 2026-09-11;
+  для внешних посетителей ещё нужен custom SMTP;
+- legacy sneaker cutouts удалены из current public tree и заменены документированными
+  ImageGen assets без retailer photography, логотипов и named product references;
 - headless Playwright WebKit не включает системный Full Keyboard Access для ссылок;
   этот один Tab-to-link test явно skipped, а Firefox/Chromium keyboard и WebKit
   navigation/dialog/axe gates проходят.

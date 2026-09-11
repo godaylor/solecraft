@@ -8,10 +8,11 @@ import { ButtonLink } from '../../shared/ui/Button/ButtonLink'
 import { TextLink } from '../../shared/ui/TextLink/TextLink'
 import { useLocale } from '../../shared/i18n/locale'
 import styles from './HomeRoute.module.scss'
+import { resolveProductImageAsset } from '../../entities/product/model/productMedia'
 
 const featuredProduct = {
   id: 'para-city-01',
-  slug: 'sever-signal',
+  slug: 'sever-signal-01',
   brand: { id: 'fixture-brand-sever', slug: 'sever', name: 'СЕВЕР' },
   category: { id: 'fixture-category-city', slug: 'city', name: 'Город' },
   model: 'Signal 01',
@@ -24,10 +25,8 @@ const featuredProduct = {
     color: { slug: 'default', name: 'Основной', code: '#171C26' },
   },
   image: {
-    src: '/img/sneakers/1.png',
+    ...resolveProductImageAsset('/img/sneakers/1.png', 266, 224),
     alt: 'СЕВЕР Signal 01, вид сбоку',
-    width: 266,
-    height: 224,
   },
   fit: {
     width: 'standard',
@@ -57,7 +56,7 @@ export function HomeRoute() {
         'Soft cushioning for a long city route.',
       ),
       meta: text('весь день / мягко', 'all day / soft'),
-      href: catalogProductAnchor('sever-signal'),
+      href: catalogProductAnchor('sever-signal-01'),
       tone: 'blue',
     },
     {
@@ -77,7 +76,7 @@ export function HomeRoute() {
         'Support and a confident stride on wet routes.',
       ),
       meta: text('дождь / опора', 'rain / support'),
-      href: catalogProductAnchor('krug-rain'),
+      href: catalogProductAnchor('krug-rain-2'),
       tone: 'orange',
     },
   ] as const

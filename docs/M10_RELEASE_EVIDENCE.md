@@ -1,5 +1,23 @@
 # M10 performance, CI and release evidence
 
+## 2026-09-11 generated-media addendum
+
+- Legacy shoe raster assets удалены из current public tree и заменены десятью
+  оригинальными fictional ImageGen-моделями в responsive WebP 600/1200 px.
+- Исправлены canonical home recommendations: Signal 01 и Rain 2 больше не ведут на
+  несуществующие product slugs; добавлен browser regression test.
+- PASS: format, strict TypeScript, ESLint, 30 test files / 84 tests, Vite production
+  build, bundle budget (JS 119.15 KiB; CSS 6.48 KiB) и npm audit (0 vulnerabilities).
+- Installed Chrome production preview: smoke 15/15; resilience/a11y 13/13 применимых,
+  один reviewed visual-snapshot test оставлен только для bundled Chromium.
+- Новые reviewed screenshots сохранены в `docs/screenshots/`.
+- Supabase dashboard подтверждает production Site URL
+  `https://solecraft-two.vercel.app` и единственный exact redirect
+  `https://solecraft-two.vercel.app/auth/callback`; custom SMTP не настроен.
+- Текущий Lighthouse rerun дважды заблокирован Windows lock временного Chrome-профиля
+  (`EBUSY Account Web Data`) до появления отчёта; процессы/порты других проектов не
+  изменялись. Последнее валидное измерение ниже относится к предыдущему artifact.
+
 > Historical evidence below is dated 2026-09-03. Current ports, rebrand, checks and
 > remaining release gates: [RELEASE_PREPARATION.md](RELEASE_PREPARATION.md), 2026-09-08.
 
@@ -74,8 +92,10 @@ Latest three Lighthouse runs:
    security-header, auth redirect and deployed privacy smoke are NOT RUN.
 3. **Clean hosted CI:** workflow is defined locally, but a hosted run from a clean
    checkout cannot exist without commit/push, which were explicitly forbidden.
-4. **Media rights:** legacy sneaker cutouts remain local/test portfolio placeholders;
-   public merchandising rights are not claimed.
+4. **Media rights (closed locally 2026-09-11):** legacy raster assets were removed from
+   the current public tree and replaced by a documented original fictional ImageGen set.
+   Hosted visual/performance revalidation remains pending until the updated artifact is
+   deployed.
 
 M10 cannot be marked GREEN and the Release exit gate cannot be crossed until these
 items are resolved. No waiver beyond the explicitly accepted M9 manual-AT scope has
