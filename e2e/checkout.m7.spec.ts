@@ -24,7 +24,9 @@ async function addExactSku(page: Page) {
     .first()
     .click()
   await page.getByRole('button', { name: 'Добавить точный размер' }).click()
-  await expect(page.getByRole('status')).toContainText('добавлен в корзину')
+  await expect(
+    page.getByRole('status').filter({ hasText: 'добавлен в корзину' }),
+  ).toBeVisible()
 }
 
 async function reachPayment(page: Page) {
