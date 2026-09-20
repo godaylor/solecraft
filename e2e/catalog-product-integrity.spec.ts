@@ -21,6 +21,18 @@ function overlaps(
   )
 }
 
+async function elementGeometry(locator: Locator) {
+  return locator.evaluate((element) => {
+    const htmlElement = element as HTMLElement
+    return {
+      left: htmlElement.offsetLeft,
+      top: htmlElement.offsetTop,
+      width: htmlElement.offsetWidth,
+      height: htmlElement.offsetHeight,
+    }
+  })
+}
+
 async function collectProductLinks(page: Page) {
   const links = new Set<string>()
 
@@ -120,23 +132,9 @@ for (const viewport of [
     await page.goto('/catalog')
     const firstCard = page.locator('main article[id]').first()
     const firstButton = firstCard.getByRole('button', { name: /избранн/i })
-    const cardBefore = await firstCard.boundingBox()
-    const before = await firstButton.boundingBox()
+    const before = await elementGeometry(firstButton)
     await firstButton.click()
     await expect(firstButton).toHaveAttribute('aria-pressed', 'true')
-    const cardAfter = await firstCard.boundingBox()
-    const after = await firstButton.boundingBox()
-    expect(cardBefore).not.toBeNull()
-    expect(before).not.toBeNull()
-    expect(cardAfter).not.toBeNull()
-    expect(after).not.toBeNull()
-    expect(
-      Math.abs(after!.x - cardAfter!.x - (before!.x - cardBefore!.x)),
-    ).toBeLessThan(0.5)
-    expect(
-      Math.abs(after!.y - cardAfter!.y - (before!.y - cardBefore!.y)),
-    ).toBeLessThan(0.5)
-    expect(after!.width).toBe(before!.width)
-    expect(after!.height).toBe(before!.height)
+    expect(await elementGeometry(firstButton)).toEqual(before)
   })
 }
