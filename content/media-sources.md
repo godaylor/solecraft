@@ -22,6 +22,22 @@ The responsive derivatives were produced lossily from the generated PNGs with Sh
 this is a format/size transformation only. The database seed stores the 1200×900 source
 dimensions and the frontend exposes a 600w/1200w `srcset`.
 
+## Colorway consistency update — 2026-09-18
+
+Six alternate colorway assets were generated with OpenAI ImageGen by editing the
+corresponding fictional source shoe. Each edit explicitly preserves the same silhouette,
+camera angle, panel geometry, sole, crop, lighting and transparent background while only
+changing material colors. They are published as responsive 1200×900 and 600×450 WebP:
+
+- `solecraft-01-black`, `solecraft-02-black`;
+- `solecraft-03-blue`, `solecraft-04-white`;
+- `solecraft-05-burgundy`, `solecraft-06-navy`.
+
+Models 7–10 keep their single multi-tone source frame for both described palette facets;
+the database never substitutes a different shoe silhouette. The repeatable conversion
+script uses the installed Chrome canvas encoder and does not alter the generated pixels
+other than contain-sizing and WebP compression.
+
 ## Replaced legacy media
 
 The original training storefront's low-resolution raster assets had unverified public

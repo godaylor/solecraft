@@ -158,21 +158,33 @@ values (
   9999
 );
 
-with colors (color_no, slug, name, code) as (
+with colorways (
+  asset_no,
+  default_slug,
+  default_name,
+  default_code,
+  alternate_slug,
+  alternate_name,
+  alternate_code
+) as (
   values
-    (1, 'black', 'Чёрный', '#171C26'),
-    (2, 'graphite', 'Графит', '#515966'),
-    (3, 'white', 'Белый', '#F3F6FA'),
-    (4, 'navy', 'Тёмно-синий', '#22345F'),
-    (5, 'blue', 'Синий', '#315CF5'),
-    (6, 'orange', 'Оранжевый', '#FF7A45'),
-    (7, 'mint', 'Мятный', '#8CCBB4'),
-    (8, 'burgundy', 'Бордовый', '#763B4B')
+    (1, 'white', 'Белый', '#F3F6FA', 'black', 'Чёрный', '#171C26'),
+    (2, 'white', 'Белый', '#F3F6FA', 'black', 'Чёрный', '#171C26'),
+    (3, 'graphite', 'Графит', '#515966', 'blue', 'Синий', '#315CF5'),
+    (4, 'graphite', 'Графит', '#515966', 'white', 'Белый', '#F3F6FA'),
+    (5, 'graphite', 'Графит', '#515966', 'burgundy', 'Бордовый', '#763B4B'),
+    (6, 'mint', 'Мятный', '#8CCBB4', 'navy', 'Тёмно-синий', '#22345F'),
+    (7, 'navy', 'Тёмно-синий', '#22345F', 'black', 'Чёрный', '#171C26'),
+    (8, 'white', 'Белый', '#F3F6FA', 'mint', 'Мятный', '#8CCBB4'),
+    (9, 'blue', 'Синий', '#315CF5', 'white', 'Белый', '#F3F6FA'),
+    (10, 'burgundy', 'Бордовый', '#763B4B', 'black', 'Чёрный', '#171C26')
 ),
 published_products as (
-  select *
-  from public.products
-  where status = 'published'
+  select
+    products.*,
+    mod((products.merch_rank / 10)::integer - 1, 10) + 1 as asset_no
+  from public.products as products
+  where products.status = 'published'
 )
 insert into public.product_variants (
   id,
@@ -190,10 +202,10 @@ insert into public.product_variants (
 select
   ('20000000-0000-4000-8000-' || lpad(products.merch_rank::text, 12, '0'))::uuid,
   products.id,
-  products.slug || '-' || colors.slug,
-  colors.slug,
-  colors.name,
-  colors.code,
+  products.slug || '-' || colorways.default_slug,
+  colorways.default_slug,
+  colorways.default_name,
+  colorways.default_code,
   999000 + products.merch_rank * 2300,
   case
     when mod(products.merch_rank, 40) = 0
@@ -204,24 +216,24 @@ select
   true,
   timestamptz '2026-07-01 09:00:00+00' + (products.merch_rank * interval '1 minute')
 from published_products as products
-join colors
-  on colors.color_no = mod((products.merch_rank / 10)::integer - 1, 8) + 1
+join colorways on colorways.asset_no = products.asset_no
 union all
 select
   ('21000000-0000-4000-8000-' || lpad(products.merch_rank::text, 12, '0'))::uuid,
   products.id,
-  products.slug || '-' || colors.slug,
-  colors.slug,
-  colors.name,
-  colors.code,
+  products.slug || '-' || colorways.alternate_slug,
+  colorways.alternate_slug,
+  colorways.alternate_name,
+  colorways.alternate_code,
   1079000 + products.merch_rank * 2300,
   null,
   'RUB',
   false,
   timestamptz '2026-07-01 09:05:00+00' + (products.merch_rank * interval '1 minute')
 from published_products as products
-join colors
-  on colors.color_no = mod((products.merch_rank / 10)::integer + 2, 8) + 1;
+join colorways
+  on colorways.asset_no = products.asset_no
+  and colorways.alternate_slug is not null;
 
 insert into public.product_media (
   id,
@@ -241,10 +253,13 @@ select
   variants.id,
   'catalog',
   '/media/products/solecraft-' ||
-    lpad((
-      mod((products.merch_rank / 10)::integer - 1 + case when variants.is_default then 0 else 1 end, 10)
-      + 1
-    )::text, 2, '0') ||
+    lpad((mod((products.merch_rank / 10)::integer - 1, 10) + 1)::text, 2, '0') ||
+    case
+      when variants.is_default
+        or mod((products.merch_rank / 10)::integer - 1, 10) + 1 > 6
+        then ''
+      else '-' || variants.color_slug
+    end ||
     '.webp',
   products.title || ', цвет «' || variants.color_name || '», вид сбоку',
   1200,

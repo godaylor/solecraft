@@ -6,7 +6,8 @@ export type ProductImageAsset = {
 }
 
 const legacyProductAsset = /^\/img\/sneakers\/(10|[1-9])\.png$/
-const currentProductAsset = /^\/media\/products\/solecraft-(0[1-9]|10)\.webp$/
+const currentProductAsset =
+  /^\/media\/products\/solecraft-(0[1-9]|10)(?:-[a-z][a-z-]*)?\.webp$/
 
 export function resolveProductImageAsset(
   src: string,
@@ -17,8 +18,10 @@ export function resolveProductImageAsset(
   const currentMatch = currentProductAsset.exec(src)
   if (!legacyMatch && !currentMatch) return { src, width, height }
 
-  const assetNumber = (legacyMatch?.[1] ?? currentMatch?.[1])!.padStart(2, '0')
-  const base = `/media/products/solecraft-${assetNumber}`
+  const assetNumber = legacyMatch?.[1]?.padStart(2, '0')
+  const base = legacyMatch
+    ? `/media/products/solecraft-${assetNumber}`
+    : src.slice(0, -'.webp'.length)
 
   return {
     src: `${base}.webp`,

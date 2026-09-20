@@ -26,6 +26,15 @@ describe('resolveProductImageAsset', () => {
       width: 1200,
       height: 900,
     })
+    expect(
+      resolveProductImageAsset('/media/products/solecraft-05-burgundy.webp', 1200, 900),
+    ).toEqual({
+      src: '/media/products/solecraft-05-burgundy.webp',
+      srcSet:
+        '/media/products/solecraft-05-burgundy-600.webp 600w, /media/products/solecraft-05-burgundy.webp 1200w',
+      width: 1200,
+      height: 900,
+    })
   })
 
   it('preserves non-legacy media without inventing responsive variants', () => {

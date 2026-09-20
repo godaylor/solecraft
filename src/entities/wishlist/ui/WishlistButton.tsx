@@ -25,7 +25,16 @@ export function WishlistButton({
       disabled={wishlistPending}
       onClick={() => toggleWishlist(productId)}
     >
-      <span aria-hidden="true">{active ? '♥' : '♡'}</span>
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path
+          d="M12 20.4 4.3 13A5.1 5.1 0 0 1 11.5 5.8L12 6.3l.5-.5A5.1 5.1 0 0 1 19.7 13Z"
+          fill={active ? 'currentColor' : 'none'}
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </svg>
     </button>
   )
 }
