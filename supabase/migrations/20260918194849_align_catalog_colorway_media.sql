@@ -3,8 +3,8 @@
 
 update public.product_variants as variants
 set
-  slug = 'media-fix-' || right(replace(variants.id::text, '-', ''), 12),
-  color_slug = 'media-fix-' || right(replace(variants.id::text, '-', ''), 12)
+  slug = 'media-fix-' || replace(variants.id::text, '-', ''),
+  color_slug = 'media-fix-' || replace(variants.id::text, '-', '')
 from public.products as products
 where products.id = variants.product_id
   and products.status = 'published';
