@@ -33,10 +33,33 @@ changing material colors. They are published as responsive 1200×900 and 600×45
 - `solecraft-03-blue`, `solecraft-04-white`;
 - `solecraft-05-burgundy`, `solecraft-06-navy`.
 
-Models 7–10 keep their single multi-tone source frame for both described palette facets;
-the database never substitutes a different shoe silhouette. The repeatable conversion
+At that revision, models 7–10 kept a shared source frame across two colors; this
+was an incomplete color preview and is superseded by the update below. The repeatable conversion
 script uses the installed Chrome canvas encoder and does not alter the generated pixels
 other than contain-sizing and WebP compression.
+
+## Colorway completion — 2026-09-23
+
+Added `solecraft-07-black`, `solecraft-08-mint`, `solecraft-09-white`, and
+`solecraft-10-black`, each in 1200×900 and 600×450 WebP, under
+`public/media/products/`. Built-in ImageGen edited the corresponding original
+fictional model. No external photography or new paid service was introduced.
+
+Prompt set: precise-object-edit; recolor only (07 navy upper → black, 08 white
+upper → mint, 09 blue upper → white, 10 burgundy mesh → black); preserve silhouette,
+panels, seams, sole, camera and framing. A second background-only pass replaces
+the generated checkerboard with solid Cold Paper `#F3F6FA`. Final images are opaque;
+they must not be described as alpha-transparent. Final responsive files were
+visually inspected. Source PNGs remain in the local ImageGen output directory.
+
+`resolveProductImageAsset` selects these reviewed derivatives using the exact
+variant color, shared by catalog/PDP/cart adapters. This is a presentation mapping
+for existing media paths; it does not alter inventory IDs, SKU, prices, stock,
+product ownership, database media records, or historical order snapshots.
+
+The demo still has 32 named products built from 10 reusable fictional silhouettes.
+This update fixes color preview identity, not a claim of 32 independently sourced
+physical shoe designs. See the current UX audit for remaining editorial limitations.
 
 ## Replaced legacy media
 

@@ -27,7 +27,7 @@ export function CartRoute({ cartRepository }: { cartRepository: CartRepository }
     <section className={styles.page} aria-labelledby="cart-title">
       <header className={styles.heading}>
         <div>
-          <p>{text('точные SKU / актуальная сверка', 'exact SKU / live check')}</p>
+          <p>{text('ваши пары и размеры', 'your sneakers and sizes')}</p>
           <h1 id="cart-title">{text('Корзина', 'Cart')}</h1>
         </div>
         <Link to={paths.catalog}>{text('Продолжить выбор', 'Keep browsing')}</Link>

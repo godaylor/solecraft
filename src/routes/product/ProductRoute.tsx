@@ -350,7 +350,7 @@ function ProductPage({
       <section className={styles.fitPanel} aria-labelledby="fit-title">
         <div>
           <p className={styles.kicker}>
-            {text('fit-first / источник указан', 'fit-first / source shown')}
+            {text('Посадка / источник указан', 'Fit / source shown')}
           </p>
           <h2 id="fit-title">{text('Линия посадки', 'Fit line')}</h2>
           <p>{fitNotes[product.fit.note]}</p>

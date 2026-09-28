@@ -82,7 +82,7 @@ export function createAppRoutes({
       ErrorBoundary: RouteErrorBoundary,
       HydrateFallback: RouteHydrateFallback,
       children: [
-        { index: true, Component: HomeRoute },
+        { index: true, element: <HomeRoute catalogRepository={catalogRepository} /> },
         {
           path: 'catalog',
           lazy: async () => {

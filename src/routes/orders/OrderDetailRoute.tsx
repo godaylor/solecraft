@@ -71,8 +71,8 @@ export function OrderDetailRoute({ repository }: { repository: OrderRepository }
         <h1>{text('Не удалось загрузить заказ', 'Could not load order')}</h1>
         <p>
           {text(
-            'Повторите запрос; история и snapshots не изменены.',
-            'Retry the request; history and snapshots were not changed.',
+            'Повторите запрос. Состав вашего заказа сохранён.',
+            'Retry the request. Your order details have been preserved.',
           )}
         </p>
         <Button type="button" onClick={() => void query.refetch()}>

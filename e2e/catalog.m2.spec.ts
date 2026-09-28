@@ -70,7 +70,9 @@ test('slow catalog request shows a stable skeleton and is not duplicated', async
   expect(loadedBox?.height ?? 0).toBeGreaterThan(0)
 })
 
-test('catalog grid exposes one through four responsive columns', async ({ page }) => {
+test('catalog grid exposes one through three readable responsive columns', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 360, height: 800 })
   await page.goto('/catalog')
   await expect(page.getByRole('article')).toHaveCount(12)
@@ -88,7 +90,7 @@ test('catalog grid exposes one through four responsive columns', async ({ page }
   await page.setViewportSize({ width: 1000, height: 900 })
   await expect.poll(columnCount).toBe(3)
   await page.setViewportSize({ width: 1440, height: 900 })
-  await expect.poll(columnCount).toBe(4)
+  await expect.poll(columnCount).toBe(3)
 })
 
 test('catalog result semantics have no detectable axe violations', async ({ page }) => {

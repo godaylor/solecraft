@@ -6,6 +6,13 @@
 .curated,
 .fitMethod,
 .featured,
+.featuredState {
+  min-height: 36rem;
+  padding: var(--space-5);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
 .trust {
   width: min(100%, var(--layout-max));
   margin-inline: auto;

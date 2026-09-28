@@ -105,7 +105,7 @@ export function OrderHistoryRoute({ repository }: { repository: OrderRepository 
     <section className={styles.page} aria-labelledby="orders-title">
       <header className={styles.heading}>
         <div>
-          <p>owner-only / immutable snapshots</p>
+          <p>{text('Ваши покупки', 'Your purchases')}</p>
           <h1 id="orders-title">{text('Мои заказы', 'My orders')}</h1>
         </div>
         <Link to={paths.account}>{text('Аккаунт', 'Account')}</Link>
@@ -115,8 +115,8 @@ export function OrderHistoryRoute({ repository }: { repository: OrderRepository 
           <h2>{text('Заказов пока нет', 'No orders yet')}</h2>
           <p>
             {text(
-              'Выберите точный SKU и завершите демо-оформление.',
-              'Choose an exact SKU and complete the demo checkout.',
+              'Выберите пару и размер, затем оформите демо-заказ.',
+              'Choose your sneakers and size, then place a demo order.',
             )}
           </p>
           <Link to={paths.catalog}>{text('Перейти в каталог', 'Open catalog')}</Link>

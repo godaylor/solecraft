@@ -28,6 +28,7 @@ import { CatalogPagination } from './CatalogPagination'
 import {
   emptyCatalogState,
   hasCatalogDiscoveryState,
+  hasInvalidPriceRange,
   normalizeCatalogState,
   parseCatalogParams,
   serializeCatalogParams,
@@ -103,12 +104,14 @@ export function CatalogRoute({ catalogRepository }: CatalogRouteProps) {
     [setSearchParams],
   )
 
-  const catalogQuery = useQuery(
-    catalogPageQueryOptions(catalogRepository, {
+  const invalidRange = hasInvalidPriceRange(catalogState)
+  const catalogQuery = useQuery({
+    ...catalogPageQueryOptions(catalogRepository, {
       ...catalogState,
       pageSize,
     }),
-  )
+    enabled: !invalidRange,
+  })
   const cachedCatalogPage = queryClient
     .getQueriesData<CatalogPage>({ queryKey: catalogKeys.all })
     .reduce<CatalogPage | undefined>(
@@ -140,7 +143,7 @@ export function CatalogRoute({ catalogRepository }: CatalogRouteProps) {
 
         <div className={styles.results}>
           <div className={styles.catalogNote} role="note">
-            <span>{text('Живые данные', 'Live data')}</span>
+            <span>{text('Выберите свою пару', 'Find your pair')}</span>
             <p>
               {text(
                 'Сравните модели по цене, доступным EU-размерам и Линии посадки.',
@@ -163,7 +166,16 @@ export function CatalogRoute({ catalogRepository }: CatalogRouteProps) {
               : ''}
           </p>
 
-          {!catalogPage ? (
+          {invalidRange ? (
+            <InlineError
+              title={text('Проверьте диапазон цены', 'Check the price range')}
+            >
+              {text(
+                'Цена «от» выше цены «до». Измените одну из границ или уберите её. Значения сохранены без перестановки.',
+                'The minimum price exceeds the maximum. Change or remove one bound. Your values have not been swapped.',
+              )}
+            </InlineError>
+          ) : !catalogPage ? (
             catalogQuery.isError ? (
               <div className={styles.statePanel}>
                 <InlineError
@@ -239,7 +251,7 @@ export function CatalogRoute({ catalogRepository }: CatalogRouteProps) {
                   <EmptyState
                     title={text('Каталог пока пуст', 'The catalog is empty')}
                     description={text(
-                      'Published товары не найдены. Попробуйте повторить обновление позже.',
+                      'Товары пока не добавлены. Попробуйте обновить каталог позже.',
                       'No published products were found. Try refreshing later.',
                     )}
                     action={

@@ -246,6 +246,12 @@ export function CheckoutRoute({
 
       {step === 'contact' ? (
         <form className={styles.form} onSubmit={saveContact} noValidate>
+          <p>
+            {text(
+              'Демо-заказ без регистрации, оплаты и отправки товара. Используйте вымышленные контактные данные, например guest@example.test.',
+              'Demo checkout needs no account, takes no payment, and ships no goods. Use fictional contact details, such as guest@example.test.',
+            )}
+          </p>
           <label htmlFor="checkout-email">
             Email
             <input
@@ -439,8 +445,8 @@ export function CheckoutRoute({
             </p>
             <p>
               {text(
-                'Сервер повторно проверит точные SKU, цены и остатки.',
-                'The server will recheck exact SKUs, prices, and stock.',
+                'Перед подтверждением проверим выбранные размеры, цены и наличие.',
+                'We will check your selected sizes, prices, and availability before confirming.',
               )}
             </p>
             <Link to={paths.cart}>{text('Изменить корзину', 'Edit cart')}</Link>

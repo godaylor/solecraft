@@ -30,7 +30,12 @@ function mapCartRow(row: CartRow): CartInventoryRecord {
     row.image_width !== null &&
     row.image_height !== null
   const image = hasImage
-    ? resolveProductImageAsset(row.image_path!, row.image_width!, row.image_height!)
+    ? resolveProductImageAsset(
+        row.image_path!,
+        row.image_width!,
+        row.image_height!,
+        row.color_slug ?? undefined,
+      )
     : undefined
   return {
     inventoryId: requiredString(row.inventory_id, 'inventory_id'),

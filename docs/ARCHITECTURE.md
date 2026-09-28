@@ -7,6 +7,12 @@
 
 ## 1. Architecture decision summary
 
+M10 clarification (2026-09-23): the existing `productMedia` presentation resolver
+also accepts the exact variant color slug to select four reviewed derivatives for
+legacy shared frames (families 07–10). Catalog, PDP and cart use the same mapping;
+unknown/custom paths remain untouched. No remote entity, inventory identity, SKU,
+price or order snapshot is rewritten. This mapping is covered by regression tests.
+
 | Decision | Choice | Why | Explicitly not chosen |
 |---|---|---|---|
 | App shape | Client-rendered SPA, route-oriented | Максимум frontend depth и скорость; deploy на static host | SSR/Next.js в v1 |
@@ -501,3 +507,13 @@ binds только 32600–32699; фактическая port map и сохра�
 - Не откладывать error/a11y/responsive на «final polish».
 - Не включать real payment, admin, realtime, PWA или SSR до отдельного scope decision.
 - Не обновлять major packages «заодно» вне foundation/dependency milestone.
+
+### V3 presentation correction (2026-09-28)
+
+Price bounds retain independent URL identities; a reversed range is an explicit
+validation state, never silently reordered. Known fictional demo products use
+neutral RU/EN presentation descriptions that disclose shared image designs and
+unverified fit properties. This correction lives in the existing localization
+layer; it does not mutate catalog IDs, inventory, server contracts or immutable
+order snapshots. Prebuilt production output includes a public commit-only
+`build-info.json` (plus build time) for Git/deployment reconciliation.

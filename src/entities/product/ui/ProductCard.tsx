@@ -33,8 +33,11 @@ export function ProductCard({
 
   return (
     <article className={styles.card} id={product.slug}>
-      <div className={styles.media}>
+      <div className={styles.toolbar}>
+        <p className={styles.brand}>{product.brand.name}</p>
         <WishlistButton productId={product.id} label={product.model} />
+      </div>
+      <div className={styles.media}>
         {imageFailed ? (
           <div
             className={styles.imageFallback}
@@ -50,7 +53,7 @@ export function ProductCard({
           <img
             src={product.image.src}
             srcSet={product.image.srcSet}
-            sizes="(min-width: 1200px) 280px, (min-width: 900px) 30vw, (min-width: 600px) 45vw, 92vw"
+            sizes="(min-width: 1200px) 30vw, (min-width: 900px) 30vw, (min-width: 600px) 45vw, 92vw"
             alt={product.image.alt}
             width={product.image.width}
             height={product.image.height}
@@ -60,18 +63,17 @@ export function ProductCard({
             onError={() => setImageFailed(true)}
           />
         )}
+      </div>
+
+      <div className={styles.summary}>
         <div
           className={styles.tags}
           aria-label={text('Сценарии использования', 'Use cases')}
         >
-          {product.useCases.slice(0, 2).map((useCase) => (
+          {product.useCases.slice(0, 1).map((useCase) => (
             <Badge key={useCase.slug}>{useCase.label}</Badge>
           ))}
         </div>
-      </div>
-
-      <div className={styles.summary}>
-        <p className={styles.brand}>{product.brand.name}</p>
         <Heading className={styles.title}>
           <Link
             to={href}
@@ -92,6 +94,9 @@ export function ProductCard({
               )}`
             : text('Нет в наличии', 'Out of stock')}
         </p>
+        <span className={styles.action} aria-hidden="true">
+          {text('Выбрать размер', 'Choose size')} <span>↗</span>
+        </span>
       </div>
 
       <div className={styles.fit}>

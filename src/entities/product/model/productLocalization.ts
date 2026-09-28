@@ -99,11 +99,26 @@ function localizeBase<T extends Product | ProductDetails>(
     sourceNote:
       product.fit.provenance === 'editorial_demo'
         ? locale === 'ru'
-          ? 'Детерминированный демо-каталог Solecraft'
-          : 'Solecraft deterministic demo catalog'
+          ? 'Условные показатели для знакомства с подбором; свойства обуви не подтверждены'
+          : 'Illustrative fit values for exploring the store; shoe properties are not verified'
         : product.fit.sourceNote,
   }
-  if (locale === 'ru') return { ...product, fit }
+  const demoDescription = descriptions[product.slug]
+    ? locale === 'ru'
+      ? 'Модель демонстрационного каталога. Несколько моделей используют общий дизайн обуви; на фото показан выбранный цвет. Посадка и сценарии использования условные, а не подтверждённые свойства изделия.'
+      : 'A demo catalog model. Several models share a shoe design; the image shows the selected color. Fit values and use cases are illustrative, not verified product properties.'
+    : undefined
+  if (locale === 'ru')
+    return {
+      ...product,
+      fit,
+      ...(demoDescription
+        ? {
+            title: `${product.brand.name} ${product.model}`,
+            description: demoDescription,
+          }
+        : {}),
+    }
   return {
     ...product,
     category: {
@@ -112,7 +127,7 @@ function localizeBase<T extends Product | ProductDetails>(
     },
     title: `${product.brand.name} ${product.model} sneakers`,
     description:
-      descriptions[product.slug] ??
+      demoDescription ??
       `${product.brand.name} ${product.model} for everyday city movement.`,
     fit,
     useCases: product.useCases.map((useCase) => ({
@@ -124,7 +139,6 @@ function localizeBase<T extends Product | ProductDetails>(
 
 export function localizeProduct(product: Product, locale: Locale): Product {
   const localized = localizeBase(product, locale)
-  if (locale === 'ru') return localized
   return {
     ...localized,
     defaultVariant: {
@@ -140,7 +154,10 @@ export function localizeProduct(product: Product, locale: Locale): Product {
     },
     image: {
       ...localized.image,
-      alt: `${localized.brand.name} ${localized.model}, side view`,
+      alt:
+        locale === 'ru'
+          ? `${localized.brand.name} ${localized.model}, цвет «${localized.defaultVariant.color.name}», вид сбоку`
+          : `${localized.brand.name} ${localized.model}, ${localizeColorName(localized.defaultVariant.color.slug, localized.defaultVariant.color.name, locale)}, side view`,
     },
   }
 }
@@ -153,10 +170,17 @@ export function localizeProductDetails(
   if (locale === 'ru') {
     return {
       ...localized,
+      variants: localized.variants.map((variant) => ({
+        ...variant,
+        media: variant.media.map((media) => ({
+          ...media,
+          alt: `${localized.brand.name} ${localized.model}, цвет «${variant.color.name}», вид сбоку`,
+        })),
+      })),
       sizeGuide: localized.sizeGuide.map((entry) => ({
         ...entry,
         ...(entry.provenance === 'editorial_demo'
-          ? { sourceNote: 'Детерминированная демо-таблица Solecraft' }
+          ? { sourceNote: 'Пример размерной таблицы, не данные производителя' }
           : entry.sourceNote
             ? { sourceNote: entry.sourceNote }
             : {}),
@@ -179,7 +203,7 @@ export function localizeProductDetails(
     sizeGuide: localized.sizeGuide.map((entry) => ({
       ...entry,
       ...(entry.provenance === 'editorial_demo'
-        ? { sourceNote: 'Solecraft deterministic demo size guide' }
+        ? { sourceNote: 'Example size guide, not manufacturer data' }
         : entry.sourceNote
           ? { sourceNote: entry.sourceNote }
           : {}),

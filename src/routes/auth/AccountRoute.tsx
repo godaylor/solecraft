@@ -40,8 +40,8 @@ export function AccountRoute() {
         <h1>{text('Войдите в аккаунт', 'Sign in to your account')}</h1>
         <p>
           {text(
-            'История и owner-only списки доступны после magic link.',
-            'Order history and owner-only lists are available after magic-link sign-in.',
+            'Вход по ссылке из письма нужен для истории заказов и сохранения списка на разных устройствах. Избранное, корзина и демо-заказ доступны без регистрации.',
+            'Sign in with an email link for order history and saved lists across devices. Wishlist, cart, and demo checkout work without an account.',
           )}
         </p>
         <Link to={`${paths.signIn}?returnTo=${encodeURIComponent(paths.account)}`}>
@@ -52,7 +52,7 @@ export function AccountRoute() {
   }
   return (
     <section className={styles.account} aria-labelledby="account-title">
-      <p>owner-only / RLS</p>
+      <p>{text('Ваш личный кабинет', 'Your personal account')}</p>
       <h1 id="account-title">{text('Аккаунт', 'Account')}</h1>
       <p>{auth.user?.email}</p>
       <p role="status">

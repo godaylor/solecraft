@@ -13,7 +13,7 @@ describe('localizeProduct', () => {
     expect(product.title).toBe(`${original.brand.name} ${original.model} sneakers`)
     expect(product.category.name).toBe('City')
     expect(product.description).toBe(
-      'A calm city sneaker for long routes and an everyday pace.',
+      'A demo catalog model. Several models share a shoe design; the image shows the selected color. Fit values and use cases are illustrative, not verified product properties.',
     )
     expect(product.useCases.map(({ label }) => label)).toEqual(['city walk', 'all day'])
     expect(product.defaultVariant.color.name).toBe('Main')
@@ -27,6 +27,8 @@ describe('localizeProduct', () => {
     expect(product.slug).toBe(original.slug)
     expect(product.brand.name).toBe(original.brand.name)
     expect(product.model).toBe(original.model)
-    expect(product.fit.sourceNote).toBe('Детерминированный демо-каталог Solecraft')
+    expect(product.fit.sourceNote).toBe(
+      'Условные показатели для знакомства с подбором; свойства обуви не подтверждены',
+    )
   })
 })

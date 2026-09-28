@@ -194,6 +194,7 @@ export function adaptCatalogRow(row: CatalogRow): Product {
     requireString(row.image_path, 'image_path'),
     requireInteger(row.image_width, 'image_width'),
     requireInteger(row.image_height, 'image_height'),
+    requireString(row.default_color_slug, 'default_color_slug'),
   )
 
   return {

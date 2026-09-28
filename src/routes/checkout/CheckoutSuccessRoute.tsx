@@ -117,12 +117,12 @@ export function CheckoutSuccessRoute({
       <p>
         {auth.status === 'authenticated'
           ? text(
-              'Заказ сохранён в owner-only истории аккаунта.',
-              'The order is saved in your owner-only account history.',
+              'Заказ сохранён в вашей истории заказов.',
+              'The order is saved in your order history.',
             )
           : text(
-              'Гостевое подтверждение доступно только в этой browser session.',
-              'Guest confirmation is available only in this browser session.',
+              'Сохраните номер заказа. Подтверждение доступно в этом браузере ограниченное время и не добавляется в историю аккаунта.',
+              'Save your order number. This confirmation is available in this browser for a limited time and is not added to an account history.',
             )}
       </p>
       {auth.status === 'authenticated' ? (

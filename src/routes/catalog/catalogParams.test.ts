@@ -10,6 +10,16 @@ import {
 import { catalogPageHref } from './readCatalogPage'
 
 describe('catalog URL codec', () => {
+  it.each([
+    'priceMax=1000000',
+    'priceMin=1000000',
+    'priceMin=1000000&priceMax=1000000',
+    'priceMin=1800000&priceMax=1000000',
+  ])('preserves the meaning and order of bounds: %s', (query) => {
+    expect(
+      serializeCatalogParams(parseCatalogParams(new URLSearchParams(query))).toString(),
+    ).toBe(query)
+  })
   it('omits defaults and removes unknown or duplicate values canonically', () => {
     const parsed = parseCatalogParams(
       new URLSearchParams(
@@ -22,7 +32,7 @@ describe('catalog URL codec', () => {
 
     expect(serializeCatalogParams(parsed).toString()).toBe(
       'q=Metro+office&brand=forma&brand=sever&use=office&width=wide' +
-        '&color=black&priceMin=1000000&priceMax=1800000',
+        '&color=black&priceMin=1800000&priceMax=1000000',
     )
   })
 

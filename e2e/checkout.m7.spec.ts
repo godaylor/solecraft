@@ -167,9 +167,7 @@ test('signed-in checkout writes owner cart and reads success through owner RLS',
 
   await expect(page).toHaveURL(/\/checkout\/success\/PARA-/)
   await expect(page.getByRole('heading', { level: 1, name: 'Готово' })).toBeVisible()
-  await expect(
-    page.getByText('Заказ сохранён в owner-only истории аккаунта.'),
-  ).toBeVisible()
+  await expect(page.getByText('Заказ сохранён в вашей истории заказов.')).toBeVisible()
   expect(
     await page.evaluate(() =>
       Object.keys(sessionStorage).some((key) =>

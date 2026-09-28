@@ -96,7 +96,7 @@ function enumValue<T extends string>(
   return value as T
 }
 
-function mapMedia(value: unknown): ProductMedia[] {
+function mapMedia(value: unknown, colorSlug: string): ProductMedia[] {
   return array(value, 'variants.media').map((entry, index) => {
     const item = object(entry, `variants.media[${index}]`)
     const kind = string(item.kind, 'media.kind')
@@ -105,6 +105,7 @@ function mapMedia(value: unknown): ProductMedia[] {
       string(item.src, 'media.src'),
       integer(item.width, 'media.width'),
       integer(item.height, 'media.height'),
+      colorSlug,
     )
     return {
       id: string(item.id, 'media.id'),
@@ -153,7 +154,7 @@ function mapVariants(value: unknown): ProductVariant[] {
         ? {}
         : { compareAtPrice: { amountMinor: compareAtMinor, currency } }),
       isDefault: item.isDefault === true,
-      media: mapMedia(item.media),
+      media: mapMedia(item.media, string(item.colorSlug, 'variant.colorSlug')),
       inventory: mapInventory(item.inventory),
     } satisfies ProductVariant
   })

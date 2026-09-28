@@ -359,6 +359,10 @@ test('stable home and catalog states match reviewed visual baselines', async ({
   )
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
+  await expect(page.locator('#sever-signal-01')).toBeVisible()
+  await page.locator('#sever-signal-01').scrollIntoViewIfNeeded()
+  await expect(page.locator('#sever-signal-01 img')).toHaveJSProperty('complete', true)
+  await page.evaluate(() => window.scrollTo(0, 0))
   await page.evaluate(() => document.fonts.ready)
   await expect(page).toHaveScreenshot('m9-home-mobile.png', {
     fullPage: true,

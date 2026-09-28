@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { cp, mkdir, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { deploymentEnvironment, vercelOutputConfig } from './deploy-config.mjs'
@@ -27,6 +27,16 @@ await mkdir(new URL('static/', output), { recursive: true })
 await cp(new URL('../dist/', import.meta.url), new URL('static/', output), {
   recursive: true,
 })
+await writeFile(
+  new URL('static/build-info.json', output),
+  JSON.stringify({
+    commit: execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: root,
+      encoding: 'utf8',
+    }).trim(),
+    builtAt: new Date().toISOString(),
+  }) + '\n',
+)
 await writeFile(
   new URL('config.json', output),
   JSON.stringify(vercelOutputConfig(origin), null, 2) + '\n',

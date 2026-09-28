@@ -1,53 +1,51 @@
+import { useQuery } from '@tanstack/react-query'
 import { catalogProductAnchor, paths } from '../../app/router/paths'
+import type { CatalogRepository } from '../../entities/product/api/CatalogRepository'
+import { catalogPageQueryOptions } from '../../entities/product/api/catalogQuery'
 import type { Product } from '../../entities/product/model/product'
 import { localizeProduct } from '../../entities/product/model/productLocalization'
 import { FitLine } from '../../entities/product/ui/FitLine'
 import { ProductCard } from '../../entities/product/ui/ProductCard'
 import { Badge } from '../../shared/ui/Badge/Badge'
 import { ButtonLink } from '../../shared/ui/Button/ButtonLink'
+import { Button } from '../../shared/ui/Button/Button'
 import { TextLink } from '../../shared/ui/TextLink/TextLink'
 import { useLocale } from '../../shared/i18n/locale'
 import styles from './HomeRoute.module.scss'
-import { resolveProductImageAsset } from '../../entities/product/model/productMedia'
 
-const featuredProduct = {
-  id: 'para-city-01',
-  slug: 'sever-signal-01',
-  brand: { id: 'fixture-brand-sever', slug: 'sever', name: 'СЕВЕР' },
-  category: { id: 'fixture-category-city', slug: 'city', name: 'Город' },
-  model: 'Signal 01',
-  title: 'Городские кроссовки Signal 01',
-  description: 'Городские кроссовки Signal 01',
-  price: { amountMinor: 1299000, currency: 'RUB' },
-  defaultVariant: {
-    id: 'fixture-variant-para-city-01',
-    slug: 'sever-signal-default',
-    color: { slug: 'default', name: 'Основной', code: '#171C26' },
-  },
-  image: {
-    ...resolveProductImageAsset('/img/sneakers/1.png', 266, 224),
-    alt: 'СЕВЕР Signal 01, вид сбоку',
-  },
-  fit: {
-    width: 'standard',
-    cushioning: 'soft',
-    support: 'balanced',
-    note: 'unknown',
-    provenance: 'editorial_demo',
-    sourceNote: 'M1 deterministic fixture',
-    reviewedAt: '2026-08-28',
-  },
-  useCases: [
-    { slug: 'city-walk', label: '12 000 шагов' },
-    { slug: 'all-day', label: 'весь день' },
-  ],
-  availableSizes: ['40', '42', '44'],
-  availability: { inStock: true, totalStock: 8 },
-} as const satisfies Product
+const exampleFit = {
+  width: 'standard',
+  cushioning: 'soft',
+  support: 'balanced',
+  note: 'unknown',
+  provenance: 'editorial_demo',
+  sourceNote: 'M1 deterministic fixture',
+  reviewedAt: '2026-08-28',
+} as const satisfies Product['fit']
 
-export function HomeRoute() {
+export function HomeRoute({
+  catalogRepository,
+}: {
+  catalogRepository: CatalogRepository
+}) {
   const { locale, text } = useLocale()
-  const localizedFeaturedProduct = localizeProduct(featuredProduct, locale)
+  const featuredQuery = useQuery(
+    catalogPageQueryOptions(catalogRepository, {
+      q: 'Signal 01',
+      brands: [],
+      uses: [],
+      colors: [],
+      sort: 'recommended',
+      page: 1,
+      pageSize: 12,
+    }),
+  )
+  const featuredProduct = featuredQuery.data?.products.find(
+    (product) => product.slug === 'sever-signal-01',
+  )
+  const localizedFeaturedProduct = featuredProduct
+    ? localizeProduct(featuredProduct, locale)
+    : undefined
   const curatedEntries = [
     {
       title: text('12 000 шагов', '12,000 steps'),
@@ -127,7 +125,7 @@ export function HomeRoute() {
               'Walk softly. Keep a confident rhythm.',
             )}
           </h2>
-          <FitLine fit={localizedFeaturedProduct.fit} />
+          <FitLine fit={exampleFit} />
           <div className={styles.panelTags}>
             <Badge tone="mint">{text('весь день', 'all day')}</Badge>
             <Badge tone="mint">{text('город', 'city')}</Badge>
@@ -246,10 +244,28 @@ export function HomeRoute() {
             {text('Смотреть весь каталог', 'View the full catalog')}
           </ButtonLink>
         </div>
-        <ProductCard
-          product={localizedFeaturedProduct}
-          href={catalogProductAnchor(localizedFeaturedProduct.slug)}
-        />
+        {localizedFeaturedProduct ? (
+          <ProductCard
+            product={localizedFeaturedProduct}
+            href={catalogProductAnchor(localizedFeaturedProduct.slug)}
+          />
+        ) : (
+          <div className={styles.featuredState} role="status">
+            <p>
+              {featuredQuery.isPending
+                ? text('Загружаем пару…', 'Loading this pair…')
+                : text(
+                    'Сейчас эта пара недоступна. Другие модели — в каталоге.',
+                    'This pair is unavailable right now. Explore other models in the catalog.',
+                  )}
+            </p>
+            {featuredQuery.isError && (
+              <Button variant="secondary" onClick={() => void featuredQuery.refetch()}>
+                {text('Повторить', 'Try again')}
+              </Button>
+            )}
+          </div>
+        )}
       </section>
 
       <section

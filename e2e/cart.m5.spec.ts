@@ -17,7 +17,13 @@ test('exact PDP line persists, quick sheet returns focus, and cart supports edit
 
   await page.goto('/products/sever-signal-01')
   const sizes = page.getByRole('group', { name: 'Размер EU' })
-  await sizes.locator('button:not(:disabled)').first().click()
+  // Quantity editing needs more than one item; checkout smoke may consume the
+  // first available size in an existing local demo database.
+  await sizes
+    .locator('button:not(:disabled)')
+    .filter({ hasNotText: 'мало' })
+    .first()
+    .click()
   const skuText = await page.getByText(/^SKU SOLECRAFT-/).textContent()
   const sku = skuText?.match(/SOLECRAFT-[A-Z0-9-]+/)?.[0]
   expect(sku).toBeTruthy()

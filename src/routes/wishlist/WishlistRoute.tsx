@@ -36,8 +36,8 @@ export function WishlistRoute({ repository }: { repository: OwnerCommerceReposit
           <h2>{text('Здесь пока пусто', 'Nothing saved yet')}</h2>
           <p>
             {text(
-              'Сохраняйте пары из каталога — гостевой список переживёт reload.',
-              'Save sneakers from the catalog—the guest list survives reload.',
+              'Сохраняйте понравившиеся пары без регистрации. Список останется в этом браузере после обновления страницы.',
+              'Save your favorite sneakers without signing in. Your list stays in this browser after refreshing.',
             )}
           </p>
           <Link to={paths.catalog}>{text('В каталог', 'Back to catalog')}</Link>

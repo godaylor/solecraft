@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import { writeFile } from 'node:fs/promises'
 
 const catalogPages = [1, 2, 3]
 
@@ -53,8 +54,17 @@ async function collectProductLinks(page: Page) {
 
 test('all catalog products keep their model, copy and media family across colorways', async ({
   page,
-}) => {
+}, info) => {
   test.setTimeout(180_000)
+  const mapping: {
+    model: string | null
+    href: string
+    image: string | null
+    color: string
+    description: string | null
+    sizes: string[]
+    sku?: string
+  }[] = []
   const links = await collectProductLinks(page)
   expect(links).toHaveLength(32)
 
@@ -80,12 +90,19 @@ test('all catalog products keep their model, copy and media family across colorw
     const colorButtons = colorGroup.getByRole('button')
     expect(await colorButtons.count()).toBeGreaterThanOrEqual(2)
 
+    const imageSources = new Set<string>()
+    const skus = new Set<string>()
     for (let index = 0; index < (await colorButtons.count()); index += 1) {
       const button = colorButtons.nth(index)
       const colorName = (await button.innerText()).trim()
       await button.click()
       await expect(button).toHaveAttribute('aria-pressed', 'true')
       await expect(primaryImage).toBeVisible()
+      await expect(primaryImage).toHaveJSProperty('complete', true)
+      expect(
+        await primaryImage.evaluate((img: HTMLImageElement) => img.naturalWidth),
+      ).toBeGreaterThan(0)
+      imageSources.add((await primaryImage.getAttribute('src'))!)
       await expect(primaryImage).toHaveAttribute(
         'alt',
         new RegExp(`цвет «${colorName}»`, 'i'),
@@ -95,12 +112,44 @@ test('all catalog products keep their model, copy and media family across colorw
       )
       await expect(heading).toHaveText(initialHeading ?? '')
       await expect(description).toHaveText(initialDescription ?? '')
+      const sizes = page.getByRole('group', { name: 'Размер EU' })
+      await expect(sizes.locator('[aria-pressed="true"]')).toHaveCount(0)
+      const available = sizes.locator('button:not(:disabled)')
+      const entry = {
+        model: initialHeading,
+        href,
+        image: await primaryImage.getAttribute('src'),
+        color: colorName,
+        description: initialDescription,
+        sizes: await sizes.getByRole('button').allTextContents(),
+        sku: '',
+      }
+      if (await available.count()) {
+        await available.first().click()
+        const sku = await page
+          .locator('main p')
+          .filter({ hasText: /^SKU / })
+          .innerText()
+        expect(skus.has(sku), `${href}: repeated SKU across colors`).toBe(false)
+        skus.add(sku)
+        entry.sku = sku
+      }
+      mapping.push(entry)
     }
+    expect(imageSources.size, `${href}: colors share the same image`).toBe(
+      await colorButtons.count(),
+    )
   }
+  await writeFile(
+    info.outputPath('catalog-correspondence.json'),
+    JSON.stringify(mapping, null, 2),
+  )
 })
 
 for (const viewport of [
   { name: 'mobile', width: 360, height: 800 },
+  { name: 'mobile-390', width: 390, height: 844 },
+  { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ]) {
   test(`wishlist control stays fixed and clear of use-case badges on ${viewport.name}`, async ({
@@ -120,13 +169,23 @@ for (const viewport of [
         const tags = card.getByLabel('Сценарии использования')
         const buttonBox = await button.boundingBox()
         const tagsBox = await tags.boundingBox()
+        const imageBox = await card.locator('img').boundingBox()
         expect(buttonBox).not.toBeNull()
         expect(tagsBox).not.toBeNull()
         expect(
           overlaps(buttonBox!, tagsBox!),
           `${await card.getAttribute('id')}: overlap`,
         ).toBe(false)
+        expect(imageBox).not.toBeNull()
+        expect(overlaps(buttonBox!, imageBox!)).toBe(false)
+        expect(overlaps(tagsBox!, imageBox!)).toBe(false)
+        expect(await tags.locator(':scope > *').count()).toBeLessThanOrEqual(1)
       }
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > window.innerWidth,
+        ),
+      ).toBe(false)
     }
 
     await page.goto('/catalog')

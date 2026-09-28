@@ -58,12 +58,8 @@ function parsePositiveInteger(value: string | null): number | undefined {
 }
 
 export function normalizeCatalogState(state: CatalogUrlState): CatalogUrlState {
-  const priceValues = [state.priceMin, state.priceMax].filter(
-    (value): value is number =>
-      value !== undefined && Number.isSafeInteger(value) && value >= 0,
-  )
-  const priceMin = priceValues.length > 0 ? Math.min(...priceValues) : undefined
-  const priceMax = priceValues.length > 1 ? Math.max(...priceValues) : undefined
+  const priceMin = validPrice(state.priceMin)
+  const priceMax = validPrice(state.priceMax)
   const q = normalizeQuery(state.q)
   const size = state.size && knownSizes.has(state.size) ? state.size : undefined
   const width = state.width && knownWidths.has(state.width) ? state.width : undefined
@@ -81,6 +77,20 @@ export function normalizeCatalogState(state: CatalogUrlState): CatalogUrlState {
     sort: catalogSorts.has(state.sort) ? state.sort : defaultSort,
     page: Number.isSafeInteger(state.page) && state.page > 0 ? state.page : 1,
   }
+}
+
+function validPrice(value: number | undefined): number | undefined {
+  return value !== undefined && Number.isSafeInteger(value) && value >= 0
+    ? value
+    : undefined
+}
+
+export function hasInvalidPriceRange(state: CatalogUrlState): boolean {
+  return (
+    state.priceMin !== undefined &&
+    state.priceMax !== undefined &&
+    state.priceMin > state.priceMax
+  )
 }
 
 export function parseCatalogParams(searchParams: URLSearchParams): CatalogUrlState {

@@ -3,6 +3,19 @@ import { describe, expect, it } from 'vitest'
 import { resolveProductImageAsset } from './productMedia'
 
 describe('resolveProductImageAsset', () => {
+  it.each([
+    ['07', 'black'],
+    ['08', 'mint'],
+    ['09', 'white'],
+    ['10', 'black'],
+  ])('resolves the exact color without changing model family %s', (family, color) => {
+    const src = `/media/products/solecraft-${family}.webp`
+    expect(resolveProductImageAsset(src, 1200, 900, color).src).toBe(
+      `/media/products/solecraft-${family}-${color}.webp`,
+    )
+    expect(resolveProductImageAsset(src, 1200, 900, 'unreviewed').src).toBe(src)
+  })
+
   it('maps the ten legacy catalog paths to generated responsive Solecraft assets', () => {
     expect(resolveProductImageAsset('/img/sneakers/1.png', 266, 224)).toEqual({
       src: '/media/products/solecraft-01.webp',
