@@ -22,6 +22,7 @@
   width: 100%;
   max-width: none;
   height: 100%;
+  height: 100dvh;
   max-height: none;
   margin: 0;
   padding: 0;
@@ -33,9 +34,10 @@
 }
 .panel {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(34rem, 100%);
   height: 100%;
+  min-height: 0;
   margin-left: auto;
   background: var(--surface-page);
   box-shadow: -1rem 0 3rem rgb(0 0 0 / 20%);
@@ -50,6 +52,10 @@
   align-items: center;
   justify-content: space-between;
 }
+.heading {
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
 .heading p,
 .heading h2 {
   margin: 0.15rem 0;
@@ -62,12 +68,18 @@
   font: 1.8rem var(--font-display);
 }
 .content {
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding: 1rem;
 }
 .footer {
   border-top: 1px solid var(--border-default);
   border-bottom: 0;
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
 }
 .footer p {
   display: flex;
