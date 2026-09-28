@@ -61,6 +61,17 @@ The demo still has 32 named products built from 10 reusable fictional silhouette
 This update fixes color preview identity, not a claim of 32 independently sourced
 physical shoe designs. See the current UX audit for remaining editorial limitations.
 
+## Background cleanup — 2026-09-28
+
+Visual V3 inspection found baked checkerboards in `solecraft-01-black`,
+`solecraft-02-black`, `solecraft-04-white` and `solecraft-06-navy`. Built-in
+ImageGen edited each existing fictional source, with instructions to replace
+only the checkerboard background and preserve shoe color, silhouette, panels,
+laces, sole and camera. Reviewed outputs use opaque Cold Paper `#F3F6FA`, not
+alpha transparency. The existing canvas conversion script exported 1200×900
+and 600×450 WebP. No external photography or additional service was introduced.
+The other September 18 variants, 03-blue and 05-burgundy, retain transparency.
+
 ## Replaced legacy media
 
 The original training storefront's low-resolution raster assets had unverified public
