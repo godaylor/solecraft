@@ -1,7 +1,7 @@
 .page {
   width: min(100%, var(--layout-max));
   margin: 0 auto;
-  padding: clamp(1rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
 }
 .page header p {
   margin: 0;
@@ -10,7 +10,7 @@
 }
 .page h1 {
   margin: 0.3rem 0 2rem;
-  font: clamp(2.5rem, 6vw, 5rem)/0.95 var(--font-display);
+  font: 550 clamp(2.2rem, 5vw, 3.6rem)/1.2 var(--font-display);
 }
 .grid {
   display: grid;
@@ -23,7 +23,9 @@
 }
 .empty {
   padding: 3rem;
-  border: 1px dashed var(--border-default);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: white;
   text-align: center;
 }
 .error {

@@ -1,5 +1,8 @@
 # Solecraft transformation plan
 
+M10 visual redesign от 2026-10-17: [концепция, изменения и проверки](docs/REDESIGN_M10.md).
+Public release gate остаётся открытым для manual AT и внешней повторной проверки.
+
 > Статус: M0–M9 GREEN; M9 manual AT covered by an explicit time-bounded accepted exception (checks NOT RUN); M10 local gates GREEN, external/public-release gate BLOCKED
 > Дата: 2026-09-03
 > Product: Solecraft — fit-first city sneaker store

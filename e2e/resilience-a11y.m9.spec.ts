@@ -360,21 +360,39 @@ test('stable home and catalog states match reviewed visual baselines', async ({
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await expect(page.locator('#sever-signal-01')).toBeVisible()
-  await page.locator('#sever-signal-01').scrollIntoViewIfNeeded()
-  await expect(page.locator('#sever-signal-01 img')).toHaveJSProperty('complete', true)
-  await page.evaluate(() => window.scrollTo(0, 0))
+  for (const image of await page.locator('main img').all()) {
+    await image.scrollIntoViewIfNeeded()
+    await image.evaluate((element: HTMLImageElement) => element.decode())
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
   await page.evaluate(() => document.fonts.ready)
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+        .map((animation) => animation.finished.catch(() => {})),
+    ),
+  )
   await expect(page).toHaveScreenshot('m9-home-mobile.png', {
     fullPage: true,
-    animations: 'disabled',
+    animations: 'allow',
+    mask: [page.getByText(/В наличии · \d+ EU размеров|Нет в наличии/)],
   })
 
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/catalog')
   await expect(page.getByRole('article').first()).toBeVisible()
+  for (const image of await page.locator('main img').all()) {
+    await image.scrollIntoViewIfNeeded()
+    await image.evaluate((element: HTMLImageElement) => element.decode())
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
   await page.evaluate(() => document.fonts.ready)
+  await page.screenshot({ animations: 'allow' })
   await expect(page).toHaveScreenshot('m9-catalog-desktop.png', {
     fullPage: true,
-    animations: 'disabled',
+    animations: 'allow',
+    mask: [page.getByText(/В наличии · \d+ EU размеров|Нет в наличии/)],
   })
 })

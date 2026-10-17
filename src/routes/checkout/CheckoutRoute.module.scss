@@ -3,7 +3,7 @@
 .failure,
 .loading {
   width: min(100% - 2rem, 70rem);
-  margin: 2rem auto;
+  margin: 3rem auto;
 }
 .page > header p,
 .success > p:first-child {
@@ -15,7 +15,7 @@
 .success h1,
 .failure h1 {
   margin: 0.3rem 0 1.5rem;
-  font: clamp(2.3rem, 6vw, 5rem)/0.95 var(--font-display);
+  font: 550 clamp(2rem, 5vw, 3.6rem)/1.2 var(--font-display);
 }
 .steps {
   display: grid;
@@ -26,13 +26,16 @@
   list-style: none;
 }
 .steps li {
-  padding: 0.7rem;
-  border-top: 3px solid var(--border-default);
+  padding: 1rem;
+  border-top: 2px solid var(--border-default);
   font-size: 0.75rem;
 }
 .steps li[aria-current='step'] {
   border-color: var(--action-primary);
   font-weight: 800;
+  color: var(--action-primary);
+  background: #e8edff;
+  border-radius: 0 0 6px 6px;
 }
 .steps span {
   margin-right: 0.35rem;
@@ -43,7 +46,8 @@
   display: grid;
   gap: 1rem;
   padding: clamp(1rem, 4vw, 2.5rem);
-  border: 1px solid var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
   background: var(--surface-raised);
 }
 .form > label {
@@ -54,13 +58,16 @@
 .form input:not([type='radio']) {
   min-height: 48px;
   padding: 0.7rem;
-  border: 1px solid var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
   font: inherit;
 }
 .form fieldset {
   display: grid;
   gap: 0.75rem;
   padding: 1rem;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
 }
 .form fieldset label {
   display: flex;
@@ -103,10 +110,17 @@
 }
 .demoNotice {
   padding: 1rem;
-  background: var(--surface-data);
+  background: #e0eee8;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  line-height: 1.8;
 }
 .review {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow-wrap: anywhere;
+}
+.review > * {
+  min-width: 0;
 }
 .review aside {
   grid-column: 2;
@@ -114,6 +128,7 @@
   padding: 1.25rem;
   color: white;
   background: var(--surface-inverse);
+  border-radius: 8px;
 }
 .review aside p,
 .total,
@@ -129,7 +144,8 @@
 .success,
 .failure {
   padding: clamp(1.5rem, 5vw, 4rem);
-  border: 1px solid var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
   background: var(--surface-raised);
 }
 .success ul {
@@ -146,6 +162,34 @@
   padding: 0.6rem;
   background: var(--surface-data);
   font: 1.1rem var(--font-data);
+  border-radius: 6px;
+}
+.success::before {
+  content: '✓';
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  background: var(--surface-data);
+  color: #17634c;
+  font-size: 1.5rem;
+}
+.form {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+.form input[type='radio'] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--action-primary);
+  flex: none;
+}
+.review > div > p,
+.review aside {
+  font-size: 0.85rem;
+  line-height: 1.8;
 }
 @media (max-width: 42rem) {
   .steps {

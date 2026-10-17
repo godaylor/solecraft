@@ -22,7 +22,7 @@
 .detail h1,
 .state h1 {
   margin: 0.35rem 0 1.6rem;
-  font: clamp(2.3rem, 6vw, 5rem)/0.95 var(--font-display);
+  font: 550 clamp(2rem, 5vw, 3.6rem)/1.2 var(--font-display);
 }
 .heading > a,
 .state a,
@@ -47,7 +47,8 @@
   align-items: center;
   gap: 1.25rem;
   padding: 1.2rem;
-  border: 1px solid var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
   background: var(--surface-raised);
 }
 .orders h2 {
@@ -128,7 +129,8 @@
 .delivery,
 .totals {
   padding: 1.25rem;
-  border: 1px solid var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
   background: var(--surface-raised);
 }
 .delivery address {

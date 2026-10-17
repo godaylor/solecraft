@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solecraft — до и после</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: clamp(20px, 4vw, 60px); background: #f3f6fa; color: #171c26; font: 16px/1.6 system-ui, sans-serif; }
+      main { max-width: 1400px; margin: auto; }
+      .eyebrow { color: #315cf5; font: 12px monospace; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { font-size: clamp(28px, 4vw, 56px); line-height: 1.15; letter-spacing: -.05em; margin: 20px 0; }
+      .intro { max-width: 700px; color: #566171; }
+      .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 30px 0 20px; }
+      button, select { min-height: 44px; padding: 10px 18px; font: inherit; background: white; color: inherit; border: 1px solid #c9d0db; border-radius: 6px; cursor: pointer; }
+      button[aria-pressed="true"] { background: #315cf5; color: white; border-color: #315cf5; }
+      select { margin-left: auto; }
+      :focus-visible { outline: 3px solid #315cf5; outline-offset: 4px; }
+      .frame { position: relative; width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; border: 1px solid #c9d0db; border-radius: 12px; background: white; --split: 50%; }
+      .frame img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+      #before { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+      .divider { position: absolute; inset-block: 0; left: var(--split); width: 2px; background: #315cf5; }
+      .divider::after { content: '↔'; position: absolute; top: 50%; left: 0; display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #315cf5; color: white; transform: translate(-50%, -50%); }
+      .badge { position: absolute; bottom: 12px; padding: 4px 12px; border-radius: 4px; background: #171c26; color: white; font: 12px/1.8 monospace; }
+      .old { left: 12px; } .new { right: 12px; background: #315cf5; }
+      .range { display: grid; gap: 8px; margin: 20px 0; font-size: 14px; }
+      input[type="range"] { width: 100%; min-height: 44px; accent-color: #315cf5; cursor: ew-resize; }
+      .links { display: flex; gap: 25px; flex-wrap: wrap; }
+      a { display: inline-flex; min-height: 44px; align-items: center; color: #2447ca; }
+      .note { font-size: 13px; color: #566171; }
+      .frame.mobile { max-width: 390px; margin-inline: auto; aspect-ratio: 360 / 800; }
+      @media (max-width: 600px) { select { margin-left: 0; } .controls { gap: 8px; } button { padding-inline: 12px; font-size: 13px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Solecraft / M10 / 17.10.2026</p>
+      <h1>До. После. В своём ритме.</h1>
+      <p class="intro">Тот же работающий магазин: реальные варианты, размеры, избранное и гостевой заказ. Новая композиция, предметная подача обуви и цельный визуальный язык.</p>
+      <div class="controls" role="group" aria-label="Сравнить экран">
+        <button type="button" data-surface="home" aria-pressed="true">Главная</button>
+        <button type="button" data-surface="catalog" aria-pressed="false">Каталог</button>
+        <button type="button" data-surface="product" aria-pressed="false">Страница товара</button>
+        <label>Размер экрана <select id="viewport"><option value="desktop">Компьютер / 1440×900</option><option value="mobile">Телефон / 360×800</option></select></label>
+      </div>
+      <div class="frame" id="frame">
+        <img id="after" src="after-hero-desktop.png" alt="Solecraft после редизайна, первый экран" />
+        <img id="before" src="before-home-desktop.png" alt="Solecraft до редизайна, первый экран" />
+        <div class="divider" aria-hidden="true"></div>
+        <span class="badge old">ДО</span><span class="badge new">ПОСЛЕ</span>
+      </div>
+      <label class="range">Передвиньте границу сравнения<input id="split" type="range" min="0" max="100" value="50" aria-label="Граница до и после" /></label>
+      <div class="links"><a href="after-home-desktop.png" id="full">Открыть полный новый экран</a><a href="../../REDESIGN_M10.md">Концепция и проверки</a><a href="http://127.0.0.1:32600/">Открыть работающий Solecraft</a></div>
+      <p class="note">Снимки реального локального сайта. Первый экран приведён к одинаковому viewport. Сравнение мобильного каталога и PDP доступно через итоговые screenshots; исходные mobile-снимки этих двух страниц в задаче не снимались.</p>
+    </main>
+    <script>
+      const frame = document.getElementById('frame')
+      const before = document.getElementById('before')
+      const after = document.getElementById('after')
+      const viewport = document.getElementById('viewport')
+      let surface = 'home'
+      function update() {
+        const mobile = viewport.value === 'mobile'
+        frame.classList.toggle('mobile', mobile)
+        before.src = 'before-' + (mobile ? 'home-mobile' : surface + '-desktop') + '.png'
+        after.src = 'after-' + (surface === 'home' ? 'hero' : surface) + '-' + viewport.value + '.png'
+        document.getElementById('full').href = 'after-' + surface + '-' + viewport.value + '.png'
+        document.querySelectorAll('[data-surface]').forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.surface === surface))
+          button.disabled = mobile && button.dataset.surface !== 'home'
+        })
+      }
+      document.querySelectorAll('[data-surface]').forEach((button) => button.addEventListener('click', () => { surface = button.dataset.surface; update() }))
+      viewport.addEventListener('change', () => { if (viewport.value === 'mobile') surface = 'home'; update() })
+      document.getElementById('split').addEventListener('input', (event) => frame.style.setProperty('--split', event.target.value + '%'))
+    </script>
+  </body>
+</html>

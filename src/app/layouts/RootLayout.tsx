@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router'
 
 import { IconButton } from '../../shared/ui/IconButton/IconButton'
+import { Icon } from '../../shared/ui/Icon/Icon'
 import type { CartRepository } from '../../entities/cart/api/CartRepository'
 import { applyGuestCartStorageEvent } from '../../entities/cart/model/guestCartStore'
 import { CartQuickSheet } from '../../entities/cart/ui/CartQuickSheet'
@@ -30,6 +31,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
 
   return (
     <div className={styles.app}>
+      <ScrollRestoration storageKey="solecraft:scroll:v1" />
       <nav
         className={styles.skipNavigation}
         aria-label={text('Быстрый переход', 'Skip navigation')}
@@ -40,13 +42,25 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
       </nav>
 
       <header className={styles.header}>
+        <div className={styles.announcement}>
+          {text('Больше города. Больше тебя.', 'More city. More you.')}
+          <span>
+            {text(
+              'Демо-магазин · без реальных списаний',
+              'Demo store · no real charges',
+            )}
+          </span>
+        </div>
         <div className={styles.headerInner}>
           <NavLink
             className={styles.brand ?? ''}
             to={paths.home}
             aria-label={text('Solecraft — на главную', 'Solecraft — home')}
           >
-            <span className={styles.brandWord}>Solecraft</span>
+            <span className={styles.brandWord}>
+              <Icon name="route" />
+              Solecraft
+            </span>
             <span className={styles.brandNote}>
               {text('fit-first / город', 'fit-first / city')}
             </span>
@@ -97,18 +111,33 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
                 </button>
               ))}
             </div>
-            <Link className={styles.utilityLink} to={paths.wishlist}>
-              {text('Избранное', 'Wishlist')}{' '}
-              <span>{commerce.wishlistProductIds.length}</span>
+            <Link
+              className={styles.utilityLink}
+              to={paths.wishlist}
+              aria-label={`${text('Избранное', 'Wishlist')} ${commerce.wishlistProductIds.length}`}
+            >
+              <Icon name="heart" />
+              <span className={styles.utilityLabel}>
+                {text('Избранное', 'Wishlist')}
+              </span>
+              <span className={styles.count}>{commerce.wishlistProductIds.length}</span>
             </Link>
             <CartQuickSheet repository={cartRepository} />
             <Link
               className={styles.utilityLink}
               to={auth.status === 'authenticated' ? paths.account : paths.signIn}
+              aria-label={
+                auth.status === 'authenticated'
+                  ? text('Аккаунт', 'Account')
+                  : text('Войти', 'Sign in')
+              }
             >
-              {auth.status === 'authenticated'
-                ? text('Аккаунт', 'Account')
-                : text('Войти', 'Sign in')}
+              <Icon name="user" />
+              <span className={styles.utilityLabel}>
+                {auth.status === 'authenticated'
+                  ? text('Аккаунт', 'Account')
+                  : text('Войти', 'Sign in')}
+              </span>
             </Link>
             <IconButton
               ref={menuButtonRef}
@@ -153,7 +182,10 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
-            <span>Solecraft</span>
+            <span>
+              <Icon name="route" />
+              Solecraft
+            </span>
             <p>
               {text(
                 'Городские кроссовки с понятной посадкой.',
@@ -184,6 +216,11 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
               'Demo catalog. Fit data is source-aware guidance, not medical advice.',
             )}
           </p>
+        </div>
+        <div className={styles.footerBottom}>
+          <span>© {new Date().getFullYear()} Solecraft</span>
+          <span>{text('Создан для движения.', 'Made to move.')}</span>
+          <span>RU / EN</span>
         </div>
       </footer>
     </div>

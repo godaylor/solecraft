@@ -1,5 +1,5 @@
 .discovery {
-  margin-block: var(--space-7) var(--space-5);
+  margin-block: 2rem var(--space-5);
 }
 
 .toolbar {
@@ -32,7 +32,7 @@
   min-height: 2.75rem;
   padding-inline: var(--space-3);
   color: var(--text-primary);
-  background: var(--surface-page);
+  background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-small);
   font: inherit;
@@ -52,7 +52,7 @@
   color: var(--text-primary);
   background: transparent;
   border: 1px solid var(--border-default);
-  border-radius: 999px;
+  border-radius: 6px;
   font: inherit;
   cursor: pointer;
 }
@@ -93,9 +93,9 @@
   gap: var(--space-2);
   padding-inline: var(--space-3);
   color: var(--text-primary);
-  background: var(--surface-data);
+  background: #e8edff;
   border: 1px solid var(--border-default);
-  border-radius: 999px;
+  border-radius: 6px;
   font: inherit;
   cursor: pointer;
 }
@@ -231,6 +231,15 @@
   overflow-y: auto;
   background: var(--surface-page);
   border-inline-start: 1px solid var(--border-default);
+  animation: filter-in 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes filter-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
 }
 
 .sheetHeading {

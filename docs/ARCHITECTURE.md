@@ -7,29 +7,37 @@
 
 ## 1. Architecture decision summary
 
+M10 visual redesign (2026-10-17): presentation-only redesign, no added dependency.
+RootLayout uses React Router ScrollRestoration with a versioned session key;
+filter and colorway updates prevent scroll reset. Product editorial copy derives
+from the reviewed default image family in the localization boundary, so card and
+PDP remain consistent without rewriting remote entities or order snapshots.
+Generated city media is editorial atmosphere, never product/colorway evidence.
+See [REDESIGN_M10.md](REDESIGN_M10.md).
+
 M10 clarification (2026-09-23): the existing `productMedia` presentation resolver
 also accepts the exact variant color slug to select four reviewed derivatives for
 legacy shared frames (families 07–10). Catalog, PDP and cart use the same mapping;
 unknown/custom paths remain untouched. No remote entity, inventory identity, SKU,
 price or order snapshot is rewritten. This mapping is covered by regression tests.
 
-| Decision | Choice | Why | Explicitly not chosen |
-|---|---|---|---|
-| App shape | Client-rendered SPA, route-oriented | Максимум frontend depth и скорость; deploy на static host | SSR/Next.js в v1 |
-| Build | Vite 8.x stable, exact version pinned at implementation | CRA deprecated; current Node 22.15 satisfies Vite 8 Node range | CRA/react-scripts |
-| React | Upgrade to current stable React 19 after Vite parity gate | Актуальная supported baseline | React Compiler без profiling need |
-| Language | TypeScript `strict` from foundation | Domain contracts ловят ошибки variants/cart/orders | Долгий mixed JS/TS режим |
-| Routing | React Router 7 Data Mode, lazy route modules | Nested routes, errors, loaders/prefetch, URL APIs | Router replacement или ad-hoc pathname state |
-| Server state | TanStack Query v5 | Cache/dedupe/cancel/retry/mutations для Supabase/API data | Копия remote data в global store |
-| URL state | React Router `URLSearchParams` + typed codec | Share/reload/back-forward/canonical query keys | Search/filter в Zustand/useState |
-| Guest domain state | Небольшой persisted Zustand store: cart + guest wishlist only | Cross-route cart без provider boilerplate; versioned persistence | «Один store для всего» |
-| Locale | React context + versioned localStorage preference | RU default, persisted RU/EN without duplicating domain data | Переводить footwear brand/model names |
-| Complex global workflows | Не вводить Redux Toolkit сейчас | Нет workflow, который оправдывает второй state architecture | Redux ради portfolio checkbox |
-| Backend | Supabase Postgres + Auth + Storage; Edge Function/RPC для checkout | Relations, auth, RLS, order history и transaction-shaped flow | Shared MockAPI, Firebase document model, custom Node backend v1 |
-| HTTP | Supabase client; native `fetch` для отдельного server endpoint | Axios больше не даёт уникальной ценности | Обновлённый Axios только ради одного transport |
-| Styling | CSS Modules + Dart Sass + CSS custom-property tokens | Сохраняет полезный SCSS навык и даёт custom art direction | `node-sass`, `macro-css`, обязательный Tailwind |
-| Forms | Native semantics + React Hook Form/Zod только для checkout/account forms | Complex validation и typed boundary без применения ко всем inputs | Form library для catalog search/filter |
-| Tests | Vitest + RTL + MSW; Playwright + axe; Supabase DB/RLS tests | Одна Vite transform pipeline и browser confidence | Snapshot-heavy/component-internals tests |
+| Decision                 | Choice                                                                   | Why                                                               | Explicitly not chosen                                           |
+| ------------------------ | ------------------------------------------------------------------------ | ----------------------------------------------------------------- | --------------------------------------------------------------- |
+| App shape                | Client-rendered SPA, route-oriented                                      | Максимум frontend depth и скорость; deploy на static host         | SSR/Next.js в v1                                                |
+| Build                    | Vite 8.x stable, exact version pinned at implementation                  | CRA deprecated; current Node 22.15 satisfies Vite 8 Node range    | CRA/react-scripts                                               |
+| React                    | Upgrade to current stable React 19 after Vite parity gate                | Актуальная supported baseline                                     | React Compiler без profiling need                               |
+| Language                 | TypeScript `strict` from foundation                                      | Domain contracts ловят ошибки variants/cart/orders                | Долгий mixed JS/TS режим                                        |
+| Routing                  | React Router 7 Data Mode, lazy route modules                             | Nested routes, errors, loaders/prefetch, URL APIs                 | Router replacement или ad-hoc pathname state                    |
+| Server state             | TanStack Query v5                                                        | Cache/dedupe/cancel/retry/mutations для Supabase/API data         | Копия remote data в global store                                |
+| URL state                | React Router `URLSearchParams` + typed codec                             | Share/reload/back-forward/canonical query keys                    | Search/filter в Zustand/useState                                |
+| Guest domain state       | Небольшой persisted Zustand store: cart + guest wishlist only            | Cross-route cart без provider boilerplate; versioned persistence  | «Один store для всего»                                          |
+| Locale                   | React context + versioned localStorage preference                        | RU default, persisted RU/EN without duplicating domain data       | Переводить footwear brand/model names                           |
+| Complex global workflows | Не вводить Redux Toolkit сейчас                                          | Нет workflow, который оправдывает второй state architecture       | Redux ради portfolio checkbox                                   |
+| Backend                  | Supabase Postgres + Auth + Storage; Edge Function/RPC для checkout       | Relations, auth, RLS, order history и transaction-shaped flow     | Shared MockAPI, Firebase document model, custom Node backend v1 |
+| HTTP                     | Supabase client; native `fetch` для отдельного server endpoint           | Axios больше не даёт уникальной ценности                          | Обновлённый Axios только ради одного transport                  |
+| Styling                  | CSS Modules + Dart Sass + CSS custom-property tokens                     | Сохраняет полезный SCSS навык и даёт custom art direction         | `node-sass`, `macro-css`, обязательный Tailwind                 |
+| Forms                    | Native semantics + React Hook Form/Zod только для checkout/account forms | Complex validation и typed boundary без применения ко всем inputs | Form library для catalog search/filter                          |
+| Tests                    | Vitest + RTL + MSW; Playwright + axe; Supabase DB/RLS tests              | Одна Vite transform pipeline и browser confidence                 | Snapshot-heavy/component-internals tests                        |
 
 Версии в документе — baseline на дату аудита, не разрешение ставить `latest` без проверки. При implementation milestone exact packages сверяются с official docs/changelogs, pin-ятся lockfile и обновляются только контролируемо.
 
@@ -77,18 +85,18 @@ flowchart LR
 
 ## 4. State ownership
 
-| State | Owner | Persistence | Examples | Запрещено |
-|---|---|---|---|---|
-| Route/navigation | React Router | URL/history | path, checkout step | `window.location` вручную без router |
-| Catalog discovery | Typed URL codec | URL | q, facets, sort, page | Дублировать в Zustand/Context |
-| Remote entities | TanStack Query cache | Memory + refetch | products, stock, user wishlist, orders | Копировать response в Zustand |
-| Guest cart/wishlist | Zustand feature store | Versioned localStorage | `inventoryId`, `productId`, quantity | PII, prices, full API objects |
-| Interface locale | Locale provider | Versioned localStorage | `ru` default or `en` | Переводить footwear brand/model identity |
-| Auth session | Supabase Auth provider/client | SDK-managed secure session | user/session lifecycle | Копировать tokens в localStorage вручную/store |
-| Checkout draft | Form layer; optional minimal session persistence | Memory/sessionStorage for non-sensitive fields | contact/delivery form | Payment secrets, full auth data |
-| Guest receipt capability | Checkout receipt service | sessionStorage, short TTL | opaque receipt token only | URL, localStorage, Query persistence, logs |
-| Transient UI | Local React state | None | drawer open, gallery index, inline disclosure | Global store без cross-route need |
-| Derived values | Pure selectors/functions | None | subtotal, active-filter count | Хранить отдельно от inputs |
+| State                    | Owner                                            | Persistence                                    | Examples                                      | Запрещено                                      |
+| ------------------------ | ------------------------------------------------ | ---------------------------------------------- | --------------------------------------------- | ---------------------------------------------- |
+| Route/navigation         | React Router                                     | URL/history                                    | path, checkout step                           | `window.location` вручную без router           |
+| Catalog discovery        | Typed URL codec                                  | URL                                            | q, facets, sort, page                         | Дублировать в Zustand/Context                  |
+| Remote entities          | TanStack Query cache                             | Memory + refetch                               | products, stock, user wishlist, orders        | Копировать response в Zustand                  |
+| Guest cart/wishlist      | Zustand feature store                            | Versioned localStorage                         | `inventoryId`, `productId`, quantity          | PII, prices, full API objects                  |
+| Interface locale         | Locale provider                                  | Versioned localStorage                         | `ru` default or `en`                          | Переводить footwear brand/model identity       |
+| Auth session             | Supabase Auth provider/client                    | SDK-managed secure session                     | user/session lifecycle                        | Копировать tokens в localStorage вручную/store |
+| Checkout draft           | Form layer; optional minimal session persistence | Memory/sessionStorage for non-sensitive fields | contact/delivery form                         | Payment secrets, full auth data                |
+| Guest receipt capability | Checkout receipt service                         | sessionStorage, short TTL                      | opaque receipt token only                     | URL, localStorage, Query persistence, logs     |
+| Transient UI             | Local React state                                | None                                           | drawer open, gallery index, inline disclosure | Global store без cross-route need              |
+| Derived values           | Pure selectors/functions                         | None                                           | subtotal, active-filter count                 | Хранить отдельно от inputs                     |
 
 Locale changes interface copy, editorial descriptions, categories, use-case/color
 taxonomy, date/money formatting and document/social metadata. Solecraft and footwear
@@ -207,18 +215,18 @@ Boundary rules:
 
 ### Catalog
 
-| Table/entity | Essential fields | Invariants/indexes |
-|---|---|---|
-| `brands` | id, slug, name | unique slug |
-| `categories` | id, slug, name | unique slug |
-| `products` | id, slug, brand_id, category_id, model, title, description, status, fit_width, cushioning, support_level, fit_note, fit_provenance, fit_reviewed_at, published_at | unique slug; constrained fit values; index status/category/brand/published |
-| `tags` | id, slug, label, type | unique type/slug; index type; `use_case` is a constrained type |
-| `product_tags` | product_id, tag_id | composite unique; FKs; indexes both traversal directions |
-| `product_variants` | id, product_id, slug, color_name, color_code, price_minor, compare_at_minor, currency | unique product/slug; price checks; product index |
-| `product_media` | id, variant_id, kind, storage_path, alt, width, height, position | unique position per variant; stable dimensions |
-| `sizes` | id, system, value, display_label, sort_order | unique system/value |
-| `brand_size_guide_entries` | brand_id, size_id, foot_length_min_mm, foot_length_max_mm, provenance, source_note, reviewed_at | unique brand/size; valid mm range; source required unless unknown |
-| `inventory` | id, variant_id, size_id, sku, stock_on_hand | exact sellable identity; unique SKU and variant/size; stock ≥0 |
+| Table/entity               | Essential fields                                                                                                                                                  | Invariants/indexes                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `brands`                   | id, slug, name                                                                                                                                                    | unique slug                                                                |
+| `categories`               | id, slug, name                                                                                                                                                    | unique slug                                                                |
+| `products`                 | id, slug, brand_id, category_id, model, title, description, status, fit_width, cushioning, support_level, fit_note, fit_provenance, fit_reviewed_at, published_at | unique slug; constrained fit values; index status/category/brand/published |
+| `tags`                     | id, slug, label, type                                                                                                                                             | unique type/slug; index type; `use_case` is a constrained type             |
+| `product_tags`             | product_id, tag_id                                                                                                                                                | composite unique; FKs; indexes both traversal directions                   |
+| `product_variants`         | id, product_id, slug, color_name, color_code, price_minor, compare_at_minor, currency                                                                             | unique product/slug; price checks; product index                           |
+| `product_media`            | id, variant_id, kind, storage_path, alt, width, height, position                                                                                                  | unique position per variant; stable dimensions                             |
+| `sizes`                    | id, system, value, display_label, sort_order                                                                                                                      | unique system/value                                                        |
+| `brand_size_guide_entries` | brand_id, size_id, foot_length_min_mm, foot_length_max_mm, provenance, source_note, reviewed_at                                                                   | unique brand/size; valid mm range; source required unless unknown          |
+| `inventory`                | id, variant_id, size_id, sku, stock_on_hand                                                                                                                       | exact sellable identity; unique SKU and variant/size; stock ≥0             |
 
 Primary UI size system — EU; sourced foot length хранится integer mm и форматируется в cm. Универсальная RU/EU/CM conversion не вычисляется при отсутствии brand source.
 
@@ -226,15 +234,15 @@ Fit fields constrained: width = `narrow | standard | wide | extra_wide | unknown
 
 ### Customer commerce
 
-| Table/entity | Essential fields | Invariants/security |
-|---|---|---|
-| `profiles` | user_id, display_name, created_at | owner-only write |
-| `wishlist_items` | user_id, product_id, preferred_variant_id, created_at | unique user/product; owner-only |
-| `carts` | id, user_id, status, updated_at | one active cart/user |
-| `cart_items` | cart_id, inventory_id, quantity | unique cart/inventory; quantity >0 |
-| `orders` | id, order_number, user_id nullable, email, status, currency, subtotal_minor, delivery_minor, discount_minor, total_minor, idempotency_key, created_at | unique order number/idempotency; private |
-| `private.order_receipt_capabilities` | order_id, token_hash, expires_at, created_at | guest orders only; token hash, revoke/expiry indexes; no browser table grants |
-| `order_items` | order_id, inventory_id nullable, product/variant/size/SKU snapshots, unit_price_minor, quantity, line_total_minor, image snapshot | immutable snapshots |
+| Table/entity                         | Essential fields                                                                                                                                      | Invariants/security                                                           |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `profiles`                           | user_id, display_name, created_at                                                                                                                     | owner-only write                                                              |
+| `wishlist_items`                     | user_id, product_id, preferred_variant_id, created_at                                                                                                 | unique user/product; owner-only                                               |
+| `carts`                              | id, user_id, status, updated_at                                                                                                                       | one active cart/user                                                          |
+| `cart_items`                         | cart_id, inventory_id, quantity                                                                                                                       | unique cart/inventory; quantity >0                                            |
+| `orders`                             | id, order_number, user_id nullable, email, status, currency, subtotal_minor, delivery_minor, discount_minor, total_minor, idempotency_key, created_at | unique order number/idempotency; private                                      |
+| `private.order_receipt_capabilities` | order_id, token_hash, expires_at, created_at                                                                                                          | guest orders only; token hash, revoke/expiry indexes; no browser table grants |
+| `order_items`                        | order_id, inventory_id nullable, product/variant/size/SKU snapshots, unit_price_minor, quantity, line_total_minor, image snapshot                     | immutable snapshots                                                           |
 
 Addresses/PII либо хранятся в защищённой `order_addresses` с минимальным retention, либо snapshot JSON с явной schema и private grants. Конкретный вариант фиксируется до checkout migration.
 
@@ -465,9 +473,16 @@ VITE_APP_ENV
 VITE_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY
 VITE_ENABLE_DEMO_PAYMENT
+VITE_EMAIL_SIGN_IN_ENABLED
 ```
 
 Server-only secrets живут только в Supabase/hosting secret manager. `.env.example` содержит names и safe descriptions, не values.
+
+Hosted email sign-in capability (2026-10-18): production/preview по умолчанию
+не предлагают отправку ссылки, пока нет проверенного SMTP. Явный public build flag
+`VITE_EMAIL_SIGN_IN_ENABLED=true` включает форму после проверки доставки. Он не
+управляет сессиями, RLS, callback или гостевым checkout. Local/test сохраняют
+работающий Auth для изолированных проверок. SMTP secrets остаются server-only.
 
 Environments: local/dev, isolated test, production. Default isolation — local Supabase test stack или dedicated hosted test project и отдельный production project; другая schema внутри production project не изолирует Auth/Storage/config. Tests никогда не используют production project. Supabase migrations/seed — source of truth; dashboard-only schema edits запрещены. Deploy gate проверяет SPA rewrites для каждого deep link, cache headers для hashed assets, no-store/private handling для sensitive responses и source maps policy.
 

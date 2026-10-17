@@ -1,27 +1,18 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { catalogProductAnchor, paths } from '../../app/router/paths'
+import { Link } from 'react-router'
+import { paths, productPath } from '../../app/router/paths'
 import type { CatalogRepository } from '../../entities/product/api/CatalogRepository'
 import { catalogPageQueryOptions } from '../../entities/product/api/catalogQuery'
-import type { Product } from '../../entities/product/model/product'
 import { localizeProduct } from '../../entities/product/model/productLocalization'
-import { FitLine } from '../../entities/product/ui/FitLine'
 import { ProductCard } from '../../entities/product/ui/ProductCard'
-import { Badge } from '../../shared/ui/Badge/Badge'
+import { FitLine } from '../../entities/product/ui/FitLine'
+import { useLocale } from '../../shared/i18n/locale'
 import { ButtonLink } from '../../shared/ui/Button/ButtonLink'
 import { Button } from '../../shared/ui/Button/Button'
-import { TextLink } from '../../shared/ui/TextLink/TextLink'
-import { useLocale } from '../../shared/i18n/locale'
+import { Icon } from '../../shared/ui/Icon/Icon'
+import { Price } from '../../shared/ui/Price/Price'
 import styles from './HomeRoute.module.scss'
-
-const exampleFit = {
-  width: 'standard',
-  cushioning: 'soft',
-  support: 'balanced',
-  note: 'unknown',
-  provenance: 'editorial_demo',
-  sourceNote: 'M1 deterministic fixture',
-  reviewedAt: '2026-08-28',
-} as const satisfies Product['fit']
 
 export function HomeRoute({
   catalogRepository,
@@ -29,9 +20,10 @@ export function HomeRoute({
   catalogRepository: CatalogRepository
 }) {
   const { locale, text } = useLocale()
+  const [spotlightIndex, setSpotlightIndex] = useState(0)
+  const [failedHeroId, setFailedHeroId] = useState<string>()
   const featuredQuery = useQuery(
     catalogPageQueryOptions(catalogRepository, {
-      q: 'Signal 01',
       brands: [],
       uses: [],
       colors: [],
@@ -40,260 +32,413 @@ export function HomeRoute({
       pageSize: 12,
     }),
   )
-  const featuredProduct = featuredQuery.data?.products.find(
-    (product) => product.slug === 'sever-signal-01',
-  )
-  const localizedFeaturedProduct = featuredProduct
-    ? localizeProduct(featuredProduct, locale)
-    : undefined
-  const curatedEntries = [
+  const products =
+    featuredQuery.data?.products.map((product) => localizeProduct(product, locale)) ??
+    []
+  const spotlightProducts = products.slice(0, 3)
+  const spotlight = spotlightProducts[spotlightIndex] ?? spotlightProducts[0]
+  const routes = [
     {
-      title: text('12 000 шагов', '12,000 steps'),
-      description: text(
-        'Мягкая амортизация для длинного городского маршрута.',
-        'Soft cushioning for a long city route.',
+      title: text('Весь день в движении', 'All day, on the move'),
+      note: text(
+        'От первой встречи до последнего метро',
+        'From the first meeting to the last train',
       ),
-      meta: text('весь день / мягко', 'all day / soft'),
-      href: catalogProductAnchor('sever-signal-01'),
+      tag: text('Город / каждый день', 'City / everyday'),
+      href: '/catalog?use=all-day',
+      image: '/media/products/solecraft-01.webp',
       tone: 'blue',
     },
     {
-      title: text('Лёгкий офис', 'Light office'),
-      description: text(
-        'Спокойный силуэт, который не устает к вечеру.',
-        'A calm silhouette that stays comfortable into the evening.',
+      title: text('В своём темпе', 'At your own pace'),
+      note: text(
+        'Планы меняются. Твой стиль остаётся.',
+        'Plans change. Your style stays.',
       ),
-      meta: text('офис / баланс', 'office / balanced'),
-      href: catalogProductAnchor('forma-metro'),
+      tag: text('Офис / после работы', 'Office / after hours'),
+      href: '/catalog?use=office',
+      image: '/media/products/solecraft-02.webp',
       tone: 'mint',
     },
     {
-      title: text('Дождливый город', 'Rainy city'),
-      description: text(
-        'Поддержка и уверенный шаг на мокром маршруте.',
-        'Support and a confident stride on wet routes.',
+      title: text('За пределами прогноза', 'Beyond the forecast'),
+      note: text(
+        'Когда хочется выйти, несмотря на погоду',
+        'When the city calls, whatever the weather',
       ),
-      meta: text('дождь / опора', 'rain / support'),
-      href: catalogProductAnchor('krug-rain-2'),
+      tag: text('Город / мокрая погода', 'City / wet weather'),
+      href: '/catalog?use=wet-weather',
+      image: '/media/products/solecraft-04.webp',
       tone: 'orange',
     },
-  ] as const
-
+  ]
   return (
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>
-            <span aria-hidden="true" />
-            {text('Посадка / город / движение', 'Fit / city / motion')}
+            <span />
+            {text('Кроссовки для жизни в городе', 'Sneakers for a life in motion')}
           </p>
           <h1 id="home-title">
             {text('Твой город.', 'Your city.')}
-            <span>{text('Твоя посадка.', 'Your fit.')}</span>
+            <br />
+            <span>{text('Твой ритм.', 'Your rhythm.')}</span>
           </h1>
           <p className={styles.lede}>
             {text(
-              'Solecraft помогает выбирать кроссовки по ширине, амортизации и поддержке — чтобы вид совпадал с тем, как вы двигаетесь каждый день.',
-              'Solecraft helps you choose sneakers by width, cushioning, and support—so the look matches how you move every day.',
+              'Пара, в которой хочется идти дальше. Выбирай по стилю. Сравнивай по посадке.',
+              'The pair that keeps you exploring. Choose your style. Compare the fit.',
             )}
           </p>
           <div className={styles.heroActions}>
             <ButtonLink to={paths.catalog}>
               {text('Подобрать пару', 'Find your pair')}
+              <Icon name="arrow" />
             </ButtonLink>
-            <TextLink to="/#fit-method">
-              {text('Как читать посадку', 'How to read fit')}
-            </TextLink>
+            <Link to="/#fit-method">
+              {text('Что такое Линия посадки', 'Meet the Fit line')}
+              <span aria-hidden="true">↗</span>
+            </Link>
           </div>
-          <p className={styles.heroNote}>
-            {text(
-              'EU-размеры · источник fit-данных виден · без магии',
-              'EU sizes · visible fit sources · no magic',
-            )}
-          </p>
+          <div className={styles.heroFootnote}>
+            <span aria-hidden="true">↳</span>
+            <p>
+              {text(
+                'Хорошая посадка. Больше города.',
+                'A better fit. More city to explore.',
+              )}
+              <small>
+                {text(
+                  'Ширина · амортизация · поддержка',
+                  'Width · cushioning · support',
+                )}
+              </small>
+            </p>
+          </div>
         </div>
-
-        <aside className={styles.fitPanel} aria-labelledby="hero-fit-title">
-          <div className={styles.panelTopline}>
-            <Badge tone="orange">fit-first</Badge>
-            <span>{text('маршрут / 12 000 шагов', 'route / 12,000 steps')}</span>
-          </div>
-          <p className={styles.panelIndex}>{text('Линия посадки', 'Fit line')}</p>
-          <h2 id="hero-fit-title">
-            {text(
-              'Мягко идти. Уверенно держать ритм.',
-              'Walk softly. Keep a confident rhythm.',
+        <div className={styles.heroStage}>
+          <span className={styles.stageWord} aria-hidden="true">
+            MOVE
+          </span>
+          <svg
+            className={styles.routeLine}
+            viewBox="0 0 700 600"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M-60 530H355C650 530 650 112 430 112H280C100 112 90 390 310 390H750" />
+          </svg>
+          <span className={styles.stageLabel}>SOLECRAFT / CITY SERIES</span>
+          <div className={styles.heroShoe} key={spotlight?.id ?? 'loading'}>
+            {spotlight ? (
+              <Link
+                to={productPath(spotlight.slug)}
+                aria-label={
+                  spotlight.title +
+                  ' — ' +
+                  text('открыть карточку товара', 'open product details')
+                }
+              >
+                {failedHeroId === spotlight.id ? (
+                  <span
+                    className={styles.heroImageFallback}
+                    role="img"
+                    aria-label={spotlight.image.alt}
+                  >
+                    {text(
+                      'Фото временно недоступно. Открыть модель',
+                      'Photo unavailable. View this sneaker',
+                    )}
+                    <Icon name="arrow" />
+                  </span>
+                ) : (
+                  <img
+                    src={spotlight.image.src}
+                    srcSet={spotlight.image.srcSet}
+                    sizes="(min-width: 900px) 55vw, 100vw"
+                    alt={spotlight.image.alt}
+                    width={1200}
+                    height={900}
+                    fetchPriority="high"
+                    onError={() => setFailedHeroId(spotlight.id)}
+                  />
+                )}
+              </Link>
+            ) : (
+              <div className={styles.shoePlaceholder} role="status">
+                {featuredQuery.isPending
+                  ? text('Загружаем пары…', 'Loading sneakers…')
+                  : text('Найди свою пару в каталоге', 'Find your pair in the catalog')}
+              </div>
             )}
-          </h2>
-          <FitLine fit={exampleFit} />
-          <div className={styles.panelTags}>
-            <Badge tone="mint">{text('весь день', 'all day')}</Badge>
-            <Badge tone="mint">{text('город', 'city')}</Badge>
           </div>
-          <p className={styles.panelSource}>
-            {text(
-              'Редакционная демо-оценка. Это ориентир, а не персональная рекомендация.',
-              'Editorial demo assessment. This is guidance, not a personal recommendation.',
-            )}
-          </p>
-        </aside>
+          <span className={styles.stepStamp} aria-hidden="true">
+            {text('Больше', 'More')}
+            <br />
+            {text('движения', 'movement')}
+            <Icon name="arrow" />
+          </span>
+          <div className={styles.spotlightInfo}>
+            <div>
+              <span>{spotlight?.brand.name ?? 'SOLECRAFT'}</span>
+              <strong>
+                {spotlight?.model ?? text('Твоя следующая пара', 'Your next pair')}
+              </strong>
+            </div>
+            {spotlight && <Price value={spotlight.price} />}
+          </div>
+          <div
+            className={styles.spotlightTabs}
+            role="group"
+            aria-label={text('Пара на главной', 'Featured sneaker')}
+          >
+            {spotlightProducts.map((product, index) => (
+              <button
+                type="button"
+                key={product.id}
+                aria-pressed={spotlightIndex === index}
+                onClick={() => setSpotlightIndex(index)}
+                aria-label={product.model}
+              >
+                <span aria-hidden="true" />
+                {product.model}
+              </button>
+            ))}
+          </div>
+          {featuredQuery.isError && (
+            <Button variant="secondary" onClick={() => void featuredQuery.refetch()}>
+              {text('Повторить', 'Try again')}
+            </Button>
+          )}
+        </div>
       </section>
-
+      <div className={styles.serviceStrip}>
+        <span>
+          <Icon name="bag" />
+          {text('Покупки без регистрации', 'Shop without signing up')}
+        </span>
+        <span>
+          <Icon name="route" />
+          {text('Сравнивай посадку до примерки', 'Compare fit before trying on')}
+        </span>
+        <span>
+          <Icon name="return" />
+          {text('14 дней на возврат демо-заказа', '14-day demo returns')}
+        </span>
+      </div>
+      <section className={styles.selection} aria-labelledby="featured-title">
+        <div className={styles.sectionHeading}>
+          <div>
+            <p className={styles.eyebrow}>
+              {text('Твоя следующая пара', 'Your next pair')}
+            </p>
+            <h2 id="featured-title">{text('С чего начнём?', 'Where to first?')}</h2>
+          </div>
+          <Link to={paths.catalog}>
+            {text('Весь каталог', 'All sneakers')}
+            <Icon name="arrow" />
+          </Link>
+        </div>
+        <div className={styles.productGrid}>
+          {products.slice(0, 3).map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              href={productPath(product.slug)}
+            />
+          ))}
+          {!products.length && (
+            <div className={styles.featuredState} role="status">
+              <p>
+                {featuredQuery.isPending
+                  ? text('Загружаем пары…', 'Loading sneakers…')
+                  : text(
+                      'Пары сейчас недоступны. Попробуйте ещё раз.',
+                      'Sneakers are unavailable right now. Please try again.',
+                    )}
+              </p>
+              {featuredQuery.isError && (
+                <Button onClick={() => void featuredQuery.refetch()}>
+                  {text('Повторить', 'Try again')}
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
       <section className={styles.curated} aria-labelledby="curated-title">
         <div className={styles.sectionHeading}>
           <div>
-            <p className={styles.sectionKicker}>
-              {text('Выбрать по дню', 'Choose by day')}
+            <p className={styles.eyebrow}>
+              {text('Не только пункт назначения', 'More than a destination')}
             </p>
             <h2 id="curated-title">
-              {text('Начните со своего маршрута', 'Start with your route')}
+              {text('У каждого дня своя пара', 'A pair for every kind of day')}
             </h2>
           </div>
           <p>
             {text(
-              'Не с логотипа на коробке, а с того, где и сколько вы ходите.',
-              'Start with where and how far you walk—not the logo on the box.',
+              'Начни с того, как ты проводишь день.',
+              'Start with the way you spend your day.',
             )}
           </p>
         </div>
-
         <div className={styles.curatedGrid}>
-          {curatedEntries.map((entry) => (
-            <article
-              className={`${styles.curatedCard ?? ''} ${styles[entry.tone] ?? ''}`}
-              key={entry.title}
+          {routes.map((route) => (
+            <Link
+              className={[styles.curatedCard, styles[route.tone]].join(' ')}
+              to={route.href}
+              key={route.href}
             >
-              <p className={styles.curatedMeta}>{entry.meta}</p>
-              <h3>{entry.title}</h3>
-              <p>{entry.description}</p>
-              <TextLink to={entry.href}>
-                {text('К подходящей паре', 'See the matching pair')}
-              </TextLink>
-            </article>
+              <span className={styles.curatedTag}>{route.tag}</span>
+              <img
+                src={route.image}
+                srcSet={
+                  route.image.replace('.webp', '-600.webp') +
+                  ' 600w, ' +
+                  route.image +
+                  ' 1200w'
+                }
+                sizes="(min-width: 900px) 30vw, 90vw"
+                alt=""
+                width={1200}
+                height={900}
+                loading="lazy"
+              />
+              <div>
+                <h3>{route.title}</h3>
+                <p>{route.note}</p>
+              </div>
+              <span className={styles.roundArrow}>
+                <Icon name="arrow" />
+              </span>
+            </Link>
           ))}
         </div>
       </section>
-
       <section id="fit-method" className={styles.fitMethod} aria-labelledby="fit-title">
-        <div className={styles.sectionHeading}>
-          <div>
-            <p className={styles.sectionKicker}>
-              {text('Как это работает', 'How it works')}
-            </p>
-            <h2 id="fit-title">
-              {text('Три сигнала, не один рейтинг', 'Three signals, not one score')}
-            </h2>
-          </div>
-          <p>
+        <div className={styles.fitIntro}>
+          <p className={styles.eyebrow}>
             {text(
-              'Линия не обещает «идеальную пару». Она показывает независимые свойства, чтобы сравнение оставалось честным.',
-              'The line does not promise a “perfect pair.” It shows independent properties so comparisons stay honest.',
+              'Форма — снаружи. Комфорт — внутри.',
+              'Style on the outside. Fit on the inside.',
             )}
           </p>
-        </div>
-        <div className={styles.methodGrid}>
-          <article>
-            <span>{text('Ширина', 'Width')}</span>
-            <h3>{text('Место для стопы', 'Room for your foot')}</h3>
-            <p>
-              {text(
-                'От узкой до очень широкой. Если данных нет, пишем «не оценено».',
-                'From narrow to extra wide. Missing data is shown as “not assessed.”',
-              )}
-            </p>
-          </article>
-          <article>
-            <span>{text('Амортизация', 'Cushioning')}</span>
-            <h3>{text('Характер шага', 'Ride character')}</h3>
-            <p>
-              {text(
-                'Упругая, сбалансированная или мягкая — без шкалы «лучше/хуже».',
-                'Firm, balanced, or soft—without a “better/worse” scale.',
-              )}
-            </p>
-          </article>
-          <article>
-            <span>{text('Поддержка', 'Support')}</span>
-            <h3>{text('Структура верха', 'Upper structure')}</h3>
-            <p>
-              {text(
-                'Гибкая, сбалансированная или структурная опора на маршруте.',
-                'Flexible, balanced, or structured support along the route.',
-              )}
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className={styles.featured} aria-labelledby="featured-title">
-        <div className={styles.featuredCopy}>
-          <p className={styles.sectionKicker}>{text('Выбор маршрута', 'Route pick')}</p>
-          <h2 id="featured-title">
-            {text(
-              'Для дня, который не заканчивается после обеда',
-              'For a day that does not end after lunch',
-            )}
+          <h2 id="fit-title">
+            {text('Красиво — это когда', 'Looks good.')}
+            <br />
+            <span>{text('тебе подходит.', 'Feels like you.')}</span>
           </h2>
           <p>
             {text(
-              'Познакомьтесь с Signal 01: сравните посадку и сценарии, затем откройте карточку, чтобы выбрать цвет и доступный размер.',
-              'Meet Signal 01: compare fit and everyday use, then open the product page to choose a color and an available size.',
+              'У пары есть характер. У твоей стопы — свои особенности. Линия посадки помогает сравнивать их до покупки.',
+              'Every sneaker has a character. Every foot has its own needs. The Fit line helps you compare before choosing.',
             )}
           </p>
-          <ButtonLink variant="secondary" to={paths.catalog}>
-            {text('Смотреть весь каталог', 'View the full catalog')}
+          <ButtonLink variant="secondary" to="/catalog">
+            {text('Найти свою посадку', 'Find your fit')}
+            <Icon name="arrow" />
           </ButtonLink>
         </div>
-        {localizedFeaturedProduct ? (
-          <ProductCard
-            product={localizedFeaturedProduct}
-            href={catalogProductAnchor(localizedFeaturedProduct.slug)}
-          />
-        ) : (
-          <div className={styles.featuredState} role="status">
-            <p>
-              {featuredQuery.isPending
-                ? text('Загружаем пару…', 'Loading this pair…')
-                : text(
-                    'Сейчас эта пара недоступна. Другие модели — в каталоге.',
-                    'This pair is unavailable right now. Explore other models in the catalog.',
-                  )}
-            </p>
-            {featuredQuery.isError && (
-              <Button variant="secondary" onClick={() => void featuredQuery.refetch()}>
-                {text('Повторить', 'Try again')}
-              </Button>
-            )}
+        <div className={styles.fitSample}>
+          <div className={styles.fitSampleHeading}>
+            <Icon name="route" />
+            <h3>{text('Линия посадки', 'Fit line')}</h3>
+            <span>FIT / PROFILE</span>
           </div>
-        )}
+          {spotlight ? (
+            <FitLine fit={spotlight.fit} />
+          ) : (
+            <p>
+              {text(
+                'Данные появятся вместе с парой.',
+                'Fit data appears with the sneaker.',
+              )}
+            </p>
+          )}
+          <div className={styles.fitExplanations}>
+            <p>
+              <strong>{text('Ширина', 'Width')}</strong>
+              {text('Пространство для стопы', 'Room for your foot')}
+            </p>
+            <p>
+              <strong>{text('Амортизация', 'Cushioning')}</strong>
+              {text('Мягкий или упругий шаг', 'A soft or firm ride')}
+            </p>
+            <p>
+              <strong>{text('Поддержка', 'Support')}</strong>
+              {text('Структура верха', 'Upper structure')}
+            </p>
+          </div>
+          <small>
+            {text(
+              'Демо-оценка, а не персональная рекомендация. Неизвестные свойства всегда отмечаем.',
+              'Demo assessment, not a personal recommendation. Unknown properties are always marked.',
+            )}
+          </small>
+        </div>
       </section>
-
+      <section className={styles.cityStory} aria-labelledby="city-title">
+        <img
+          src="/media/editorial/city-route.webp"
+          srcSet="/media/editorial/city-route-800.webp 800w, /media/editorial/city-route.webp 1600w"
+          sizes="100vw"
+          alt={text(
+            'Солнечный городской переход, бетонные лестницы и синие перила',
+            'Sunlit city passage, concrete stairs and blue handrails',
+          )}
+          width={1600}
+          height={1067}
+          loading="lazy"
+        />
+        <div>
+          <p className={styles.eyebrow}>SOLECRAFT / EVERYDAY EXPLORERS</p>
+          <h2 id="city-title">
+            {text('Планы на сегодня?', 'Plans for today?')}
+            <br />
+            {text('Просто идти.', 'Just keep going.')}
+          </h2>
+          <ButtonLink to={paths.catalog}>
+            {text('Город ждёт. Выбрать пару', 'The city awaits. Find your pair')}
+            <Icon name="arrow" />
+          </ButtonLink>
+        </div>
+      </section>
       <section
         id="store-policy"
         className={styles.trust}
         aria-label={text('Условия магазина', 'Store policies')}
       >
         <div>
-          <strong>{text('Примерка без спешки', 'Try without rushing')}</strong>
-          <span>{text('14 дней на возврат демо-заказа', '14-day demo return')}</span>
+          <Icon name="bag" />
+          <strong>{text('Без лишних шагов', 'Keep it simple')}</strong>
+          <p>
+            {text(
+              'Каталог, избранное и заказ доступны гостям. Аккаунт — по желанию.',
+              'Browse, save and order as a guest. An account is optional.',
+            )}
+          </p>
         </div>
         <div>
-          <strong>{text('Доставка по городу', 'City delivery')}</strong>
-          <span>
+          <Icon name="route" />
+          <strong>{text('Всё ясно до оплаты', 'Clear before you pay')}</strong>
+          <p>
             {text(
-              'Срок и стоимость покажем до оплаты',
-              'Timing and cost appear before payment',
+              'Стоимость доставки и итог заказа покажем заранее. Оплата — демонстрационная.',
+              'Delivery costs and order totals appear upfront. Payment is a demo.',
             )}
-          </span>
+          </p>
         </div>
         <div>
-          <strong>{text('Fit-данные с источником', 'Source-aware fit data')}</strong>
-          <span>
+          <Icon name="return" />
+          <strong>{text('Примерка без спешки', 'Take your time')}</strong>
+          <p>
             {text(
-              'Неизвестное не маскируем средним значением',
-              'Unknown values are never disguised as average',
+              '14 дней на возврат демо-заказа. Никаких реальных списаний.',
+              '14-day demo returns. No real payments are taken.',
             )}
-          </span>
+          </p>
         </div>
       </section>
     </div>

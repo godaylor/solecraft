@@ -5,6 +5,7 @@ import { paths } from '../../app/router/paths'
 import { safeReturnTo, useAuth } from '../../app/providers/AuthProvider'
 import { Button } from '../../shared/ui/Button/Button'
 import { useLocale } from '../../shared/i18n/locale'
+import { emailSignInEnabled } from '../../shared/config/emailSignIn'
 import styles from './AuthRoutes.module.scss'
 
 export function SignInRoute() {
@@ -36,6 +37,35 @@ export function SignInRoute() {
       </section>
     )
   }
+  if (!emailSignInEnabled()) {
+    return (
+      <section className={styles.state} aria-labelledby="sign-in-title">
+        <h1 id="sign-in-title">
+          {text(
+            'Вход по email временно недоступен',
+            'Email sign-in is temporarily unavailable',
+          )}
+        </h1>
+        <p>
+          {text(
+            'Вы можете выбрать обувь и оформить демо-заказ без регистрации. Избранное и корзина сохраняются в этом браузере.',
+            'You can browse shoes and place a demo order without registering. Your wishlist and cart are saved in this browser.',
+          )}
+        </p>
+        <p>
+          {text(
+            'Гостевой заказ не добавляется в историю аккаунта. Подтверждение доступно в этой же сессии браузера.',
+            'Guest orders are not added to account history. The receipt is available in the same browser session.',
+          )}
+        </p>
+        <Link to={paths.catalog}>
+          {text('Перейти в каталог', 'Browse the catalog')}
+        </Link>
+        {' · '}
+        <Link to={paths.cart}>{text('Открыть корзину', 'Open cart')}</Link>
+      </section>
+    )
+  }
   return (
     <section className={styles.page} aria-labelledby="sign-in-title">
       <div>
@@ -43,8 +73,8 @@ export function SignInRoute() {
         <h1 id="sign-in-title">{text('Войти по email', 'Sign in with email')}</h1>
         <p>
           {text(
-            'Отправим одноразовую magic link. Пароль и данные карты не нужны.',
-            'We will send a one-time magic link. No password or card details needed.',
+            'Отправим одноразовую ссылку для входа. Пароль и данные карты не нужны.',
+            'We will send a one-time sign-in link. No password or card details needed.',
           )}
         </p>
       </div>

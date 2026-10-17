@@ -13,7 +13,7 @@ html {
   background: var(--surface-page);
   font-family: var(--font-body);
   line-height: 1.5;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   text-rendering: optimizeLegibility;
 }
 
@@ -39,6 +39,44 @@ a {
 
 a {
   color: var(--action-primary);
+}
+
+button,
+select,
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+main {
+  scroll-margin-top: 120px;
+}
+main h1 {
+  letter-spacing: -0.055em;
+}
+input,
+select,
+textarea {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--action-primary);
+}
+dialog[open]::backdrop {
+  animation: backdrop-in 200ms ease both;
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 :focus-visible {

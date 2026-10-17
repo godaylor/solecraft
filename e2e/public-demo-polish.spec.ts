@@ -45,7 +45,7 @@ for (const viewport of [
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Signal 01')
     const colors = page.getByRole('group', { name: /Цвет:/ }).getByRole('button')
     await colors.nth(1).click()
-    const color = (await colors.nth(1).innerText()).trim()
+    let color = (await colors.nth(1).innerText()).trim()
     await expect(page).toHaveURL(/color=/)
     await page.reload()
     await expect(colors.nth(1)).toHaveAttribute('aria-pressed', 'true')
@@ -59,6 +59,7 @@ for (const viewport of [
     await page.reload()
     await page.locator('#sever-signal-01').getByRole('link').click()
     await colors.nth(1).click()
+    await expect(colors.nth(1)).toHaveAttribute('aria-pressed', 'true')
     const sizes = page.getByRole('group', { name: 'Размер EU' })
     let selectedStock = 0
     for (const size of await sizes.locator('button:not(:disabled)').all()) {
@@ -69,6 +70,23 @@ for (const viewport of [
         )?.[1],
       )
       if (selectedStock >= 2) break
+    }
+    if (selectedStock < 2) {
+      // Existing isolated stock is deliberately preserved across repeated runs.
+      // The alternate color was already verified with reload/Back/Forward above;
+      // quantity editing may use another available colorway of this same model.
+      await colors.first().click()
+      await expect(colors.first()).toHaveAttribute('aria-pressed', 'true')
+      color = (await colors.first().innerText()).trim()
+      for (const size of await sizes.locator('button:not(:disabled)').all()) {
+        await size.click()
+        selectedStock = Number(
+          (await page.locator('p').filter({ hasText: /^SKU / }).innerText()).match(
+            /(\d+)\s*$/,
+          )?.[1],
+        )
+        if (selectedStock >= 2) break
+      }
     }
     expect(
       selectedStock,

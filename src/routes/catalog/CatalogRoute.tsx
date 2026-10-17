@@ -99,6 +99,7 @@ export function CatalogRoute({ catalogRepository }: CatalogRouteProps) {
     (nextState, replace = false) => {
       setSearchParams(serializeCatalogParams(normalizeCatalogState(nextState)), {
         replace,
+        preventScrollReset: true,
       })
     },
     [setSearchParams],

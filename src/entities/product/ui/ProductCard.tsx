@@ -59,7 +59,7 @@ export function ProductCard({
             height={product.image.height}
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : 'auto'}
-            decoding="async"
+            decoding="auto"
             onError={() => setImageFailed(true)}
           />
         )}
@@ -86,6 +86,13 @@ export function ProductCard({
           </Link>
         </Heading>
         <Price value={product.price} />
+        <p className={styles.color}>
+          <span
+            style={{ backgroundColor: product.defaultVariant.color.code }}
+            aria-hidden="true"
+          />
+          {product.defaultVariant.color.name}
+        </p>
         <p className={styles.availability}>
           {product.availability.inStock
             ? `${text('В наличии', 'In stock')} · ${product.availableSizes.length} ${text(

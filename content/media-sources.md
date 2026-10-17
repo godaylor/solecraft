@@ -1,5 +1,37 @@
 # Catalog media sources
 
+## Editorial city photograph — 2026-10-17
+
+`public/media/editorial/city-route.webp` (1600×1067) and
+`city-route-800.webp` (800×533) were created for the M10 redesign with the built-in
+OpenAI ImageGen tool. Text-only generation; no external reference photograph.
+The photograph contains no person, footwear, brand mark or readable signage and
+is used only as city atmosphere. It never represents a catalog model/colorway.
+The original PNG remains in the local ImageGen output; responsive derivatives
+are saved in the project and encoded as WebP with the installed Chrome canvas.
+
+Final prompt:
+
+> Use case: photorealistic-natural. Asset type: wide editorial photograph for
+> Solecraft, a modern city sneaker store. Create an art-directed architectural
+> photograph of a quiet European urban pedestrian passage, long cool pale
+> concrete stairs and blue painted handrails, graphic white road crossing
+> markings on dark asphalt in foreground, a single small vivid orange street
+> element. Morning sun casts crisp diagonal shadows. Materiality: real granular
+> asphalt, brushed concrete, subtle imperfections. Composition: cinematic very
+> wide horizontal frame 3:2, low street-level viewpoint looking through the
+> passage, strong leading lines and depth, open uncluttered space on left, stairs
+> on right. Sophisticated restrained contemporary streetwear campaign
+> photography, film grain very subtle, cool light blue and charcoal palette with
+> small orange accent. No people, no footwear, no cars, no text, no lettering, no
+> logo, no watermark. This is a city atmosphere photograph, not a product
+> photograph, not an illustration, not a rendered website.
+
+All existing product/colorway files are retained. The visual review uses a common
+Cold Paper media surface and avoids multiply blending, preserving displayed shoe
+colors and opaque backgrounds. The catalog still deliberately shares ten
+fictional silhouettes across 32 named products; this remains disclosed on PDP.
+
 ## Current production media
 
 The ten catalog/PDP sneaker assets in `public/media/products/` were generated for

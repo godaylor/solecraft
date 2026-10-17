@@ -22,6 +22,7 @@ import { Button } from '../../shared/ui/Button/Button'
 import { InlineError } from '../../shared/ui/InlineError/InlineError'
 import { Price } from '../../shared/ui/Price/Price'
 import { Skeleton } from '../../shared/ui/Skeleton/Skeleton'
+import { Icon } from '../../shared/ui/Icon/Icon'
 import { useLocale } from '../../shared/i18n/locale'
 import { resolveProductVariant } from './productVariant'
 import styles from './ProductRoute.module.scss'
@@ -109,6 +110,12 @@ function ProductGallery({ variant }: { variant: ProductVariant }) {
 
 function SizeGuide({ product }: { product: ProductDetails }) {
   const { text } = useLocale()
+  const manufacturerGuide =
+    product.sizeGuide.length > 0 &&
+    product.sizeGuide.every((entry) => entry.provenance === 'manufacturer')
+  const hasDemoEntries = product.sizeGuide.some(
+    (entry) => entry.provenance === 'editorial_demo',
+  )
   const provenanceLabels: Record<ProductDetails['fit']['provenance'], string> = {
     manufacturer: text('Данные производителя', 'Manufacturer data'),
     editorial_demo: text('Редакционная демо-оценка', 'Editorial demo assessment'),
@@ -118,10 +125,20 @@ function SizeGuide({ product }: { product: ProductDetails }) {
     <details className={styles.guide}>
       <summary>{text('Как выбрать размер', 'How to choose a size')}</summary>
       <p>
-        {text(
-          'Измерьте стопу вечером и сравните диапазон в миллиметрах. Это справочник бренда, не персональная рекомендация.',
-          'Measure your foot in the evening and compare the millimeter range. This is a brand guide, not a personal recommendation.',
-        )}
+        {manufacturerGuide
+          ? text(
+              'Измерьте стопу вечером и сравните диапазон в миллиметрах с данными производителя. Это справочник бренда, не персональная рекомендация.',
+              'Measure your foot in the evening and compare the millimeter range with the manufacturer data. This is a brand guide, not a personal recommendation.',
+            )
+          : hasDemoEntries
+            ? text(
+                'Это демонстрационная таблица: условные диапазоны показывают работу магазина и не заменяют размерную сетку производителя. Для реальной покупки используйте подтверждённые данные бренда.',
+                'This is a demonstration size guide: illustrative ranges show how the store works and do not replace the manufacturer’s size chart. Use verified brand data for an actual purchase.',
+              )
+            : text(
+                'Подтверждённой размерной сетки пока нет. Для выбора размера используйте данные производителя.',
+                'A verified size chart is not available yet. Use manufacturer data to choose a size.',
+              )}
       </p>
       <div className={styles.tableScroll}>
         <table>
@@ -140,14 +157,19 @@ function SizeGuide({ product }: { product: ProductDetails }) {
               <tr key={entry.sizeId}>
                 <th scope="row">{entry.sizeLabel}</th>
                 <td>
-                  {entry.footLengthMinMm && entry.footLengthMaxMm
+                  {entry.provenance !== 'unknown' &&
+                  entry.footLengthMinMm &&
+                  entry.footLengthMaxMm
                     ? `${entry.footLengthMinMm}–${entry.footLengthMaxMm} ${text(
                         'мм',
                         'mm',
                       )}`
                     : text('Нет подтверждённого соответствия', 'No confirmed mapping')}
                 </td>
-                <td>{provenanceLabels[entry.provenance]}</td>
+                <td>
+                  {provenanceLabels[entry.provenance]}
+                  {entry.sourceNote ? <small>{entry.sourceNote}</small> : null}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -207,7 +229,7 @@ function ProductPage({
     const next = new URLSearchParams(searchParams)
     if (canonicalColor) next.set('color', canonicalColor)
     else next.delete('color')
-    setSearchParams(next, { replace: true })
+    setSearchParams(next, { replace: true, preventScrollReset: true })
   }, [canonicalColor, colorParam, searchParams, setSearchParams])
 
   const selected = variant.inventory.find(
@@ -255,8 +277,10 @@ function ProductPage({
           <p className={styles.kicker}>
             {product.brand.name} / {product.category.name}
           </p>
-          <h1 id="product-title">{product.model}</h1>
-          <WishlistButton productId={product.id} label={product.model} />
+          <div className={styles.titleRow}>
+            <h1 id="product-title">{product.model}</h1>
+            <WishlistButton productId={product.id} label={product.model} />
+          </div>
           <p className={styles.description}>{product.description}</p>
           <Price value={variant.price} />
 
@@ -280,7 +304,7 @@ function ProductPage({
                     setSelectedInventoryId(undefined)
                     setSelectionError(false)
                     setFeedback(undefined)
-                    setSearchParams(next)
+                    setSearchParams(next, { preventScrollReset: true })
                   }}
                 >
                   <span
@@ -334,16 +358,31 @@ function ProductPage({
 
           <Button className={styles.addButton} type="button" onClick={addToCart}>
             {text('Добавить точный размер', 'Add selected size')}
+            <Icon name="bag" />
           </Button>
           <p className={styles.feedback} role="status" aria-live="polite">
             {feedback?.variantId === variant.id ? feedback.text : ''}
           </p>
+          {feedback?.variantId === variant.id && (
+            <Link className={styles.goToCart} to={paths.cart}>
+              {text('Перейти в корзину', 'Go to cart')}
+              <Icon name="arrow" />
+            </Link>
+          )}
           <p className={styles.trust}>
             {text(
               'Демо-заказ без реального списания · возврат в течение 14 дней',
               'Demo order with no real charge · 14-day return',
             )}
           </p>
+          {product.fit.provenance === 'editorial_demo' && (
+            <p className={styles.demoNote}>
+              {text(
+                'Демонстрационная модель: часть ассортимента использует общий дизайн обуви. Посадка и сценарии условные; изображение соответствует выбранному цвету.',
+                'Demo model: some catalog entries share a shoe design. Fit values and use cases are illustrative; the image matches the selected color.',
+              )}
+            </p>
+          )}
         </section>
       </div>
 

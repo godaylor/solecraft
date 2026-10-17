@@ -4,6 +4,7 @@ import { paths } from '../../../app/router/paths'
 import { useCommerce } from '../../../app/providers/CommerceProvider'
 import { ButtonLink } from '../../../shared/ui/Button/ButtonLink'
 import { IconButton } from '../../../shared/ui/IconButton/IconButton'
+import { Icon } from '../../../shared/ui/Icon/Icon'
 import { useLocale } from '../../../shared/i18n/locale'
 import { formatMoney } from '../../../shared/lib/formatMoney'
 import type { CartRepository } from '../api/CartRepository'
@@ -45,10 +46,12 @@ export function CartQuickSheet({ repository }: { repository: CartRepository }) {
         ref={triggerRef}
         type="button"
         className={styles.trigger}
+        aria-label={`${text('Корзина', 'Cart')} ${count} ${text('товаров', 'items')}`}
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        {text('Корзина', 'Cart')}{' '}
+        <Icon name="bag" />
+        <span className={styles.triggerLabel}>{text('Корзина', 'Cart')}</span>
         <span aria-label={`${count} ${text('товаров', 'items')}`}>{count}</span>
       </button>
       {open ? (

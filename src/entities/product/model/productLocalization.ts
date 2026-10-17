@@ -40,44 +40,83 @@ const colorNamesToSlugs: Record<string, string> = {
   Основной: 'default',
 }
 
-const descriptions: Record<string, string> = {
-  'sever-signal-01': 'A calm city sneaker for long routes and an everyday pace.',
-  'sever-signal': 'A calm city sneaker for long routes and an everyday pace.',
-  'forma-metro':
-    'A restrained silhouette for the office, commuting, and after-work walks.',
-  'volna-route': 'Soft cushioning and an easy stride for a full day in the city.',
-  'krug-rain-2': 'A structured city sneaker for rainy routes and cooler days.',
-  'krug-rain': 'A structured city sneaker for rainy routes and cooler days.',
-  'smena-block': 'A versatile profile with a secure fit and substantial upper.',
-  'luch-tempo': 'A flexible sneaker for light training, commuting, and brisk walks.',
-  'sever-line-02': 'A clean design with firm cushioning for a steady city pace.',
-  'forma-office-one':
-    'A minimalist sneaker for understated offices and long days on foot.',
-  'volna-airwalk': 'A light, soft sneaker for long walks and busy connections.',
-  'krug-guard': 'A protected upper and structured support for changeable weather.',
-  'smena-shift': 'A balanced city sneaker for workdays and evening routes.',
-  'luch-pulse': 'A soft transition and flexible upper for unhurried light training.',
-  'sever-north-03': 'A substantial city sneaker for cool weather and wet asphalt.',
-  'forma-frame': 'Clean lines, moderate cushioning, and a composed office fit.',
-  'volna-cloud': 'A very soft ride for walking and full, active days.',
-  'krug-asphalt': 'A stable sole and firm support for a fast city pace.',
-  'smena-daylight': 'A light office sneaker with soft fit and a neat profile.',
-  'luch-sprint-lite': 'A light, flexible sneaker for short runs and active walks.',
-  'sever-axis': 'A stable fit and balanced cushioning for the daily route.',
-  'forma-softdesk': 'A soft office sneaker for people who walk between meetings.',
-  'volna-river': 'A roomy toe box and flexible sole for long city walks.',
-  'krug-shelter':
-    'A composed weather sneaker with a protected upper and steady support.',
-  'smena-cross': 'A versatile sneaker for light training and city errands.',
-  'luch-flow': 'A soft, flexible profile for warm-ups and everyday movement.',
-  'sever-vector': 'A structured city sneaker with a firm heel and even transition.',
-  'forma-balance': 'A restrained, versatile sneaker for the office and the route home.',
-  'volna-step': 'A soft, wide fit for an easy pace and long weekends.',
-  'krug-rainline': 'A protected wet-weather sneaker without a heavy hiking feel.',
-  'smena-pace': 'A firm fit for active walks and light training.',
-  'luch-move': 'A simple, flexible sneaker for short everyday routes.',
-  'sever-tram': 'A city sneaker with a partially assessed editorial fit profile.',
-  'forma-outline': 'A clean office silhouette with a neutral ride.',
+const demoProductSlugs = new Set([
+  'sever-signal-01',
+  'sever-signal',
+  'forma-metro',
+  'volna-route',
+  'krug-rain-2',
+  'krug-rain',
+  'smena-block',
+  'luch-tempo',
+  'sever-line-02',
+  'forma-office-one',
+  'volna-airwalk',
+  'krug-guard',
+  'smena-shift',
+  'luch-pulse',
+  'sever-north-03',
+  'forma-frame',
+  'volna-cloud',
+  'krug-asphalt',
+  'smena-daylight',
+  'luch-sprint-lite',
+  'sever-axis',
+  'forma-softdesk',
+  'volna-river',
+  'krug-shelter',
+  'smena-cross',
+  'luch-flow',
+  'sever-vector',
+  'forma-balance',
+  'volna-step',
+  'krug-rainline',
+  'smena-pace',
+  'luch-move',
+  'sever-tram',
+  'forma-outline',
+])
+const silhouetteDescriptions: Record<string, { ru: string; en: string }> = {
+  '01': {
+    ru: 'Сетчатый верх, контрастные панели и скульптурная подошва. Выразительный силуэт для повседневных сочетаний.',
+    en: 'Mesh textures, contrasting panels and a sculpted sole. An expressive silhouette for everyday outfits.',
+  },
+  '02': {
+    ru: 'Лаконичный низкий силуэт с фактурными панелями и ровной линией подошвы. Чистые формы без лишних деталей.',
+    en: 'A pared-back low profile with textured panels and a clean sole line. Simple shapes, considered details.',
+  },
+  '03': {
+    ru: 'Сетчатая фактура и волнообразная многослойная подошва. Заметная форма с небольшими цветовыми акцентами.',
+    en: 'A mesh texture and a wave-shaped layered sole. A distinctive shape with small color accents.',
+  },
+  '04': {
+    ru: 'Многослойные панели, рельефная подошва и яркие детали шнуровки. Городской силуэт с характером outdoor-обуви.',
+    en: 'Layered panels, a textured outsole and bright lacing details. A city silhouette with an outdoor influence.',
+  },
+  '05': {
+    ru: 'Геометричные накладки и угловатая подошва. Фактурный верх и собранный профиль в духе городских ретро-кроссовок.',
+    en: 'Geometric overlays and an angular sole. A textured upper and a composed, retro-inspired city profile.',
+  },
+  '06': {
+    ru: 'Низкий профиль, сетчатые вставки и сегментированная подошва. Небольшие контрастные детали завершают силуэт.',
+    en: 'A low profile, mesh inserts and a segmented sole. Small contrasting details complete the silhouette.',
+  },
+  '07': {
+    ru: 'Контурные накладки обрамляют сетчатые панели. Графичный силуэт дополнен угловатой светлой подошвой.',
+    en: 'Contoured overlays frame the mesh panels. A graphic silhouette finished with an angular light-colored sole.',
+  },
+  '08': {
+    ru: 'Спокойные линии, сетчатая фактура и тонкий акцент вдоль подошвы. Минималистичный взгляд на городские кроссовки.',
+    en: 'Quiet lines, mesh texture and a subtle accent along the sole. A minimalist take on the city sneaker.',
+  },
+  '09': {
+    ru: 'Крупная сетчатая фактура, плавные накладки и объёмная подошва. Мягкие линии создают цельный современный силуэт.',
+    en: 'An open mesh texture, flowing overlays and a substantial sole. Rounded lines create a cohesive modern silhouette.',
+  },
+  '10': {
+    ru: 'Контрастные слои, петли для шнуровки и рельефный протектор. Насыщенный деталями силуэт с outdoor-настроением.',
+    en: 'Contrasting layers, lacing loops and a textured tread. A detailed silhouette with an outdoor spirit.',
+  },
 }
 
 export function localizeColorName(
@@ -103,11 +142,23 @@ function localizeBase<T extends Product | ProductDetails>(
           : 'Illustrative fit values for exploring the store; shoe properties are not verified'
         : product.fit.sourceNote,
   }
-  const demoDescription = descriptions[product.slug]
-    ? locale === 'ru'
-      ? 'Модель демонстрационного каталога. Несколько моделей используют общий дизайн обуви; на фото показан выбранный цвет. Посадка и сценарии использования условные, а не подтверждённые свойства изделия.'
-      : 'A demo catalog model. Several models share a shoe design; the image shows the selected color. Fit values and use cases are illustrative, not verified product properties.'
+  const mediaSource =
+    'image' in product
+      ? product.image.src
+      : (product.variants.find((variant) => variant.isDefault) ?? product.variants[0])
+          ?.media[0]?.src
+  const family = mediaSource?.match(/solecraft-(\d{2})/)?.[1]
+  const visualDescription = family
+    ? silhouetteDescriptions[family]?.[locale]
     : undefined
+  const demoDescription =
+    demoProductSlugs.has(product.slug) && visualDescription
+      ? visualDescription
+      : demoProductSlugs.has(product.slug)
+        ? locale === 'ru'
+          ? 'Модель демонстрационного каталога. Несколько моделей используют общий дизайн обуви; на фото показан выбранный цвет. Посадка и сценарии использования условные, а не подтверждённые свойства изделия.'
+          : 'A demo catalog model. Several models share a shoe design; the image shows the selected color. Fit values and use cases are illustrative, not verified product properties.'
+        : undefined
   if (locale === 'ru')
     return {
       ...product,
@@ -197,7 +248,7 @@ export function localizeProductDetails(
       },
       media: variant.media.map((media, index) => ({
         ...media,
-        alt: `${localized.brand.name} ${localized.model}, view ${index + 1}`,
+        alt: `${localized.brand.name} ${localized.model}, ${localizeColorName(variant.color.slug, variant.color.name, locale)}, view ${index + 1}`,
       })),
     })),
     sizeGuide: localized.sizeGuide.map((entry) => ({

@@ -62,22 +62,26 @@ test('home and shell have no detectable axe violations', async ({ page }) => {
   expect(results.violations).toEqual([])
 })
 
-test('home recommendations use canonical product routes', async ({ page }) => {
+test('home selections use canonical products and collection filters', async ({
+  page,
+}) => {
   await page.goto('/')
 
-  const recommendations = page.getByRole('link', { name: 'К подходящей паре' })
-  await expect(recommendations.nth(0)).toHaveAttribute(
+  const recommendations = page.locator('section[aria-labelledby="curated-title"] a')
+  await expect(recommendations.nth(0)).toHaveAttribute('href', '/catalog?use=all-day')
+  await expect(recommendations.nth(1)).toHaveAttribute('href', '/catalog?use=office')
+  await expect(recommendations.nth(2)).toHaveAttribute(
+    'href',
+    '/catalog?use=wet-weather',
+  )
+  await expect(page.locator('#sever-signal-01').getByRole('link')).toHaveAttribute(
     'href',
     '/products/sever-signal-01',
   )
-  await expect(recommendations.nth(1)).toHaveAttribute('href', '/products/forma-metro')
-  await expect(recommendations.nth(2)).toHaveAttribute('href', '/products/krug-rain-2')
-  await expect(
-    page.getByRole('link', { name: /Signal 01 — открыть карточку товара/ }),
-  ).toHaveAttribute('href', '/products/sever-signal-01')
 
   await recommendations.nth(2).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Rain 2' })).toBeVisible()
+  await expect(page).toHaveURL(/catalog\?use=wet-weather$/)
+  await expect(page.locator('#krug-rain-2')).toBeVisible()
 })
 
 test('skip link and header navigation work with keyboard only', async ({
@@ -148,11 +152,11 @@ test('reduced motion and forced colors preserve the home meaning', async ({ page
   await page.emulateMedia({ reducedMotion: 'reduce', forcedColors: 'active' })
   await page.goto('/')
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Твоя посадка')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Твой ритм')
   await expect(page.getByLabel('Линия посадки').first()).toContainText('Ширина')
 
   const motionDuration = await page
-    .locator('aside')
+    .locator('section[aria-labelledby="home-title"] svg path')
     .first()
     .evaluate((element) => getComputedStyle(element, '::before').animationDuration)
   const durationMs = motionDuration.endsWith('ms')
@@ -196,7 +200,7 @@ test('200% desktop zoom equivalent reflows without horizontal overflow', async (
   await page.setViewportSize({ width: 720, height: 450 })
   await page.goto('/')
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Твоя посадка')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Твой ритм')
   const hasOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
   )

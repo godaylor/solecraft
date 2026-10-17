@@ -14,6 +14,10 @@ variant/size/SKU identity от PDP до immutable order snapshot.
 gate остаётся открытым для manual AT и custom SMTP. Неподтверждённые legacy
 media заменены собственным сгенерированным fictional catalog set.
 
+2026-10-18 существующий Supabase восстановлен без сброса данных. Публичный
+email-вход временно выключен до настройки SMTP; весь гостевой путь доступен.
+Редизайн и результаты исправлений: [отчёт M10](docs/REDESIGN_M10.md).
+
 ## Что реализовано
 
 - URL-driven каталог с поиском, фильтрами, сортировкой и пагинацией;
@@ -151,6 +155,11 @@ Route-matrix headless повтор остановлен Vercel Security Checkpoi
 Отчёт и методика: [M10 release evidence](docs/M10_RELEASE_EVIDENCE.md).
 
 ## Portfolio evidence
+
+Редизайн от 2026-10-17: [концепция и browser evidence](docs/REDESIGN_M10.md),
+[интерактивное сравнение до/после](docs/screenshots/redesign/comparison.html).
+Крупная обувь из актуального каталога, подборки по сценариям и общая визуальная
+система магазина сохраняют guest checkout, RU/EN и точную SKU identity.
 
 - [mobile home](docs/screenshots/solecraft-home-mobile.png);
 - [desktop catalog](docs/screenshots/solecraft-catalog-desktop.png);

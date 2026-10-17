@@ -5,6 +5,34 @@ Production deployment и additive migrations выполнены по явном�
 Frontend публикуется статически, но приложение НЕ автономный static-only магазин:
 каталог, Auth, owner commerce, атомарный checkout и история требуют Supabase.
 
+## Восстановление и email-вход — 2026-10-18
+
+Существующий production project `nwekblxelexknvvrfwig` восстановлен из `INACTIVE`
+штатным restore API до `ACTIVE_HEALTHY`. Каталог и публичный Auth endpoint снова
+возвращают 200. Новый project, миграции, смена тарифа и сброс данных не выполнялись.
+Production Site URL и exact callback по-прежнему соответствуют текущему Vercel alias.
+
+Проверка auth config подтвердила отсутствие custom SMTP. Встроенный отправитель
+Supabase ограничен адресами участников организации и малым лимитом отправки;
+это не рабочая публичная доставка на произвольные Mail/Яндекс/Gmail адреса.
+Поэтому hosted builds по умолчанию показывают понятное объяснение временной
+недоступности email-входа и ссылки на полный гостевой путь. Существующие сессии,
+owner data, callback и локальные изолированные auth tests сохранены.
+
+Чтобы включить публичный email-вход после настройки существующего отправителя,
+проверить SPF/DKIM/DMARC, получение письма и полный callback, затем задать
+`VITE_EMAIL_SIGN_IN_ENABLED=true` в environment хостинга и пересобрать frontend.
+Пустой/отсутствующий флаг на production/preview означает выключенную форму;
+`false` явно выключает её, неизвестное значение также fails closed.
+SMTP password/API secret никогда не передаются в Vite. Новые платные сервисы и
+обход email verification для этой публикации не используются.
+
+Free project может снова приостанавливаться при низкой активности. Разовое
+восстановление не является гарантией непрерывного uptime; при необходимости
+повторный Resume выполняется для этого же project. Платный тариф не включался.
+Официальные условия: [project pausing](https://supabase.com/docs/guides/platform/free-project-pausing),
+[SMTP limits](https://supabase.com/docs/guides/auth/auth-smtp).
+
 ## Текущее развертывание
 
 - GitHub: [godaylor/solecraft](https://github.com/godaylor/solecraft), ветка `master`.
