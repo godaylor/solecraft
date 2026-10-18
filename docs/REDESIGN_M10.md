@@ -352,3 +352,64 @@ SPF/DKIM/DMARC и фактически полученная ссылка с за
 NVDA+Firefox и Android TalkBack+Chrome. Free Supabase может снова pause при низкой
 активности согласно [условиям сервиса](https://supabase.com/docs/guides/platform/free-project-pausing).
 Это ограничение бесплатного uptime, а не основание включать платный ресурс.
+
+### Результат production deploy и проверок
+
+Код сохранён и отправлен в `master`: `30a268d747f4d7b2a7c5b13ad9746c87518ef190`.
+Опубликован в существующем проекте, alias `https://solecraft-two.vercel.app`;
+`build-info.json` подтвердил этот commit. Следующий commit добавляет только
+документацию/доказательства; production marker повторно сверяется с HEAD.
+
+- [CI 39081039154](https://github.com/godaylor/solecraft/actions/runs/39081039154):
+  SUCCESS — quality, database/security, Chromium E2E, Lighthouse. Scheduled
+  three-browser job пропущен по условию workflow; локальное покрытие Firefox/
+  WebKit указано выше, полный multi-engine suite не заявляется.
+- Production Chrome: 20/20 PASS. Автоматически пройдены 32 published models и
+  64 colorways: стабильные title/description/media family, точный цвет/alt,
+  уникальные SKU между цветами, смена фото и сброс выбранного размера.
+  Все 64 изображения отдельно просмотрены на двух atlas sheets.
+- Проверены карточки 360/390/768/1440 px: сердце, фото и один scenario не
+  пересекаются. RU/EN reflow повторён вплоть до 7680 CSS px. Checkout review с
+  длинным email, keyboard focus и source notes прошли на опубликованном коде.
+- Два VPN journeys (FR) прошли на 1440×900 и 390×844: каталог → PDP → цвет →
+  избранное → compact drawer → qty=2/reload → checkout review. Production
+  заказы и Auth email не отправлялись; полный submit/receipt был в test stack.
+
+Сеть требует отдельной оговорки. Через физический Ethernet (trace RU) обычные
+DNS answers `216.198.79.131`/`64.29.17.131` на этом подключении дают TLS reset
+до HTTP. То же поведение воспроизведено curl, отдельным выбором каждого IP и
+TLS 1.2; default direct browser journey НЕ ПРОШЁЛ. Ответ DNS через независимый
+DoH (`.3`) здесь также не загрузился. Точную причину/виновника эти проверки не
+устанавливают. Нельзя обещать, что обычное отключение VPN устранит проблему:
+его системные маршруты и DNS в этой задаче не переключались.
+
+Два дополнительных прямых RU browser journeys прошли на desktop/mobile через
+доступный edge `216.198.79.195`. IP выбирался только внутри временного CONNECT
+proxy; hostname, HTTPS/SNI, приложение и backend оставались production.
+`64.29.17.195` также отдал точный build marker. Это диагностический PASS с
+явным IP override, а не исправление обычного DNS-маршрута. Page errors, failed
+requests и axe review violations на успешных journeys — 0. Каталог и публичный
+Auth API Supabase ответили 200 через оба физических исходящих соединения.
+
+Независимая [Globalping-проверка](https://api.globalping.io/v1/measurements/2W8P6mlXvrtXtQH5A00021KuB)
+от 2026-10-18 00:03:35 UTC: Москва/Timeweb AS9123, Петербург/Selectel AS49505,
+Москва/Selectel AS50340 и Франция/OVH AS16276 получили полный 91-byte JSON
+с `30a268d`, HTTP 200, valid TLS 1.3, `truncated:false`. Это серверные сети,
+не домашние/мобильные операторы. [Check-Host](https://check-host.net/check-report/51acdfe1kb6):
+две RU-ноды и Париж 200, ещё одна московская нода timeout. В совокупности это
+подтверждает зависимость от маршрута и исключает вывод о всеобщей недоступности
+из РФ в момент измерения. Внешние HTTP probes не заменяют browser checkout.
+
+Production evidence: [карточка 390 px](screenshots/redesign/release-20261018/production-card-390.png),
+[карточка desktop](screenshots/redesign/release-20261018/production-card-desktop.png),
+[drawer mobile](screenshots/redesign/release-20261018/production-drawer-390.png),
+[atlas 1](screenshots/redesign/release-20261018/catalog-atlas-1.png),
+[atlas 2](screenshots/redesign/release-20261018/catalog-atlas-2.png).
+Карточка до редизайна: [desktop catalog](screenshots/redesign/before-catalog-desktop.png).
+Mapping и сырые сетевые результаты сохранены в ignored release artifacts.
+
+Реально незакрыто: публичная доставка email/вход без существующего SMTP;
+native NVDA/TalkBack evidence; нестабильная доступность Vercel по обычному
+маршруту конкретного российского подключения. Платные ресурсы, миграции/reset
+production и общий admin password не создавались. Эти gates остаются открытыми;
+публикация проверенного demo выполнена по прямому запросу владельца.

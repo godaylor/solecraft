@@ -1,6 +1,6 @@
 # Deployment contract
 
-Это M10 runbook для Vercel + облачного Supabase, актуализированный 2026-09-10.
+Это M10 runbook для Vercel + облачного Supabase, актуализированный 2026-10-18.
 Production deployment и additive migrations выполнены по явному запросу владельца.
 Frontend публикуется статически, но приложение НЕ автономный static-only магазин:
 каталог, Auth, owner commerce, атомарный checkout и история требуют Supabase.
@@ -37,14 +37,22 @@ Free project может снова приостанавливаться при �
 
 - GitHub: [godaylor/solecraft](https://github.com/godaylor/solecraft), ветка `master`.
 - Vercel production: [solecraft-two.vercel.app](https://solecraft-two.vercel.app).
-- Vercel deployment details: [ENL19q6gBZiHdaopuyYLJ2kiRKkq](https://vercel.com/maxeem/solecraft/ENL19q6gBZiHdaopuyYLJ2kiRKkq).
+- Vercel deployment history: [Solecraft deployments](https://vercel.com/maxeem/solecraft/deployments).
 - Supabase project ref: `nwekblxelexknvvrfwig`, URL
   `https://nwekblxelexknvvrfwig.supabase.co`.
 - Все 6 локальных migrations применены, затем применён `supabase/seed.sql`.
-- `npm run e2e:deployed` против первого production deployment: 2/2 PASS. Текущий
-  alias после GitHub auto-deploy подтверждён в обычном браузере (главная и каталог
-  загружаются); headless повтор из этой среды может получить Vercel Security
-  Checkpoint (403) до выполнения browser challenge.
+- 2026-10-18: редизайн и исправления `30a268d` опубликованы. Production suites:
+  20/20 PASS, включая все 32 модели/64 расцветки, карточки на четырёх viewport,
+  colorway/SKU, guest checkout review, RU/EN reflow и HTML/asset cache headers.
+  Полный order submit/receipt и Auth проверены в изолированной БД; production
+  smoke не создаёт заказы и не отправляет email. [CI этого кода](https://github.com/godaylor/solecraft/actions/runs/39081039154)
+  прошёл quality, isolated DB tests, Chromium E2E и Lighthouse.
+- VPN browser journeys прошли на 1440×900 и 390×844. Через физический RU Ethernet
+  они также прошли при выборе доступного Vercel edge `216.198.79.195` только
+  внутри тестового proxy. Обычные DNS-адреса `.131` на этом соединении дают TLS
+  reset; системный DNS/VPN и конфигурация сайта не изменялись. Это не безусловный
+  PASS для обычного домашнего подключения без VPN. Независимые RU server probes
+  подтвердили HTTP 200 и точный commit. Подробности и пределы — [M10 report](REDESIGN_M10.md).
 
 Vercel хранит только `VITE_APP_ENV`, `VITE_SUPABASE_URL` и
 `VITE_SUPABASE_PUBLISHABLE_KEY` для production. Service-role/secret keys, DB password
