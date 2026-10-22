@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router'
+import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router'
 
 import { IconButton } from '../../shared/ui/IconButton/IconButton'
 import { Icon } from '../../shared/ui/Icon/Icon'
@@ -7,6 +7,8 @@ import type { CartRepository } from '../../entities/cart/api/CartRepository'
 import { applyGuestCartStorageEvent } from '../../entities/cart/model/guestCartStore'
 import { CartQuickSheet } from '../../entities/cart/ui/CartQuickSheet'
 import { useLocale } from '../../shared/i18n/locale'
+import { useRouteEntrance } from '../../shared/motion/useRouteEntrance'
+import { ThemeControl } from '../../shared/ui/ThemeControl/ThemeControl'
 import { useAuth } from '../providers/AuthProvider'
 import { useCommerce } from '../providers/CommerceProvider'
 import { paths } from '../router/paths'
@@ -20,9 +22,12 @@ function navClassName({ isActive }: { isActive: boolean }): string {
 export function RootLayout({ cartRepository }: { cartRepository: CartRepository }) {
   const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const mainRef = useRef<HTMLElement>(null)
+  const { pathname } = useLocation()
   const auth = useAuth()
   const commerce = useCommerce()
   const { locale, setLocale, text } = useLocale()
+  useRouteEntrance(mainRef, pathname)
 
   useEffect(() => {
     window.addEventListener('storage', applyGuestCartStorageEvent)
@@ -43,7 +48,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
 
       <header className={styles.header}>
         <div className={styles.announcement}>
-          {text('Больше города. Больше тебя.', 'More city. More you.')}
+          {text('Кроссовки для жизни в городе', 'Sneakers for city life')}
           <span>
             {text(
               'Демо-магазин · без реальных списаний',
@@ -90,6 +95,9 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
           </nav>
 
           <div className={styles.headerActions}>
+            <div className={styles.desktopTheme}>
+              <ThemeControl />
+            </div>
             <div
               className={styles.localeSwitch}
               role="group"
@@ -175,7 +183,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
         </p>
       ) : null}
 
-      <main id="main-content" className={styles.main} tabIndex={-1}>
+      <main ref={mainRef} id="main-content" className={styles.main} tabIndex={-1}>
         <Outlet />
       </main>
 
@@ -212,7 +220,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
           </nav>
           <p className={styles.disclaimer}>
             {text(
-              'Демо-каталог. Fit-данные — ориентир с указанным источником, а не медицинская рекомендация.',
+              'Демо-каталог. Данные о посадке — ориентир с указанным источником, а не медицинская рекомендация.',
               'Demo catalog. Fit data is source-aware guidance, not medical advice.',
             )}
           </p>

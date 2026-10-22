@@ -19,7 +19,7 @@
   text-decoration: none;
 }
 .breadcrumbs a:hover {
-  color: var(--action-primary);
+  color: var(--action-link);
 }
 .layout {
   display: grid;
@@ -38,7 +38,7 @@
   place-items: center;
   aspect-ratio: 1.05;
   overflow: hidden;
-  background: var(--color-cold-paper);
+  background: var(--media-background);
   border-radius: 12px;
   border: 1px solid var(--border-default);
 }
@@ -52,7 +52,7 @@
   position: absolute;
   left: 22px;
   bottom: 22px;
-  color: var(--text-secondary);
+  color: var(--color-muted-ink);
   font: 0.62rem var(--font-data);
   text-transform: uppercase;
 }
@@ -60,7 +60,8 @@
   display: grid;
   min-height: 300px;
   place-items: center;
-  background: var(--color-cold-paper);
+  background: var(--media-background);
+  color: var(--color-muted-ink);
   font-size: 0.8rem;
 }
 .primaryMedia .mediaFallback {
@@ -74,6 +75,7 @@
   place-items: center;
   font: 0.6rem/1.3 var(--font-data);
   text-align: center;
+  color: var(--color-muted-ink);
 }
 .thumbnails {
   display: flex;
@@ -84,7 +86,7 @@
   width: 80px;
   height: 80px;
   border: 1px solid transparent;
-  background: var(--color-cold-paper);
+  background: var(--media-background);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -156,9 +158,9 @@
 .colorways button,
 .sizes button {
   min-height: 48px;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-control);
   border-radius: 6px;
-  background: white;
+  background: var(--surface-raised);
   color: inherit;
   transition:
     color 160ms ease,
@@ -185,7 +187,7 @@
 .colorways button[aria-pressed='true'] {
   border-color: var(--action-primary);
   box-shadow: inset 0 0 0 1px var(--action-primary);
-  background: #edf1ff;
+  background: var(--surface-accent);
 }
 .sizes button[aria-pressed='true'] {
   color: white;
@@ -210,7 +212,7 @@
 }
 .error {
   margin: 8px 0 0;
-  color: var(--color-danger);
+  color: var(--text-danger);
   font-weight: 700;
   font-size: 0.8rem;
 }
@@ -231,7 +233,7 @@
 .feedback {
   min-height: 24px;
   margin: 10px 0 0;
-  color: #17634c;
+  color: var(--text-success);
   font-size: 0.75rem;
   font-weight: 650;
 }
@@ -264,7 +266,7 @@
   margin-top: 55px;
   padding: 40px;
   border-radius: 12px;
-  background: #e0eee8;
+  background: var(--surface-success);
   align-items: center;
 }
 .fitPanel h2 {
@@ -325,7 +327,7 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  color: var(--action-primary);
+  color: var(--action-link);
 }
 @keyframes color-in {
   from {
@@ -386,7 +388,7 @@
     bottom: calc(12px + env(safe-area-inset-bottom));
     width: calc(100% - 32px);
     box-shadow:
-      0 0 0 6px var(--color-cold-paper),
+      0 0 0 6px var(--surface-page),
       0 0 24px 8px rgb(23 28 38 / 10%);
     font-size: 0.85rem;
   }

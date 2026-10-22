@@ -16,14 +16,28 @@
   --surface-raised: var(--color-white);
   --surface-inverse: var(--color-asphalt);
   --surface-data: var(--color-gauge-mint);
+  --surface-muted: #e9eef4;
+  --surface-accent: #e8edff;
+  --surface-success: #e0eee8;
+  --surface-danger: #fff0ed;
   --text-primary: var(--color-asphalt);
   --text-secondary: var(--color-muted-ink);
   --text-inverse: var(--color-white);
+  --text-success: #17634c;
+  --text-danger: var(--color-danger);
   --border-default: var(--color-line-grey);
+  --border-control: #7b8798;
   --action-primary: var(--color-transit-blue);
   --action-primary-hover: var(--color-transit-blue-strong);
+  --action-link: var(--color-transit-blue);
   --focus-ring: var(--color-transit-blue);
   --accent-emotional: var(--color-sole-orange);
+  --header-background: rgb(243 246 250 / 96%);
+  --media-background: #e8edf2;
+  --decorative-ink: #e5eaf3;
+  --collection-blue: #e2e9ff;
+  --collection-mint: #d5e9e2;
+  --collection-orange: #ffe1d3;
 
   --font-display: 'Unbounded Variable', 'Arial Black', sans-serif;
   --font-body: 'Manrope Variable', Arial, sans-serif;
@@ -50,19 +64,61 @@
   --motion-medium: 260ms;
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-page: #111a28;
+  --surface-raised: #192435;
+  --surface-inverse: #0d1521;
+  --surface-data: #213c35;
+  --surface-muted: #202b3c;
+  --surface-accent: #243554;
+  --surface-success: #213c35;
+  --surface-danger: #462a2d;
+  --text-primary: #e9eef7;
+  --text-secondary: #afbdd0;
+  --text-success: #94dcc0;
+  --text-danger: #ffb4a8;
+  --border-default: #435168;
+  --border-control: #7e90ab;
+  --action-link: #9bb6ff;
+  --focus-ring: #a6bdff;
+  --header-background: rgb(17 26 40 / 96%);
+  --decorative-ink: #29364b;
+  --collection-blue: #233551;
+  --collection-mint: #244039;
+  --collection-orange: #493529;
+  --shadow-card: 0 1.25rem 3rem rgb(0 0 0 / 20%);
+}
+
 @media (forced-colors: active) {
-  :root {
+  :root,
+  :root[data-theme] {
     --surface-page: Canvas;
     --surface-raised: Canvas;
     --surface-inverse: Canvas;
     --surface-data: Canvas;
+    --surface-muted: Canvas;
+    --surface-accent: Canvas;
+    --surface-success: Canvas;
+    --surface-danger: Canvas;
     --text-primary: CanvasText;
     --text-secondary: CanvasText;
     --text-inverse: CanvasText;
+    --text-success: CanvasText;
+    --text-danger: CanvasText;
     --border-default: CanvasText;
+    --border-control: ButtonText;
     --action-primary: LinkText;
     --action-primary-hover: LinkText;
+    --action-link: LinkText;
     --focus-ring: Highlight;
     --accent-emotional: Highlight;
+    --header-background: Canvas;
+    --media-background: Canvas;
+    --decorative-ink: CanvasText;
+    --collection-blue: Canvas;
+    --collection-mint: Canvas;
+    --collection-orange: Canvas;
   }
 }

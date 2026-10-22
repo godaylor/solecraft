@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f3f6fa" />
+    <script src="/theme-init.js"></script>
     <link
       rel="preload"
       href="/node_modules/@fontsource-variable/unbounded/files/unbounded-cyrillic-wght-normal.woff2"
@@ -106,6 +107,30 @@
         background: #355cff;
         font-weight: 800;
         text-decoration: none;
+      }
+
+      :root[data-theme='dark'] #solecraft-boot {
+        color: #e9eef7;
+        background: #111a28;
+      }
+
+      :root[data-theme='dark'] #solecraft-boot header {
+        border-color: #435168;
+      }
+
+      :root[data-theme='dark'] #solecraft-boot small {
+        color: #9bb6ff;
+      }
+
+      @media (forced-colors: active) {
+        :root[data-theme] #solecraft-boot {
+          color: CanvasText;
+          background: Canvas;
+        }
+
+        :root[data-theme] #solecraft-boot small {
+          color: CanvasText;
+        }
       }
 
       #app-root {

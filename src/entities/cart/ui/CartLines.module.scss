@@ -22,12 +22,13 @@
   height: auto;
   aspect-ratio: 1.2;
   object-fit: contain;
-  background: var(--color-cold-paper);
+  background: var(--media-background);
   border-radius: 6px;
 }
 .imageFallback {
   display: grid;
   place-items: center;
+  color: var(--color-muted-ink);
 }
 .summary p,
 .summary h3 {
@@ -57,7 +58,7 @@
 .quantity button {
   min-width: 44px;
   min-height: 44px;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-control);
   border-radius: 5px;
   background: transparent;
 }
@@ -74,13 +75,13 @@
   min-height: 44px;
   padding: 0;
   border: 0;
-  color: var(--color-danger);
+  color: var(--text-danger);
   background: transparent;
   text-decoration: underline;
 }
 .unavailable {
   display: block;
-  color: var(--color-danger);
+  color: var(--text-danger);
   font-size: 0.8rem;
 }
 .empty {

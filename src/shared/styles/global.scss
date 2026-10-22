@@ -22,6 +22,7 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: clip;
+  color: var(--text-primary);
 }
 
 body,
@@ -38,7 +39,26 @@ a {
 }
 
 a {
-  color: var(--action-primary);
+  color: var(--action-link);
+}
+
+button,
+input,
+select,
+textarea {
+  color: var(--text-primary);
+}
+
+input,
+select,
+textarea {
+  background-color: var(--surface-raised);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
 }
 
 button,

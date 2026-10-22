@@ -22,6 +22,7 @@ import { createAppRouter } from './app/router/createAppRouter'
 import { guestCartHandoff } from './entities/cart/model/guestCartStore'
 import { installObservability } from './shared/lib/observability'
 import { LocaleProvider } from './shared/i18n/locale'
+import { ThemeProvider } from './shared/theme/theme'
 import './shared/styles/global.scss'
 
 const rootElement = document.getElementById('app-root')
@@ -56,11 +57,13 @@ createRoot(rootElement).render(
   <StrictMode>
     <AppQueryProvider client={queryClient}>
       <LocaleProvider>
-        <AuthProvider loadClient={loadSupabaseClient}>
-          <CommerceProvider repository={ownerCommerceRepository}>
-            <RouterProvider router={router} />
-          </CommerceProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider loadClient={loadSupabaseClient}>
+            <CommerceProvider repository={ownerCommerceRepository}>
+              <RouterProvider router={router} />
+            </CommerceProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </LocaleProvider>
     </AppQueryProvider>
   </StrictMode>,

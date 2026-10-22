@@ -532,3 +532,26 @@ unverified fit properties. This correction lives in the existing localization
 layer; it does not mutate catalog IDs, inventory, server contracts or immutable
 order snapshots. Prebuilt production output includes a public commit-only
 `build-info.json` (plus build time) for Git/deployment reconciliation.
+
+### M10 appearance and motion (2026-10-23)
+
+Appearance belongs to a small React ThemeProvider, separate from locale, Auth,
+Query and commerce state. The versioned `solecraft:theme:v1` preference stores
+only `light`, `dark` or `system`; system is the default. Browser media-query and
+cross-tab storage changes update the resolved theme. Blocked storage leaves a
+working in-memory choice. No catalog data, authentication or server state moves
+into this provider.
+
+`public/theme-init.js` applies the saved/system appearance before first paint.
+It is an external same-origin script so the deployed `script-src 'self'` policy
+stays unchanged. React keeps `data-theme` and browser theme-color synchronized.
+Semantic surface/text/control-border tokens cover all routes, with fixed light
+product media planes and independent forced-colors overrides.
+
+Route transitions animate only the title position, after pathname changes; Outlet
+is never keyed/remounted and its containing block is never transformed. Text and
+forms retain full opacity and contrast during motion. ScrollRestoration,
+URL colorways, checkout state and mobile fixed actions retain their behavior.
+Home sections use one IntersectionObserver and native Web Animations; content
+is visible before enhancement. Reduced motion disables/cancels animation, and
+keyboard focus cancels section motion. No new runtime dependency was introduced.

@@ -6,6 +6,7 @@ import { IconButton } from '../../shared/ui/IconButton/IconButton'
 import { useAuth } from '../providers/AuthProvider'
 import { useCommerce } from '../providers/CommerceProvider'
 import { useLocale } from '../../shared/i18n/locale'
+import { ThemeControl } from '../../shared/ui/ThemeControl/ThemeControl'
 import styles from './MobileNavigation.module.scss'
 
 type MobileNavigationProps = {
@@ -178,10 +179,12 @@ export function MobileNavigation({ open, onClose, triggerRef }: MobileNavigation
           </ul>
         </nav>
 
+        <ThemeControl variant="expanded" />
+
         <p className={styles.note}>
           {text(
-            'Подбираем по ширине, амортизации и поддержке — без обещаний угадать за вас.',
-            'Choose by width, cushioning, and support—without claims of guessing for you.',
+            'Сравните ширину, амортизацию и поддержку перед примеркой.',
+            'Compare width, cushioning, and support before trying a pair on.',
           )}
         </p>
       </div>

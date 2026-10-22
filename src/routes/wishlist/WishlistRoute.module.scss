@@ -25,7 +25,7 @@
   padding: 3rem;
   border: 1px solid var(--border-default);
   border-radius: 12px;
-  background: white;
+  background: var(--surface-raised);
   text-align: center;
 }
 .error {
@@ -40,5 +40,5 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  color: var(--action-primary);
+  color: var(--action-link);
 }

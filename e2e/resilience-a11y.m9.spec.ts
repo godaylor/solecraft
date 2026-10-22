@@ -357,6 +357,7 @@ test('stable home and catalog states match reviewed visual baselines', async ({
       process.env.SKIP_VISUAL_REGRESSION === '1',
     'Reviewed visual baselines are intentionally maintained in local Windows Chromium.',
   )
+  await page.emulateMedia({ colorScheme: 'light' })
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await expect(page.locator('#sever-signal-01')).toBeVisible()
@@ -377,7 +378,7 @@ test('stable home and catalog states match reviewed visual baselines', async ({
   await expect(page).toHaveScreenshot('m9-home-mobile.png', {
     fullPage: true,
     animations: 'allow',
-    mask: [page.getByText(/В наличии · \d+ EU размеров|Нет в наличии/)],
+    mask: [page.getByText(/В наличии · размеров EU: \d+|Нет в наличии/)],
   })
 
   await page.setViewportSize({ width: 1440, height: 900 })
@@ -393,6 +394,6 @@ test('stable home and catalog states match reviewed visual baselines', async ({
   await expect(page).toHaveScreenshot('m9-catalog-desktop.png', {
     fullPage: true,
     animations: 'allow',
-    mask: [page.getByText(/В наличии · \d+ EU размеров|Нет в наличии/)],
+    mask: [page.getByText(/В наличии · размеров EU: \d+|Нет в наличии/)],
   })
 })

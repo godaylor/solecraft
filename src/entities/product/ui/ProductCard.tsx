@@ -95,10 +95,7 @@ export function ProductCard({
         </p>
         <p className={styles.availability}>
           {product.availability.inStock
-            ? `${text('В наличии', 'In stock')} · ${product.availableSizes.length} ${text(
-                'EU размеров',
-                'EU sizes',
-              )}`
+            ? `${text('В наличии', 'In stock')} · ${text('размеров EU', 'EU sizes')}: ${product.availableSizes.length}`
             : text('Нет в наличии', 'Out of stock')}
         </p>
         <span className={styles.action} aria-hidden="true">

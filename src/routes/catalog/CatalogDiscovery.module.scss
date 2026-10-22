@@ -33,7 +33,7 @@
   padding-inline: var(--space-3);
   color: var(--text-primary);
   background: var(--surface-raised);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-control);
   border-radius: var(--radius-small);
   font: inherit;
 }
@@ -51,7 +51,7 @@
   padding-inline: var(--space-4);
   color: var(--text-primary);
   background: transparent;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-control);
   border-radius: 6px;
   font: inherit;
   cursor: pointer;
@@ -69,7 +69,7 @@
 .railHeading p,
 .sheetHeading p {
   margin: 0;
-  color: var(--action-primary);
+  color: var(--action-link);
   font-family: var(--font-data);
   font-size: 0.7rem;
   letter-spacing: 0.05em;
@@ -93,7 +93,7 @@
   gap: var(--space-2);
   padding-inline: var(--space-3);
   color: var(--text-primary);
-  background: #e8edff;
+  background: var(--surface-accent);
   border: 1px solid var(--border-default);
   border-radius: 6px;
   font: inherit;

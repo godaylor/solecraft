@@ -31,7 +31,7 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  color: var(--action-primary);
+  color: var(--action-link);
 }
 .orders,
 .items {
@@ -65,20 +65,20 @@
   font-weight: 800;
 }
 .status[data-tone='new'] {
-  color: #143b77;
-  background: #eaf2ff;
+  color: var(--action-link);
+  background: var(--surface-accent);
 }
 .status[data-tone='active'] {
-  color: #6a3100;
-  background: #fff0dc;
+  color: var(--text-primary);
+  background: var(--collection-orange);
 }
 .status[data-tone='success'] {
-  color: #164c3a;
-  background: #dff7ed;
+  color: var(--text-success);
+  background: var(--surface-success);
 }
 .status[data-tone='muted'] {
-  color: #3c4148;
-  background: var(--surface-data);
+  color: var(--text-secondary);
+  background: var(--surface-muted);
 }
 .pagination {
   display: grid;

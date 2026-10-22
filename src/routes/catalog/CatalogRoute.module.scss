@@ -12,7 +12,7 @@
 
 .kicker {
   margin-block-end: var(--space-3);
-  color: var(--action-primary);
+  color: var(--action-link);
   font-family: var(--font-data);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
@@ -47,7 +47,7 @@
 
 .catalogNote span {
   flex: none;
-  color: var(--action-primary);
+  color: var(--action-link);
   font-family: var(--font-data);
   font-size: 0.72rem;
   text-transform: uppercase;

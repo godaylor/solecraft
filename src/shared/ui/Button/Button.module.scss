@@ -19,8 +19,10 @@
     transform var(--motion-fast) ease;
 }
 
-.button:hover:not(:disabled) {
-  transform: translateY(-0.125rem);
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:hover:not(:disabled) {
+    transform: translateY(-0.125rem);
+  }
 }
 
 .button:active:not(:disabled) {
@@ -44,7 +46,7 @@
 .secondary {
   color: var(--text-primary);
   background: transparent;
-  border-color: var(--border-default);
+  border-color: var(--border-control);
 }
 
 .secondary:hover:not(:disabled) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { paths, productPath } from '../../app/router/paths'
@@ -8,6 +8,7 @@ import { localizeProduct } from '../../entities/product/model/productLocalizatio
 import { ProductCard } from '../../entities/product/ui/ProductCard'
 import { FitLine } from '../../entities/product/ui/FitLine'
 import { useLocale } from '../../shared/i18n/locale'
+import { useScrollReveal } from '../../shared/motion/useScrollReveal'
 import { ButtonLink } from '../../shared/ui/Button/ButtonLink'
 import { Button } from '../../shared/ui/Button/Button'
 import { Icon } from '../../shared/ui/Icon/Icon'
@@ -20,6 +21,8 @@ export function HomeRoute({
   catalogRepository: CatalogRepository
 }) {
   const { locale, text } = useLocale()
+  const homeRef = useRef<HTMLDivElement>(null)
+  useScrollReveal(homeRef)
   const [spotlightIndex, setSpotlightIndex] = useState(0)
   const [failedHeroId, setFailedHeroId] = useState<string>()
   const featuredQuery = useQuery(
@@ -73,7 +76,7 @@ export function HomeRoute({
     },
   ]
   return (
-    <div className={styles.home}>
+    <div className={styles.home} ref={homeRef}>
       <section className={styles.hero} aria-labelledby="home-title">
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>
@@ -224,10 +227,14 @@ export function HomeRoute({
         </span>
         <span>
           <Icon name="return" />
-          {text('14 дней на возврат демо-заказа', '14-day demo returns')}
+          {text('Без реальных списаний', 'No real charges')}
         </span>
       </div>
-      <section className={styles.selection} aria-labelledby="featured-title">
+      <section
+        className={styles.selection}
+        aria-labelledby="featured-title"
+        data-reveal
+      >
         <div className={styles.sectionHeading}>
           <div>
             <p className={styles.eyebrow}>
@@ -267,7 +274,7 @@ export function HomeRoute({
           )}
         </div>
       </section>
-      <section className={styles.curated} aria-labelledby="curated-title">
+      <section className={styles.curated} aria-labelledby="curated-title" data-reveal>
         <div className={styles.sectionHeading}>
           <div>
             <p className={styles.eyebrow}>
@@ -317,7 +324,12 @@ export function HomeRoute({
           ))}
         </div>
       </section>
-      <section id="fit-method" className={styles.fitMethod} aria-labelledby="fit-title">
+      <section
+        id="fit-method"
+        className={styles.fitMethod}
+        aria-labelledby="fit-title"
+        data-reveal
+      >
         <div className={styles.fitIntro}>
           <p className={styles.eyebrow}>
             {text(
@@ -332,8 +344,8 @@ export function HomeRoute({
           </h2>
           <p>
             {text(
-              'У пары есть характер. У твоей стопы — свои особенности. Линия посадки помогает сравнивать их до покупки.',
-              'Every sneaker has a character. Every foot has its own needs. The Fit line helps you compare before choosing.',
+              'Сравни ширину, амортизацию и поддержку моделей перед примеркой.',
+              'Compare width, cushioning and support before trying a pair on.',
             )}
           </p>
           <ButtonLink variant="secondary" to="/catalog">
@@ -379,7 +391,7 @@ export function HomeRoute({
           </small>
         </div>
       </section>
-      <section className={styles.cityStory} aria-labelledby="city-title">
+      <section className={styles.cityStory} aria-labelledby="city-title" data-reveal>
         <img
           src="/media/editorial/city-route.webp"
           srcSet="/media/editorial/city-route-800.webp 800w, /media/editorial/city-route.webp 1600w"
@@ -409,6 +421,7 @@ export function HomeRoute({
         id="store-policy"
         className={styles.trust}
         aria-label={text('Условия магазина', 'Store policies')}
+        data-reveal
       >
         <div>
           <Icon name="bag" />
@@ -432,11 +445,13 @@ export function HomeRoute({
         </div>
         <div>
           <Icon name="return" />
-          <strong>{text('Примерка без спешки', 'Take your time')}</strong>
+          <strong>
+            {text('Можно попробовать весь путь', 'Try the complete journey')}
+          </strong>
           <p>
             {text(
-              '14 дней на возврат демо-заказа. Никаких реальных списаний.',
-              '14-day demo returns. No real payments are taken.',
+              'Заказ демонстрационный: товары не отправляются, деньги не списываются.',
+              'Orders are a demo: no products are shipped and no money is charged.',
             )}
           </p>
         </div>
