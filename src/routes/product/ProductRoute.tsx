@@ -371,8 +371,8 @@ function ProductPage({
           )}
           <p className={styles.trust}>
             {text(
-              'Демо-заказ без реального списания · возврат в течение 14 дней',
-              'Demo order with no real charge · 14-day return',
+              'Демо-заказ без оплаты и отправки товара',
+              'Demo order with no payment or shipment',
             )}
           </p>
           {product.fit.provenance === 'editorial_demo' && (
