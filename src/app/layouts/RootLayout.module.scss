@@ -70,10 +70,6 @@
   font: 750 1.25rem/1 var(--font-display);
   letter-spacing: -0.06em;
 }
-.brandWord > svg {
-  width: 27px;
-  color: var(--action-link);
-}
 .brandDot {
   align-self: start;
   font: 0.5rem var(--font-data);
@@ -212,11 +208,6 @@
   font: 650 2.1rem var(--font-display);
   letter-spacing: -0.06em;
 }
-.footerBrand svg {
-  width: 35px;
-  height: 35px;
-  color: var(--color-gauge-mint);
-}
 .footerBrand > p {
   margin: 15px 0 0;
   color: #acb6c5;
@@ -271,9 +262,6 @@
   .brandWord {
     font-size: 1.08rem;
   }
-  .brandWord > svg {
-    width: 22px;
-  }
   .footerBottom {
     margin-inline: 24px;
   }
@@ -309,9 +297,6 @@
     font-size: 1.02rem;
     gap: 6px;
   }
-  .brandWord > svg {
-    width: 21px;
-  }
   .utilityLink {
     min-width: 44px;
     gap: 3px;
@@ -337,6 +322,7 @@
   }
   .footerBrand > span {
     font-size: 1.7rem;
+    gap: 12px;
   }
   .footerInner > nav {
     justify-self: start;
@@ -352,6 +338,15 @@
     gap: 12px;
     font-size: 0.5rem;
     padding-block: 20px;
+  }
+}
+@media (max-width: 380px) {
+  .brandWord {
+    font-size: 0.92rem;
+    gap: 4px;
+  }
+  .footerBrand > span {
+    font-size: 1.5rem;
   }
 }
 @media (forced-colors: active) {

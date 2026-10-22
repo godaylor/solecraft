@@ -104,6 +104,18 @@ alpha transparency. The existing canvas conversion script exported 1200×900
 and 600×450 WebP. No external photography or additional service was introduced.
 The other September 18 variants, 03-blue and 05-burgundy, retain transparency.
 
+## Sculpted sole brand emblem — 2026-10-23
+
+The new Solecraft emblem was generated from text with the built-in OpenAI
+ImageGen tool, without reference imagery. The source PNG is preserved in
+`content/brand/solecraft-emblem-source.png`; its exact prompt and intended use
+are recorded in [brand/README.md](brand/README.md).
+
+`scripts/build-brand-assets.mjs` uses the installed local Chrome canvas encoder
+to preserve alpha while exporting responsive WebP, PNG favicons/app icons and
+the composited social preview. Header/footer use the same artwork in both themes;
+no filter or recoloring is applied. No remote image dependency is introduced.
+
 ## Replaced legacy media
 
 The original training storefront's low-resolution raster assets had unverified public

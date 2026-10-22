@@ -1,0 +1,197 @@
+{
+  "baseURL": "http://127.0.0.1:32601",
+  "report": [
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 320,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 320,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 360,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 360,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 360,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 360,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 390,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 390,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 390,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 390,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 768,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 768,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 768,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 768,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 1024,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 1024,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 1024,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 1024,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 1440,
+      "colorScheme": "light",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 1440,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    },
+    {
+      "width": 1440,
+      "colorScheme": "dark",
+      "motion": {
+        "duration": 720,
+        "iterations": 1
+      },
+      "hover": "matrix(0.992546, -0.121869, 0.121869, 0.992546, 0, -2)",
+      "reduced": {
+        "name": "none",
+        "transform": "none"
+      },
+      "documentWidth": 1440,
+      "source": "http://127.0.0.1:32601/brand/solecraft-emblem-96.webp",
+      "overlaps": []
+    }
+  ]
+}

@@ -248,3 +248,15 @@ RU/EN публичный путь использует покупательск�
 обещание «14 дней на возврат демо-заказа» удалено.
 
 Обратимо до начала design-system milestone: финальное имя, конкретные font licenses/subsets, один из secondary accents, объём editorial home content. Эти решения не должны менять domain architecture.
+
+### M10 brand emblem — 2026-10-23
+
+По отдельному запросу владельца тонкий маршрутный значок бренда заменён
+на самостоятельную объёмную эмблему: S из формованной кроссовочной подошвы.
+Это прозрачная растровая картинка в Transit Blue, icy white и Sole Orange,
+общая для шапки, подвала и иконок сайта. Wordmark Solecraft сохранён текстом.
+Знак имеет однократное упругое движение 720 ms и короткий hover/focus-отклик;
+reduced motion отключает оба. Товарные фотографии и «Линия посадки» сохранены.
+Происхождение, source PNG, точный prompt и размеры:
+[content/brand/README.md](../content/brand/README.md). Проверки и сравнение:
+[BRAND_EMBLEM_M10.md](BRAND_EMBLEM_M10.md).

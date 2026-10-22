@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-rou
 
 import { IconButton } from '../../shared/ui/IconButton/IconButton'
 import { Icon } from '../../shared/ui/Icon/Icon'
+import { BrandMark } from '../../shared/ui/BrandMark/BrandMark'
 import type { CartRepository } from '../../entities/cart/api/CartRepository'
 import { applyGuestCartStorageEvent } from '../../entities/cart/model/guestCartStore'
 import { CartQuickSheet } from '../../entities/cart/ui/CartQuickSheet'
@@ -63,7 +64,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
             aria-label={text('Solecraft — на главную', 'Solecraft — home')}
           >
             <span className={styles.brandWord}>
-              <Icon name="route" />
+              <BrandMark />
               Solecraft
             </span>
             <span className={styles.brandNote}>
@@ -191,7 +192,7 @@ export function RootLayout({ cartRepository }: { cartRepository: CartRepository 
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
             <span>
-              <Icon name="route" />
+              <BrandMark variant="footer" />
               Solecraft
             </span>
             <p>
